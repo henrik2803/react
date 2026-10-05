@@ -1,15 +1,16 @@
 import {
   ArrowRight,
   Check,
-  Radio,
   MonitorSmartphone,
-  Smartphone,
-  Zap,
+  Radio,
   ShieldCheck,
+  Smartphone,
   TrendingUp,
+  Zap,
 } from "lucide-react";
 
 import Container from "../../ui/Container/Container";
+
 import styles from "./Solutions.module.css";
 
 const solutions = [
@@ -45,9 +46,27 @@ const solutions = [
   },
 ];
 
+const trustItems = [
+  {
+    icon: Zap,
+    label: "Performance",
+  },
+  {
+    icon: ShieldCheck,
+    label: "Segurança",
+  },
+  {
+    icon: TrendingUp,
+    label: "Resultados",
+  },
+];
+
 function NFCVisual() {
   return (
-    <div className={styles.nfcVisual} aria-hidden="true">
+    <div
+      className={styles.nfcVisual}
+      aria-hidden="true"
+    >
       <div className={styles.nfcGlow} />
 
       <div className={styles.nfcWaves}>
@@ -64,12 +83,15 @@ function NFCVisual() {
 
           <strong>NFC</strong>
 
-          <span>Aproxime para conectar</span>
+          <span>
+            Aproxime para conectar
+          </span>
         </div>
       </div>
 
       <div className={styles.nfcTag}>
         <Radio size={27} />
+
         <span>LINC</span>
       </div>
     </div>
@@ -78,7 +100,10 @@ function NFCVisual() {
 
 function WebVisual() {
   return (
-    <div className={styles.webVisual} aria-hidden="true">
+    <div
+      className={styles.webVisual}
+      aria-hidden="true"
+    >
       <div className={styles.webGlow} />
 
       <div className={styles.browser}>
@@ -87,7 +112,9 @@ function WebVisual() {
           <span />
           <span />
 
-          <div className={styles.browserAddress} />
+          <div
+            className={styles.browserAddress}
+          />
         </div>
 
         <div className={styles.browserContent}>
@@ -102,7 +129,10 @@ function WebVisual() {
           />
 
           <div className={styles.previewText} />
-          <div className={styles.previewTextShort} />
+
+          <div
+            className={styles.previewTextShort}
+          />
 
           <div className={styles.previewButton} />
 
@@ -117,7 +147,9 @@ function WebVisual() {
       <div className={styles.miniPhone}>
         <Smartphone size={24} />
 
-        <div className={styles.miniPhoneContent}>
+        <div
+          className={styles.miniPhoneContent}
+        >
           <span />
           <span />
           <span />
@@ -132,7 +164,9 @@ function SolutionCard({ solution }) {
 
   return (
     <article
-      className={`${styles.card} ${styles[solution.variant]}`}
+      className={`${styles.card} ${
+        styles[solution.variant]
+      }`}
     >
       <div className={styles.cardContent}>
         <div className={styles.cardHeader}>
@@ -140,30 +174,42 @@ function SolutionCard({ solution }) {
             <Icon size={24} />
           </div>
 
-          <span>{solution.eyebrow}</span>
+          <span>
+            {solution.eyebrow}
+          </span>
         </div>
 
-        <h3>{solution.title}</h3>
+        <h3>
+          {solution.title}
+        </h3>
 
-        <p>{solution.description}</p>
+        <p>
+          {solution.description}
+        </p>
 
-        <ul>
-          {solution.features.map((feature) => (
-            <li key={feature}>
-              <span className={styles.check}>
-                <Check size={14} />
-              </span>
+        <ul className={styles.featureList}>
+          {solution.features.map(
+            (feature) => (
+              <li key={feature}>
+                <span className={styles.check}>
+                  <Check size={14} />
+                </span>
 
-              {feature}
-            </li>
-          ))}
+                <span>
+                  {feature}
+                </span>
+              </li>
+            )
+          )}
         </ul>
 
         <a
           href={solution.href}
           className={styles.cardLink}
+          aria-label={`Saiba mais sobre ${solution.title}`}
         >
           Saiba mais
+
           <ArrowRight size={17} />
         </a>
       </div>
@@ -186,7 +232,7 @@ function Solutions() {
       className={styles.solutions}
     >
       <Container>
-        <div className={styles.heading}>
+        <header className={styles.heading}>
           <span className={styles.eyebrow}>
             Nossas soluções
           </span>
@@ -197,11 +243,11 @@ function Solutions() {
           </h2>
 
           <p>
-            Soluções inteligentes para empresas que
-            querem crescer com mais eficiência e
-            presença digital.
+            Soluções inteligentes para empresas
+            que querem crescer com mais eficiência
+            e presença digital.
           </p>
-        </div>
+        </header>
 
         <div className={styles.grid}>
           {solutions.map((solution) => (
@@ -213,20 +259,22 @@ function Solutions() {
         </div>
 
         <div className={styles.trust}>
-          <div>
-            <Zap size={20} />
-            <span>Performance</span>
-          </div>
+          {trustItems.map((item) => {
+            const Icon = item.icon;
 
-          <div>
-            <ShieldCheck size={20} />
-            <span>Segurança</span>
-          </div>
+            return (
+              <div
+                className={styles.trustItem}
+                key={item.label}
+              >
+                <Icon size={20} />
 
-          <div>
-            <TrendingUp size={20} />
-            <span>Resultados</span>
-          </div>
+                <span>
+                  {item.label}
+                </span>
+              </div>
+            );
+          })}
         </div>
       </Container>
     </section>
