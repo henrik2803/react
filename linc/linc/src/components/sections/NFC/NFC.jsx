@@ -6,6 +6,7 @@ import {
   LockKeyhole,
   PackageSearch,
   Radio,
+  Share2,
   Smartphone,
   Utensils,
   Wifi,
@@ -42,6 +43,10 @@ const applications = [
     title: "Controle de estoque",
   },
   {
+    icon: Share2,
+    title: "Redes sociais",
+  },
+  {
     icon: Gift,
     title: "Fidelização",
   },
@@ -65,7 +70,6 @@ function NFC() {
             <br />
             Conecte.
             <br />
-
             <span>Automatize.</span>
           </h2>
 
@@ -84,7 +88,9 @@ function NFC() {
                   className={styles.application}
                   key={item.title}
                 >
-                  <div className={styles.applicationIcon}>
+                  <div
+                    className={styles.applicationIcon}
+                  >
                     <Icon size={20} />
                   </div>
 
