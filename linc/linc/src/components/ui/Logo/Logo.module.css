@@ -1,0 +1,26 @@
+.logo {
+  display: inline-flex;
+  align-items: center;
+
+  font-size: 2rem;
+  font-weight: 800;
+
+  letter-spacing: 0.08em;
+
+  color: var(--color-text);
+}
+
+.word {
+  color: var(--color-text);
+}
+
+/*
+  Placeholder temporário.
+
+  Quando tivermos o SVG oficial,
+  substituímos o componente inteiro
+  pela marca oficial.
+*/
+.placeholder {
+  color: var(--color-primary);
+}
