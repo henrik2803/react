@@ -14,8 +14,8 @@
   background:
     radial-gradient(
       circle at 78% 35%,
-      rgba(37, 99, 235, 0.09),
-      transparent 31%
+      rgba(37, 99, 235, 0.08),
+      transparent 32%
     ),
     var(--color-background);
 }
@@ -25,11 +25,11 @@
 
   grid-template-columns:
     minmax(0, 1.05fr)
-    minmax(400px, 0.95fr);
+    minmax(360px, 0.95fr);
 
   align-items: center;
 
-  gap: 56px;
+  gap: 60px;
 }
 
 /* =========================
@@ -41,7 +41,7 @@
 
   position: relative;
 
-  z-index: 5;
+  z-index: 2;
 }
 
 .badge {
@@ -92,11 +92,12 @@
 
   color: var(--color-text);
 
-  font-size: clamp(
-    3.2rem,
-    5vw,
-    5rem
-  );
+  font-size:
+    clamp(
+      3.2rem,
+      5vw,
+      5rem
+    );
 
   font-weight: 750;
 
@@ -116,11 +117,12 @@
 
   color: var(--color-text-secondary);
 
-  font-size: clamp(
-    1rem,
-    1.25vw,
-    1.15rem
-  );
+  font-size:
+    clamp(
+      1rem,
+      1.25vw,
+      1.15rem
+    );
 
   line-height: 1.8;
 }
@@ -203,367 +205,47 @@
 }
 
 /* =========================
-   VISUAL
+   LOGO
 ========================= */
 
 .visual {
   min-width: 0;
-  min-height: 600px;
-
-  position: relative;
+  min-height: 560px;
 
   display: flex;
   align-items: center;
   justify-content: center;
+
+  position: relative;
 }
 
-.glow {
-  width: 390px;
-  height: 390px;
+.visual::before {
+  content: "";
+
+  width: 420px;
+  height: 420px;
 
   position: absolute;
 
   border-radius: 50%;
 
   background:
-    rgba(37, 99, 235, 0.17);
+    rgba(37, 99, 235, 0.09);
 
   filter: blur(90px);
 }
 
-/* =========================
-   ORBITS
-========================= */
-
-.orbit {
-  position: absolute;
-
-  border: 1px solid
-    rgba(37, 99, 235, 0.13);
-
-  border-radius: 50%;
-}
-
-.orbitOne {
-  width: 350px;
-  height: 350px;
-}
-
-.orbitTwo {
-  width: 460px;
-  height: 460px;
-}
-
-.orbitThree {
-  width: 570px;
-  height: 570px;
-}
-
-.orbitDot {
-  width: 8px;
-  height: 8px;
-
-  position: absolute;
-
-  border-radius: 50%;
-
-  background: var(--color-primary);
-
-  box-shadow:
-    0 0 14px
-    rgba(37, 99, 235, 0.7);
-}
-
-.dotOne {
-  top: 74px;
-  right: 160px;
-}
-
-.dotTwo {
-  top: 285px;
-  left: 42px;
-}
-
-.dotThree {
-  right: 30px;
-  bottom: 165px;
-}
-
-/* =========================
-   FLOATING ICONS
-========================= */
-
-.floatingIcon {
-  width: 68px;
-  height: 68px;
-
-  position: absolute;
-
-  z-index: 4;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  color: var(--color-primary);
-
-  border: 1px solid
-    rgba(255, 255, 255, 0.85);
-
-  border-radius: 50%;
-
-  background:
-    rgba(255, 255, 255, 0.9);
-
-  box-shadow:
-    0 14px 35px
-    rgba(15, 23, 42, 0.08);
-
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-
-  animation:
-    float 5s ease-in-out infinite;
-}
-
-.floatingIcon svg {
-  width: 28px;
-  height: 28px;
-}
-
-.wifi {
-  top: 88px;
-  left: 66px;
-}
-
-.cloud {
-  top: 115px;
-  right: 35px;
-
-  animation-delay: -1s;
-}
-
-.security {
-  right: 34px;
-  bottom: 88px;
-
-  animation-delay: -2s;
-}
-
-.chart {
-  left: 65px;
-  bottom: 70px;
-
-  animation-delay: -3s;
-}
-
-/* =========================
-   TECHNOLOGY CORE
-========================= */
-
-.techStage {
-  width: 350px;
-  height: 410px;
-
-  position: relative;
-
-  z-index: 3;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.techCore {
-  width: 250px;
-  height: 250px;
-
-  position: relative;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  filter:
-    drop-shadow(
-      0 20px 25px
-      rgba(37, 99, 235, 0.17)
-    );
-}
-
-.coreRing {
-  position: absolute;
-
-  border-style: solid;
-
-  border-color:
-    var(--color-primary)
-    transparent
-    var(--color-primary)
-    var(--color-primary);
-
-  border-radius: 50%;
-}
-
-.coreRing:nth-child(1) {
-  width: 240px;
-  height: 240px;
-
-  border-width: 12px;
-
-  opacity: 0.95;
-}
-
-.coreRing:nth-child(2) {
-  width: 190px;
-  height: 190px;
-
-  border-width: 10px;
-
-  opacity: 0.75;
-
-  transform: rotate(35deg);
-}
-
-.coreRing:nth-child(3) {
-  width: 140px;
-  height: 140px;
-
-  border-width: 9px;
-
-  opacity: 0.55;
-
-  transform: rotate(75deg);
-}
-
-.coreRing:nth-child(4) {
-  width: 92px;
-  height: 92px;
-
-  border-width: 8px;
-
-  opacity: 0.35;
-
-  transform: rotate(120deg);
-}
-
-.coreCenter {
-  width: 68px;
-  height: 68px;
+.logo {
+  width: min(100%, 470px);
+  height: auto;
 
   position: relative;
 
   z-index: 2;
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: block;
 
-  color: white;
-
-  border-radius: 50%;
-
-  background:
-    var(--color-primary);
-
-  box-shadow:
-    0 12px 35px
-    rgba(37, 99, 235, 0.3);
-}
-
-.coreCenter svg {
-  width: 30px;
-  height: 30px;
-}
-
-/* =========================
-   PLATFORM
-========================= */
-
-.platform {
-  width: 330px;
-  height: 56px;
-
-  position: absolute;
-
-  bottom: 20px;
-
-  border-radius: 50%;
-
-  background:
-    linear-gradient(
-      180deg,
-      #ffffff,
-      #e8eef8
-    );
-
-  box-shadow:
-    0 25px 40px
-    rgba(15, 23, 42, 0.13);
-}
-
-.platform::before {
-  content: "";
-
-  position: absolute;
-
-  inset: 0;
-
-  border:
-    1px solid
-    rgba(37, 99, 235, 0.15);
-
-  border-radius: inherit;
-}
-
-.platformLight {
-  height: 3px;
-
-  position: absolute;
-
-  left: 8%;
-  right: 8%;
-  bottom: 5px;
-
-  border-radius: 999px;
-
-  background:
-    var(--color-primary);
-
-  box-shadow:
-    0 0 15px
-    rgba(37, 99, 235, 0.75);
-}
-
-.shadow {
-  width: 230px;
-  height: 28px;
-
-  position: absolute;
-
-  bottom: 53px;
-
-  border-radius: 50%;
-
-  background:
-    rgba(37, 99, 235, 0.22);
-
-  filter: blur(20px);
-}
-
-/* =========================
-   ANIMATION
-========================= */
-
-@keyframes float {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-
-  50% {
-    transform: translateY(-10px);
-  }
+  object-fit: contain;
 }
 
 /* =========================
@@ -574,14 +256,18 @@
   .container {
     grid-template-columns:
       minmax(0, 1fr)
-      minmax(360px, 0.82fr);
+      minmax(330px, 0.8fr);
 
-    gap: 32px;
+    gap: 40px;
   }
 
   .title {
     font-size:
-      clamp(3rem, 5vw, 4.4rem);
+      clamp(
+        3rem,
+        5vw,
+        4.4rem
+      );
   }
 
   .highlights {
@@ -598,38 +284,11 @@
   }
 
   .visual {
-    min-height: 540px;
+    min-height: 500px;
   }
 
-  .orbitOne {
-    width: 310px;
-    height: 310px;
-  }
-
-  .orbitTwo {
-    width: 400px;
-    height: 400px;
-  }
-
-  .orbitThree {
-    width: 490px;
-    height: 490px;
-  }
-
-  .wifi {
-    left: 38px;
-  }
-
-  .cloud {
-    right: 18px;
-  }
-
-  .security {
-    right: 16px;
-  }
-
-  .chart {
-    left: 38px;
+  .logo {
+    width: min(100%, 410px);
   }
 }
 
@@ -641,15 +300,13 @@
   .hero {
     min-height: auto;
 
-    padding:
-      145px 0
-      70px;
+    padding: 145px 0 70px;
   }
 
   .container {
     grid-template-columns: 1fr;
 
-    gap: 30px;
+    gap: 40px;
 
     text-align: center;
   }
@@ -682,12 +339,15 @@
   }
 
   .visual {
-    width: 100%;
-    max-width: 650px;
+    min-height: 440px;
 
-    min-height: 520px;
+    max-width: 600px;
 
     margin-inline: auto;
+  }
+
+  .logo {
+    width: min(100%, 390px);
   }
 }
 
@@ -697,13 +357,11 @@
 
 @media (max-width: 700px) {
   .hero {
-    padding:
-      120px 0
-      55px;
+    padding: 120px 0 55px;
   }
 
   .container {
-    gap: 24px;
+    gap: 30px;
   }
 
   .badge {
@@ -714,7 +372,11 @@
 
   .title {
     font-size:
-      clamp(2.55rem, 11vw, 3.6rem);
+      clamp(
+        2.55rem,
+        11vw,
+        3.6rem
+      );
 
     line-height: 1.02;
   }
@@ -757,147 +419,27 @@
     padding: 14px 0;
 
     border-bottom:
-      1px solid var(--color-border);
+      1px solid
+      var(--color-border);
   }
 
   .highlight:first-child {
     border-top:
-      1px solid var(--color-border);
-  }
-
-  .highlightIcon {
-    width: 42px;
-    height: 42px;
-  }
-
-  .highlight strong {
-    font-size: 0.88rem;
-  }
-
-  .highlight span {
-    font-size: 0.75rem;
+      1px solid
+      var(--color-border);
   }
 
   .visual {
-    min-height: 440px;
+    min-height: 360px;
   }
 
-  .glow {
+  .visual::before {
     width: 300px;
     height: 300px;
   }
 
-  .orbitOne {
-    width: 260px;
-    height: 260px;
-  }
-
-  .orbitTwo {
-    width: 340px;
-    height: 340px;
-  }
-
-  .orbitThree {
-    width: 420px;
-    height: 420px;
-  }
-
-  .techStage {
-    width: 300px;
-    height: 350px;
-  }
-
-  .techCore {
-    width: 200px;
-    height: 200px;
-  }
-
-  .coreRing:nth-child(1) {
-    width: 195px;
-    height: 195px;
-
-    border-width: 10px;
-  }
-
-  .coreRing:nth-child(2) {
-    width: 155px;
-    height: 155px;
-
-    border-width: 9px;
-  }
-
-  .coreRing:nth-child(3) {
-    width: 115px;
-    height: 115px;
-
-    border-width: 8px;
-  }
-
-  .coreRing:nth-child(4) {
-    width: 78px;
-    height: 78px;
-
-    border-width: 7px;
-  }
-
-  .coreCenter {
-    width: 58px;
-    height: 58px;
-  }
-
-  .coreCenter svg {
-    width: 26px;
-    height: 26px;
-  }
-
-  .platform {
-    width: 275px;
-    height: 48px;
-  }
-
-  .floatingIcon {
-    width: 55px;
-    height: 55px;
-  }
-
-  .floatingIcon svg {
-    width: 23px;
-    height: 23px;
-  }
-
-  .wifi {
-    top: 70px;
-    left: 28px;
-  }
-
-  .cloud {
-    top: 80px;
-    right: 24px;
-  }
-
-  .security {
-    right: 22px;
-    bottom: 70px;
-  }
-
-  .chart {
-    left: 25px;
-    bottom: 58px;
-  }
-
-  .dotOne {
-    top: 58px;
-    right: 112px;
-  }
-
-  .dotTwo {
-    top: 215px;
-    left: 18px;
-  }
-
-  .dotThree {
-    right: 14px;
-    bottom: 125px;
+  .logo {
+    width: min(88%, 320px);
   }
 }
 
@@ -907,9 +449,7 @@
 
 @media (max-width: 430px) {
   .hero {
-    padding:
-      108px 0
-      45px;
+    padding: 108px 0 45px;
   }
 
   .badge {
@@ -920,7 +460,11 @@
 
   .title {
     font-size:
-      clamp(2.25rem, 11vw, 2.9rem);
+      clamp(
+        2.25rem,
+        11vw,
+        2.9rem
+      );
 
     letter-spacing: -0.045em;
   }
@@ -929,149 +473,18 @@
     font-size: 0.92rem;
   }
 
-  .buttons {
-    gap: 10px;
-  }
-
   .visual {
-    min-height: 360px;
+    min-height: 300px;
   }
 
-  .glow {
+  .visual::before {
     width: 230px;
     height: 230px;
 
     filter: blur(70px);
   }
 
-  .orbitOne {
-    width: 210px;
-    height: 210px;
-  }
-
-  .orbitTwo {
-    width: 275px;
-    height: 275px;
-  }
-
-  .orbitThree {
-    width: 340px;
-    height: 340px;
-  }
-
-  .techStage {
-    width: 240px;
-    height: 300px;
-  }
-
-  .techCore {
-    width: 160px;
-    height: 160px;
-  }
-
-  .coreRing:nth-child(1) {
-    width: 155px;
-    height: 155px;
-
-    border-width: 8px;
-  }
-
-  .coreRing:nth-child(2) {
-    width: 123px;
-    height: 123px;
-
-    border-width: 7px;
-  }
-
-  .coreRing:nth-child(3) {
-    width: 92px;
-    height: 92px;
-
-    border-width: 6px;
-  }
-
-  .coreRing:nth-child(4) {
-    width: 62px;
-    height: 62px;
-
-    border-width: 5px;
-  }
-
-  .coreCenter {
-    width: 48px;
-    height: 48px;
-  }
-
-  .coreCenter svg {
-    width: 22px;
-    height: 22px;
-  }
-
-  .platform {
-    width: 220px;
-    height: 42px;
-
-    bottom: 18px;
-  }
-
-  .shadow {
-    width: 160px;
-
-    bottom: 47px;
-  }
-
-  .floatingIcon {
-    width: 46px;
-    height: 46px;
-  }
-
-  .floatingIcon svg {
-    width: 20px;
-    height: 20px;
-  }
-
-  .wifi {
-    top: 53px;
-    left: 12px;
-  }
-
-  .cloud {
-    top: 65px;
-    right: 8px;
-  }
-
-  .security {
-    right: 9px;
-    bottom: 58px;
-  }
-
-  .chart {
-    left: 10px;
-    bottom: 52px;
-  }
-
-  .dotOne {
-    top: 46px;
-    right: 90px;
-  }
-
-  .dotTwo {
-    top: 175px;
-    left: 4px;
-  }
-
-  .dotThree {
-    right: 3px;
-    bottom: 100px;
-  }
-}
-
-/* =========================
-   REDUCED MOTION
-========================= */
-
-@media (prefers-reduced-motion: reduce) {
-  .floatingIcon {
-    animation: none;
+  .logo {
+    width: min(90%, 270px);
   }
 }

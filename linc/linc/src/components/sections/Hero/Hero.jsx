@@ -1,17 +1,17 @@
 import {
   ArrowRight,
   BarChart3,
-  Cloud,
   MessageCircle,
   Radio,
   ShieldCheck,
-  Wifi,
 } from "lucide-react";
 
 import Container from "../../ui/Container/Container";
 import Button from "../../ui/Button/Button";
 
 import { getWhatsAppLink } from "../../../constants/contact";
+
+import lincSymbol from "../../../assets/logos/linc-symbol.jpg";
 
 import styles from "./Hero.module.css";
 
@@ -93,7 +93,6 @@ function Hero() {
 
                   <div className={styles.highlightContent}>
                     <strong>{item.title}</strong>
-
                     <span>{item.description}</span>
                   </div>
                 </div>
@@ -102,78 +101,12 @@ function Hero() {
           </div>
         </div>
 
-        <div
-          className={styles.visual}
-          aria-hidden="true"
-        >
-          <div className={styles.glow} />
-
-          <div
-            className={`${styles.orbit} ${styles.orbitOne}`}
+        <div className={styles.visual}>
+          <img
+            src={lincSymbol}
+            alt="Símbolo da LINC"
+            className={styles.logo}
           />
-
-          <div
-            className={`${styles.orbit} ${styles.orbitTwo}`}
-          />
-
-          <div
-            className={`${styles.orbit} ${styles.orbitThree}`}
-          />
-
-          <span
-            className={`${styles.orbitDot} ${styles.dotOne}`}
-          />
-
-          <span
-            className={`${styles.orbitDot} ${styles.dotTwo}`}
-          />
-
-          <span
-            className={`${styles.orbitDot} ${styles.dotThree}`}
-          />
-
-          <div
-            className={`${styles.floatingIcon} ${styles.wifi}`}
-          >
-            <Wifi />
-          </div>
-
-          <div
-            className={`${styles.floatingIcon} ${styles.cloud}`}
-          >
-            <Cloud />
-          </div>
-
-          <div
-            className={`${styles.floatingIcon} ${styles.security}`}
-          >
-            <ShieldCheck />
-          </div>
-
-          <div
-            className={`${styles.floatingIcon} ${styles.chart}`}
-          >
-            <BarChart3 />
-          </div>
-
-          <div className={styles.techStage}>
-            <div className={styles.techCore}>
-              <span className={styles.coreRing} />
-              <span className={styles.coreRing} />
-              <span className={styles.coreRing} />
-              <span className={styles.coreRing} />
-
-              <div className={styles.coreCenter}>
-                <Radio />
-              </div>
-            </div>
-
-            <div className={styles.shadow} />
-
-            <div className={styles.platform}>
-              <div className={styles.platformLight} />
-            </div>
-          </div>
         </div>
       </Container>
     </section>
