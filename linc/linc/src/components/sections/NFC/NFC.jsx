@@ -3,7 +3,6 @@ import {
   Contact,
   CreditCard,
   Gift,
-  Instagram,
   LockKeyhole,
   PackageSearch,
   Radio,
@@ -41,10 +40,6 @@ const applications = [
   {
     icon: PackageSearch,
     title: "Controle de estoque",
-  },
-  {
-    icon: Instagram,
-    title: "Redes sociais",
   },
   {
     icon: Gift,
