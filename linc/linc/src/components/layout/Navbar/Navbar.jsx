@@ -32,6 +32,10 @@ function Navbar() {
     };
   }, []);
 
+  const toggleMenu = () => {
+    setMenuOpen((currentState) => !currentState);
+  };
+
   const closeMenu = () => {
     setMenuOpen(false);
   };
@@ -43,7 +47,9 @@ function Navbar() {
       }`}
     >
       <Container className={styles.container}>
-        <Logo />
+        <div className={styles.logoArea}>
+          <Logo />
+        </div>
 
         <nav
           className={styles.desktopNav}
@@ -68,7 +74,8 @@ function Navbar() {
             className={styles.whatsapp}
           >
             <MessageCircle size={18} />
-            Fale no WhatsApp
+
+            <span>Fale no WhatsApp</span>
           </Button>
 
           <button
@@ -76,11 +83,12 @@ function Navbar() {
             className={styles.menuButton}
             aria-label={
               menuOpen
-                ? "Fechar menu"
-                : "Abrir menu"
+                ? "Fechar menu de navegação"
+                : "Abrir menu de navegação"
             }
             aria-expanded={menuOpen}
-            onClick={() => setMenuOpen(!menuOpen)}
+            aria-controls="mobile-menu"
+            onClick={toggleMenu}
           >
             {menuOpen ? (
               <X size={25} />
@@ -92,26 +100,32 @@ function Navbar() {
 
         {menuOpen && (
           <nav
+            id="mobile-menu"
             className={styles.mobileNav}
             aria-label="Navegação mobile"
           >
-            {navigation.map((item) => (
-              <a
-                key={item.label}
-                href={item.href}
-                onClick={closeMenu}
-              >
-                {item.label}
-              </a>
-            ))}
+            <div className={styles.mobileLinks}>
+              {navigation.map((item) => (
+                <a
+                  key={item.label}
+                  href={item.href}
+                  className={styles.mobileLink}
+                  onClick={closeMenu}
+                >
+                  {item.label}
+                </a>
+              ))}
+            </div>
 
             <Button
               href={getWhatsAppLink(
                 "Olá! Gostaria de conhecer as soluções da LINC."
               )}
+              className={styles.mobileWhatsapp}
             >
               <MessageCircle size={18} />
-              Fale no WhatsApp
+
+              <span>Fale no WhatsApp</span>
             </Button>
           </nav>
         )}

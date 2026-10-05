@@ -45,10 +45,11 @@ function LandingPages() {
       className={styles.section}
     >
       <Container className={styles.container}>
-        <div
-          className={styles.visual}
-          aria-hidden="true"
-        >
+                  <div
+            className={styles.visual}
+            data-reveal="left"
+            aria-hidden="true"
+          >
           <div className={styles.glow} />
 
           <div className={styles.laptop}>
