@@ -15,6 +15,24 @@ import { getWhatsAppLink } from "../../../constants/contact";
 
 import styles from "./Hero.module.css";
 
+const highlights = [
+  {
+    icon: Radio,
+    title: "Automação NFC",
+    description: "Tecnologia por aproximação",
+  },
+  {
+    icon: BarChart3,
+    title: "Landing Pages",
+    description: "Experiências que convertem",
+  },
+  {
+    icon: ShieldCheck,
+    title: "Soluções inteligentes",
+    description: "Tecnologia para resultados",
+  },
+];
+
 function Hero() {
   return (
     <section
@@ -31,9 +49,7 @@ function Hero() {
 
           <h1 className={styles.title}>
             Conectamos sua empresa ao{" "}
-            <span>
-              futuro da tecnologia.
-            </span>
+            <span>futuro da tecnologia.</span>
           </h1>
 
           <p className={styles.description}>
@@ -63,44 +79,26 @@ function Hero() {
           </div>
 
           <div className={styles.highlights}>
-            <div className={styles.highlight}>
-              <div className={styles.highlightIcon}>
-                <Radio size={21} />
-              </div>
+            {highlights.map((item) => {
+              const Icon = item.icon;
 
-              <div>
-                <strong>Automação NFC</strong>
-                <span>
-                  Tecnologia por aproximação
-                </span>
-              </div>
-            </div>
+              return (
+                <div
+                  className={styles.highlight}
+                  key={item.title}
+                >
+                  <div className={styles.highlightIcon}>
+                    <Icon size={21} />
+                  </div>
 
-            <div className={styles.highlight}>
-              <div className={styles.highlightIcon}>
-                <BarChart3 size={21} />
-              </div>
+                  <div className={styles.highlightContent}>
+                    <strong>{item.title}</strong>
 
-              <div>
-                <strong>Landing Pages</strong>
-                <span>
-                  Experiências que convertem
-                </span>
-              </div>
-            </div>
-
-            <div className={styles.highlight}>
-              <div className={styles.highlightIcon}>
-                <ShieldCheck size={21} />
-              </div>
-
-              <div>
-                <strong>Soluções inteligentes</strong>
-                <span>
-                  Tecnologia para resultados
-                </span>
-              </div>
-            </div>
+                    <span>{item.description}</span>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
 
@@ -158,17 +156,16 @@ function Hero() {
             <BarChart3 />
           </div>
 
-          <div className={styles.brandStage}>
-            <div className={styles.brandSymbol}>
-              <span className={styles.ring} />
-              <span className={styles.ring} />
-              <span className={styles.ring} />
-              <span className={styles.ring} />
+          <div className={styles.techStage}>
+            <div className={styles.techCore}>
+              <span className={styles.coreRing} />
+              <span className={styles.coreRing} />
+              <span className={styles.coreRing} />
+              <span className={styles.coreRing} />
 
-              <span className={styles.connector}>
-                <i />
-                <i />
-              </span>
+              <div className={styles.coreCenter}>
+                <Radio />
+              </div>
             </div>
 
             <div className={styles.shadow} />
