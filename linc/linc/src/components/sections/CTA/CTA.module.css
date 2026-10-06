@@ -11,17 +11,24 @@
 
   display: grid;
 
-  grid-template-columns: 1fr 0.85fr;
+  grid-template-columns:
+    minmax(0, 1fr)
+    minmax(380px, 0.85fr);
 
   align-items: center;
 
-  padding: 70px;
+  gap: 40px;
+
+  padding:
+    70px 70px
+    120px;
 
   overflow: hidden;
 
   color: white;
 
-  border-radius: var(--radius-2xl);
+  border-radius:
+    var(--radius-2xl);
 
   background:
     linear-gradient(
@@ -32,6 +39,10 @@
     );
 }
 
+/* =========================
+   BACKGROUND
+========================= */
+
 .gridPattern {
   position: absolute;
 
@@ -41,12 +52,12 @@
 
   background-image:
     linear-gradient(
-      rgba(255,255,255,0.25) 1px,
+      rgba(255, 255, 255, 0.25) 1px,
       transparent 1px
     ),
     linear-gradient(
       90deg,
-      rgba(255,255,255,0.25) 1px,
+      rgba(255, 255, 255, 0.25) 1px,
       transparent 1px
     );
 
@@ -69,7 +80,8 @@
   top: -180px;
   right: -100px;
 
-  background: rgba(37, 99, 235, 0.3);
+  background:
+    rgba(37, 99, 235, 0.3);
 }
 
 .glowTwo {
@@ -79,10 +91,17 @@
   left: 30%;
   bottom: -200px;
 
-  background: rgba(37, 99, 235, 0.2);
+  background:
+    rgba(37, 99, 235, 0.2);
 }
 
+/* =========================
+   CONTENT
+========================= */
+
 .content {
+  min-width: 0;
+
   position: relative;
 
   z-index: 3;
@@ -107,10 +126,15 @@
 
   letter-spacing: 0.1em;
 
-  border: 1px solid rgba(147, 197, 253, 0.2);
-  border-radius: 999px;
+  border:
+    1px solid
+    rgba(147, 197, 253, 0.2);
 
-  background: rgba(37, 99, 235, 0.1);
+  border-radius:
+    var(--radius-pill);
+
+  background:
+    rgba(37, 99, 235, 0.1);
 }
 
 .badge span {
@@ -121,11 +145,19 @@
 
   background: #60a5fa;
 
-  box-shadow: 0 0 12px #60a5fa;
+  box-shadow:
+    0 0 12px #60a5fa;
 }
 
 .content h2 {
-  font-size: clamp(3rem, 5vw, 5rem);
+  margin: 0;
+
+  font-size:
+    clamp(
+      3rem,
+      5vw,
+      5rem
+    );
 
   line-height: 0.98;
 
@@ -139,7 +171,7 @@
 .content > p {
   max-width: 510px;
 
-  margin-top: 25px;
+  margin: 25px 0 0;
 
   color: #94a3b8;
 
@@ -151,8 +183,9 @@
 .button {
   width: fit-content;
 
-  display: flex;
+  display: inline-flex;
   align-items: center;
+  justify-content: center;
 
   gap: 10px;
 
@@ -166,10 +199,12 @@
 
   border-radius: 13px;
 
-  background: var(--color-success);
+  background:
+    var(--color-success);
 
   box-shadow:
-    0 14px 35px rgba(34, 197, 94, 0.2);
+    0 14px 35px
+    rgba(34, 197, 94, 0.2);
 
   transition:
     transform var(--transition-fast),
@@ -180,10 +215,23 @@
   transform: translateY(-3px);
 
   box-shadow:
-    0 18px 40px rgba(34, 197, 94, 0.3);
+    0 18px 40px
+    rgba(34, 197, 94, 0.3);
 }
 
+.button:focus-visible {
+  outline:
+    2px solid white;
+
+  outline-offset: 4px;
+}
+
+/* =========================
+   VISUAL
+========================= */
+
 .visual {
+  min-width: 0;
   min-height: 420px;
 
   position: relative;
@@ -200,7 +248,9 @@
 .orbitThree {
   position: absolute;
 
-  border: 1px solid rgba(96, 165, 250, 0.15);
+  border:
+    1px solid
+    rgba(96, 165, 250, 0.15);
 
   border-radius: 50%;
 }
@@ -220,56 +270,116 @@
   height: 440px;
 }
 
+/* =========================
+   LINC SYMBOL
+========================= */
+
 .symbol {
   width: 210px;
   height: 210px;
 
-  z-index: 2;
+  position: relative;
+
+  z-index: 3;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  color: #93c5fd;
-
-  border: 2px solid rgba(96, 165, 250, 0.7);
-
-  border-radius: 50%;
-
-  background:
-    radial-gradient(
-      circle,
-      rgba(37, 99, 235, 0.3),
-      rgba(37, 99, 235, 0.05)
+  filter:
+    drop-shadow(
+      0 0 35px
+      rgba(37, 99, 235, 0.25)
     );
-
-  box-shadow:
-    0 0 80px rgba(37, 99, 235, 0.25);
 }
 
-.symbol span {
+.ringOne,
+.ringTwo,
+.ringThree,
+.ringFour {
   position: absolute;
 
-  border: 5px solid #3b82f6;
+  border-style: solid;
+
+  border-color: #3b82f6;
+
   border-right-color: transparent;
 
   border-radius: 50%;
 }
 
-.symbol span:nth-child(1) {
-  width: 170px;
-  height: 170px;
+.ringOne {
+  width: 185px;
+  height: 185px;
+
+  border-width: 12px;
 }
 
-.symbol span:nth-child(2) {
-  width: 130px;
-  height: 130px;
+.ringTwo {
+  width: 145px;
+  height: 145px;
+
+  border-width: 11px;
 }
 
-.symbol span:nth-child(3) {
-  width: 90px;
-  height: 90px;
+.ringThree {
+  width: 105px;
+  height: 105px;
+
+  border-width: 10px;
 }
+
+.ringFour {
+  width: 66px;
+  height: 66px;
+
+  border-width: 9px;
+}
+
+.connector {
+  width: 75px;
+  height: 8px;
+
+  position: absolute;
+
+  right: 12px;
+
+  background: #020617;
+
+  border-radius: 999px;
+
+  transform: rotate(-45deg);
+
+  transform-origin: center;
+}
+
+.connector span {
+  width: 15px;
+  height: 15px;
+
+  position: absolute;
+
+  top: 50%;
+
+  border-radius: 50%;
+
+  background: #020617;
+
+  transform:
+    translateY(-50%);
+}
+
+.connector span:first-child {
+  left: -4px;
+}
+
+.connector span:last-child {
+  right: -4px;
+}
+
+/* =========================
+   PLATFORM
+========================= */
 
 .platform {
   width: 310px;
@@ -289,7 +399,8 @@
     );
 
   box-shadow:
-    0 30px 50px rgba(0,0,0,0.45);
+    0 30px 50px
+    rgba(0, 0, 0, 0.45);
 }
 
 .platform div {
@@ -309,6 +420,10 @@
     0 0 18px #3b82f6;
 }
 
+/* =========================
+   FEATURES
+========================= */
+
 .features {
   position: absolute;
 
@@ -320,16 +435,21 @@
 
   display: grid;
 
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns:
+    repeat(4, minmax(0, 1fr));
 
   gap: 18px;
 
   padding-top: 24px;
 
-  border-top: 1px solid rgba(255,255,255,0.1);
+  border-top:
+    1px solid
+    rgba(255, 255, 255, 0.1);
 }
 
 .features div {
+  min-width: 0;
+
   display: flex;
   align-items: center;
 
@@ -341,16 +461,85 @@
 }
 
 .features div > span {
+  flex-shrink: 0;
+
   color: #60a5fa;
 }
 
+/* =========================
+   NOTEBOOK
+========================= */
+
+@media (max-width: 1100px) {
+  .cta {
+    grid-template-columns:
+      minmax(0, 1fr)
+      minmax(330px, 0.8fr);
+
+    gap: 20px;
+
+    padding:
+      60px 50px
+      120px;
+  }
+
+  .features {
+    left: 50px;
+    right: 50px;
+  }
+
+  .orbitThree {
+    width: 390px;
+    height: 390px;
+  }
+
+  .symbol {
+    width: 190px;
+    height: 190px;
+  }
+
+  .ringOne {
+    width: 170px;
+    height: 170px;
+  }
+
+  .ringTwo {
+    width: 133px;
+    height: 133px;
+  }
+
+  .ringThree {
+    width: 97px;
+    height: 97px;
+  }
+
+  .ringFour {
+    width: 60px;
+    height: 60px;
+  }
+}
+
+/* =========================
+   TABLET
+========================= */
+
 @media (max-width: 900px) {
   .cta {
+    min-height: auto;
+
     grid-template-columns: 1fr;
 
-    padding: 50px 35px 140px;
+    gap: 20px;
+
+    padding: 50px 35px;
 
     text-align: center;
+  }
+
+  .content {
+    max-width: 680px;
+
+    margin-inline: auto;
   }
 
   .badge,
@@ -368,37 +557,217 @@
   }
 
   .features {
-    grid-template-columns: repeat(2, 1fr);
+    position: relative;
 
-    left: 35px;
-    right: 35px;
+    left: auto;
+    right: auto;
+    bottom: auto;
+
+    grid-column: 1 / -1;
+
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+
+    width: 100%;
+
+    margin-top: 8px;
+  }
+
+  .features div {
+    justify-content: center;
   }
 }
 
+/* =========================
+   MOBILE
+========================= */
+
 @media (max-width: 550px) {
   .section {
-    padding: var(--space-20) 0;
+    padding:
+      var(--space-20) 0;
   }
 
   .cta {
     padding:
-      40px 22px
-      190px;
+      40px 22px 28px;
 
-    border-radius: var(--radius-xl);
+    border-radius:
+      var(--radius-xl);
+  }
+
+  .content h2 {
+    font-size:
+      clamp(
+        2.6rem,
+        12vw,
+        3.5rem
+      );
+  }
+
+  .content > p {
+    font-size: 0.94rem;
+  }
+
+  .button {
+    width: 100%;
+
+    max-width: 310px;
   }
 
   .visual {
-    min-height: 320px;
+    min-height: 315px;
+  }
 
-    transform: scale(0.75);
+  .orbitOne {
+    width: 155px;
+    height: 155px;
+  }
 
-    margin: -25px;
+  .orbitTwo {
+    width: 225px;
+    height: 225px;
+  }
+
+  .orbitThree {
+    width: 290px;
+    height: 290px;
+  }
+
+  .symbol {
+    width: 150px;
+    height: 150px;
+  }
+
+  .ringOne {
+    width: 138px;
+    height: 138px;
+
+    border-width: 9px;
+  }
+
+  .ringTwo {
+    width: 107px;
+    height: 107px;
+
+    border-width: 8px;
+  }
+
+  .ringThree {
+    width: 77px;
+    height: 77px;
+
+    border-width: 7px;
+  }
+
+  .ringFour {
+    width: 48px;
+    height: 48px;
+
+    border-width: 6px;
+  }
+
+  .connector {
+    width: 57px;
+    height: 6px;
+
+    right: 7px;
+  }
+
+  .connector span {
+    width: 12px;
+    height: 12px;
+  }
+
+  .platform {
+    width: 220px;
+    height: 42px;
+
+    bottom: 28px;
   }
 
   .features {
     grid-template-columns: 1fr;
 
-    bottom: 25px;
+    gap: 14px;
+
+    padding-top: 22px;
+  }
+
+  .features div {
+    justify-content: flex-start;
+
+    max-width: 250px;
+
+    margin-inline: auto;
+
+    width: 100%;
+  }
+}
+
+/* =========================
+   SMALL MOBILE
+========================= */
+
+@media (max-width: 390px) {
+  .cta {
+    padding:
+      34px 18px 24px;
+  }
+
+  .badge {
+    font-size: 0.67rem;
+  }
+
+  .content h2 {
+    font-size: 2.45rem;
+  }
+
+  .visual {
+    min-height: 285px;
+  }
+
+  .orbitOne {
+    width: 140px;
+    height: 140px;
+  }
+
+  .orbitTwo {
+    width: 200px;
+    height: 200px;
+  }
+
+  .orbitThree {
+    width: 255px;
+    height: 255px;
+  }
+
+  .symbol {
+    width: 135px;
+    height: 135px;
+  }
+
+  .ringOne {
+    width: 122px;
+    height: 122px;
+  }
+
+  .ringTwo {
+    width: 95px;
+    height: 95px;
+  }
+
+  .ringThree {
+    width: 69px;
+    height: 69px;
+  }
+
+  .ringFour {
+    width: 42px;
+    height: 42px;
+  }
+
+  .platform {
+    width: 195px;
   }
 }

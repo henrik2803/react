@@ -31,7 +31,7 @@ function Footer() {
           <div>
             <h3>Soluções</h3>
 
-            <nav>
+            <nav aria-label="Soluções">
               <a href="#nfc">
                 Automação NFC
               </a>
@@ -45,28 +45,46 @@ function Footer() {
           <div>
             <h3>Navegação</h3>
 
-            <nav>
-              <a href="#solucoes">Soluções</a>
-              <a href="#processo">Processo</a>
-              <a href="#contato">Contato</a>
+            <nav aria-label="Navegação do rodapé">
+              <a href="#solucoes">
+                Soluções
+              </a>
+
+              <a href="#processo">
+                Processo
+              </a>
+
+              <a href="#contato">
+                Contato
+              </a>
             </nav>
           </div>
 
           <div>
             <h3>Contato</h3>
 
-            <nav>
-              <a href={getWhatsAppLink()}>
+            <nav aria-label="Contatos">
+              <a
+                href={getWhatsAppLink(
+                  "Olá! Gostaria de saber mais sobre as soluções da LINC."
+                )}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <MessageCircle size={16} />
                 WhatsApp
               </a>
 
               {CONTACT.email && (
-                <a href={`mailto:${CONTACT.email}`}>
+                <a
+                  href={`mailto:${CONTACT.email}`}
+                >
                   <Mail size={16} />
+
                   {CONTACT.email}
                 </a>
               )}
+
             </nav>
           </div>
         </div>

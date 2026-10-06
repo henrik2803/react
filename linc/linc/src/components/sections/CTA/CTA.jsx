@@ -2,7 +2,6 @@ import {
   ArrowUpRight,
   Check,
   MessageCircle,
-  Radio,
   ShieldCheck,
   Sparkles,
   Target,
@@ -68,6 +67,8 @@ function CTA() {
               href={getWhatsAppLink(
                 "Olá! Quero conversar sobre uma solução para minha empresa."
               )}
+              target="_blank"
+              rel="noopener noreferrer"
             >
               <MessageCircle size={21} />
 
@@ -86,11 +87,15 @@ function CTA() {
             <div className={styles.orbitThree} />
 
             <div className={styles.symbol}>
-              <span />
-              <span />
-              <span />
+              <span className={styles.ringOne} />
+              <span className={styles.ringTwo} />
+              <span className={styles.ringThree} />
+              <span className={styles.ringFour} />
 
-              <Radio size={48} />
+              <div className={styles.connector}>
+                <span />
+                <span />
+              </div>
             </div>
 
             <div className={styles.platform}>
