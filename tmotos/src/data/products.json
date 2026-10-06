@@ -1,0 +1,1392 @@
+[
+  {
+    "id": 1,
+    "type": "motorcycle",
+    "category": "motos",
+    "subcategory": "naked",
+    "brand": "Volt Moto",
+    "name": "VMX 700",
+    "slug": "vmx-700",
+    "shortDescription": "Naked de alta performance para quem busca potência e controle.",
+    "description": "A VMX 700 combina desempenho esportivo, tecnologia e design agressivo para uso urbano e rodoviário.",
+    "price": 42990,
+    "oldPrice": null,
+    "installment": {
+      "enabled": false,
+      "installments": null,
+      "value": null
+    },
+    "media": {
+      "cover": "/images/motos/vmx-700/capa.webp",
+      "images": [
+        "/images/motos/vmx-700/01.webp",
+        "/images/motos/vmx-700/02.webp",
+        "/images/motos/vmx-700/03.webp",
+        "/images/motos/vmx-700/04.webp"
+      ],
+      "video": "/videos/vmx-700.mp4"
+    },
+    "colors": [
+      {
+        "id": "red-black",
+        "name": "Preto e Vermelho",
+        "hex": "#D71920"
+      },
+      {
+        "id": "black",
+        "name": "Preto",
+        "hex": "#111111"
+      },
+      {
+        "id": "gray",
+        "name": "Cinza",
+        "hex": "#777777"
+      }
+    ],
+    "variants": [],
+    "specs": {
+      "engine": {
+        "displacement": 689,
+        "cylinders": 2,
+        "cooling": "Líquida",
+        "fuel": "Gasolina",
+        "injection": "Eletrônica"
+      },
+      "performance": {
+        "power": 74,
+        "powerUnit": "cv",
+        "torque": 68.9,
+        "torqueUnit": "Nm"
+      },
+      "transmission": {
+        "gears": 6,
+        "type": "Manual",
+        "finalDrive": "Corrente"
+      },
+      "dimensions": {
+        "weight": 189,
+        "weightUnit": "kg",
+        "seatHeight": 805,
+        "seatHeightUnit": "mm",
+        "fuelTank": 14,
+        "fuelTankUnit": "L"
+      },
+      "brakes": {
+        "front": "Disco duplo com ABS",
+        "rear": "Disco com ABS"
+      },
+      "suspension": {
+        "front": "Garfo invertido",
+        "rear": "Monoamortecedor"
+      },
+      "tires": {
+        "front": "120/70 ZR17",
+        "rear": "180/55 ZR17"
+      },
+      "features": [
+        "ABS",
+        "Painel TFT",
+        "Iluminação LED",
+        "Modos de pilotagem",
+        "Controle de tração"
+      ]
+    },
+    "stock": {
+      "available": true,
+      "quantity": null
+    },
+    "sales": {
+      "purchasableOnline": false,
+      "requestQuote": true,
+      "testRide": true,
+      "whatsapp": true
+    },
+    "feed": {
+      "enabled": true,
+      "featured": true,
+      "order": 1,
+      "text": "Potência, controle e atitude em qualquer caminho."
+    },
+    "tags": [
+      "naked",
+      "700cc",
+      "esportiva",
+      "moto",
+      "vmx"
+    ],
+    "seo": {
+      "title": "VMX 700 | Volt Moto",
+      "description": "Conheça a VMX 700, naked de alta performance com 689cc e 74 cv."
+    }
+  },
+  {
+    "id": 2,
+    "type": "motorcycle",
+    "category": "motos",
+    "subcategory": "adventure",
+    "brand": "Volt Moto",
+    "name": "VTX 500 Adventure",
+    "slug": "vtx-500-adventure",
+    "shortDescription": "Adventure versátil para cidade, estrada e viagens.",
+    "description": "A VTX 500 Adventure foi projetada para combinar conforto, autonomia e segurança em trajetos urbanos e rodoviários.",
+    "price": 36990,
+    "oldPrice": 38990,
+    "installment": {
+      "enabled": false,
+      "installments": null,
+      "value": null
+    },
+    "media": {
+      "cover": "/images/motos/vtx-500/capa.webp",
+      "images": [
+        "/images/motos/vtx-500/01.webp",
+        "/images/motos/vtx-500/02.webp",
+        "/images/motos/vtx-500/03.webp"
+      ],
+      "video": "/videos/vtx-500.mp4"
+    },
+    "colors": [
+      {
+        "id": "sand-black",
+        "name": "Areia e Preto",
+        "hex": "#B29A72"
+      },
+      {
+        "id": "black",
+        "name": "Preto",
+        "hex": "#111111"
+      },
+      {
+        "id": "white",
+        "name": "Branco",
+        "hex": "#E9E9E9"
+      }
+    ],
+    "variants": [],
+    "specs": {
+      "engine": {
+        "displacement": 471,
+        "cylinders": 2,
+        "cooling": "Líquida",
+        "fuel": "Gasolina",
+        "injection": "Eletrônica"
+      },
+      "performance": {
+        "power": 47,
+        "powerUnit": "cv",
+        "torque": 43,
+        "torqueUnit": "Nm"
+      },
+      "transmission": {
+        "gears": 6,
+        "type": "Manual",
+        "finalDrive": "Corrente"
+      },
+      "dimensions": {
+        "weight": 199,
+        "weightUnit": "kg",
+        "seatHeight": 830,
+        "seatHeightUnit": "mm",
+        "fuelTank": 17,
+        "fuelTankUnit": "L"
+      },
+      "brakes": {
+        "front": "Disco duplo com ABS",
+        "rear": "Disco com ABS"
+      },
+      "suspension": {
+        "front": "Garfo telescópico de longo curso",
+        "rear": "Monoamortecedor regulável"
+      },
+      "tires": {
+        "front": "110/80 R19",
+        "rear": "150/70 R17"
+      },
+      "features": [
+        "ABS",
+        "Painel TFT",
+        "Tomada USB-C",
+        "Protetor de motor",
+        "Controle de tração"
+      ]
+    },
+    "stock": {
+      "available": true,
+      "quantity": null
+    },
+    "sales": {
+      "purchasableOnline": false,
+      "requestQuote": true,
+      "testRide": true,
+      "whatsapp": true
+    },
+    "feed": {
+      "enabled": true,
+      "featured": true,
+      "order": 4,
+      "text": "Explore mais longe com conforto e confiança."
+    },
+    "tags": [
+      "adventure",
+      "500cc",
+      "viagem",
+      "moto"
+    ],
+    "seo": {
+      "title": "VTX 500 Adventure | Volt Moto",
+      "description": "Adventure versátil com 471cc, conforto e tecnologia para viagens e uso urbano."
+    }
+  },
+  {
+    "id": 3,
+    "type": "motorcycle",
+    "category": "motos",
+    "subcategory": "scooter",
+    "brand": "Volt Moto",
+    "name": "VRS 300",
+    "slug": "vrs-300",
+    "shortDescription": "Scooter premium para mobilidade urbana com conforto e praticidade.",
+    "description": "A VRS 300 combina agilidade urbana, posição confortável de pilotagem e recursos tecnológicos para o dia a dia.",
+    "price": 28990,
+    "oldPrice": null,
+    "installment": {
+      "enabled": false,
+      "installments": null,
+      "value": null
+    },
+    "media": {
+      "cover": "/images/motos/vrs-300/capa.webp",
+      "images": [
+        "/images/motos/vrs-300/01.webp",
+        "/images/motos/vrs-300/02.webp",
+        "/images/motos/vrs-300/03.webp"
+      ],
+      "video": "/videos/vrs-300.mp4"
+    },
+    "colors": [
+      {
+        "id": "black-red",
+        "name": "Preto e Vermelho",
+        "hex": "#111111"
+      },
+      {
+        "id": "blue",
+        "name": "Azul",
+        "hex": "#1F4F8A"
+      },
+      {
+        "id": "gray",
+        "name": "Cinza",
+        "hex": "#747474"
+      }
+    ],
+    "variants": [],
+    "specs": {
+      "engine": {
+        "displacement": 278,
+        "cylinders": 1,
+        "cooling": "Líquida",
+        "fuel": "Gasolina",
+        "injection": "Eletrônica"
+      },
+      "performance": {
+        "power": 26,
+        "powerUnit": "cv",
+        "torque": 26,
+        "torqueUnit": "Nm"
+      },
+      "transmission": {
+        "gears": null,
+        "type": "CVT Automática",
+        "finalDrive": "Correia"
+      },
+      "dimensions": {
+        "weight": 177,
+        "weightUnit": "kg",
+        "seatHeight": 780,
+        "seatHeightUnit": "mm",
+        "fuelTank": 12.5,
+        "fuelTankUnit": "L"
+      },
+      "brakes": {
+        "front": "Disco com ABS",
+        "rear": "Disco com ABS"
+      },
+      "suspension": {
+        "front": "Garfo telescópico",
+        "rear": "Duplo amortecedor"
+      },
+      "tires": {
+        "front": "120/70 R15",
+        "rear": "140/70 R14"
+      },
+      "features": [
+        "ABS",
+        "Chave presencial",
+        "Iluminação LED",
+        "Porta USB",
+        "Espaço sob o banco"
+      ]
+    },
+    "stock": {
+      "available": true,
+      "quantity": null
+    },
+    "sales": {
+      "purchasableOnline": false,
+      "requestQuote": true,
+      "testRide": true,
+      "whatsapp": true
+    },
+    "feed": {
+      "enabled": true,
+      "featured": false,
+      "order": 7,
+      "text": "Praticidade premium para todos os dias."
+    },
+    "tags": [
+      "scooter",
+      "300cc",
+      "urbana",
+      "automatica"
+    ],
+    "seo": {
+      "title": "VRS 300 | Volt Moto",
+      "description": "Scooter premium de 278cc para mobilidade urbana com conforto e tecnologia."
+    }
+  },
+  {
+    "id": 4,
+    "type": "accessory",
+    "category": "capacetes",
+    "subcategory": "integral",
+    "brand": "Volt",
+    "name": "Capacete V-Pro Carbon",
+    "slug": "capacete-v-pro-carbon",
+    "shortDescription": "Capacete integral em fibra de carbono com foco em segurança e conforto.",
+    "description": "Construção leve em fibra de carbono, sistema de ventilação e preparação para intercomunicador.",
+    "price": 1890,
+    "oldPrice": 2090,
+    "installment": {
+      "enabled": true,
+      "installments": 10,
+      "value": 189
+    },
+    "media": {
+      "cover": "/images/capacetes/v-pro-carbon/capa.webp",
+      "images": [
+        "/images/capacetes/v-pro-carbon/01.webp",
+        "/images/capacetes/v-pro-carbon/02.webp",
+        "/images/capacetes/v-pro-carbon/03.webp"
+      ],
+      "video": "/videos/v-pro-carbon.mp4"
+    },
+    "colors": [
+      {
+        "id": "black-red",
+        "name": "Preto e Vermelho",
+        "hex": "#111111"
+      },
+      {
+        "id": "black",
+        "name": "Preto Fosco",
+        "hex": "#1B1B1B"
+      }
+    ],
+    "variants": [
+      {
+        "id": "vpro-black-red-56",
+        "color": "black-red",
+        "size": "56",
+        "stock": 3
+      },
+      {
+        "id": "vpro-black-red-58",
+        "color": "black-red",
+        "size": "58",
+        "stock": 6
+      },
+      {
+        "id": "vpro-black-red-60",
+        "color": "black-red",
+        "size": "60",
+        "stock": 4
+      },
+      {
+        "id": "vpro-black-red-62",
+        "color": "black-red",
+        "size": "62",
+        "stock": 2
+      }
+    ],
+    "specs": {
+      "material": "Fibra de carbono",
+      "certification": "ECE 22.06",
+      "weight": {
+        "value": 1450,
+        "unit": "g"
+      },
+      "visor": {
+        "type": "Anti-risco",
+        "pinlockReady": true,
+        "internalSunVisor": true
+      },
+      "ventilation": true,
+      "removableLiner": true,
+      "intercomReady": true,
+      "closure": "Duplo D"
+    },
+    "stock": {
+      "available": true,
+      "quantity": 15
+    },
+    "sales": {
+      "purchasableOnline": true,
+      "requestQuote": false,
+      "testRide": false,
+      "whatsapp": true
+    },
+    "feed": {
+      "enabled": true,
+      "featured": true,
+      "order": 2,
+      "text": "Proteção premium para quem vive sobre duas rodas."
+    },
+    "tags": [
+      "capacete",
+      "integral",
+      "carbono",
+      "ece-22-06"
+    ],
+    "seo": {
+      "title": "Capacete V-Pro Carbon | Volt Moto",
+      "description": "Capacete integral em fibra de carbono com certificação ECE 22.06."
+    }
+  },
+  {
+    "id": 5,
+    "type": "accessory",
+    "category": "capacetes",
+    "subcategory": "modular",
+    "brand": "Volt",
+    "name": "Capacete V-Tour Modular",
+    "slug": "capacete-v-tour-modular",
+    "shortDescription": "Capacete modular para viagens, turismo e uso urbano.",
+    "description": "Modelo modular com viseira solar interna, forração removível e preparação para intercomunicador.",
+    "price": 1390,
+    "oldPrice": null,
+    "installment": {
+      "enabled": true,
+      "installments": 10,
+      "value": 139
+    },
+    "media": {
+      "cover": "/images/capacetes/v-tour-modular/capa.webp",
+      "images": [
+        "/images/capacetes/v-tour-modular/01.webp",
+        "/images/capacetes/v-tour-modular/02.webp"
+      ],
+      "video": null
+    },
+    "colors": [
+      {
+        "id": "graphite",
+        "name": "Grafite",
+        "hex": "#4A4A4A"
+      },
+      {
+        "id": "black",
+        "name": "Preto Fosco",
+        "hex": "#151515"
+      }
+    ],
+    "variants": [
+      {
+        "id": "vtour-graphite-58",
+        "color": "graphite",
+        "size": "58",
+        "stock": 4
+      },
+      {
+        "id": "vtour-graphite-60",
+        "color": "graphite",
+        "size": "60",
+        "stock": 5
+      },
+      {
+        "id": "vtour-black-58",
+        "color": "black",
+        "size": "58",
+        "stock": 3
+      },
+      {
+        "id": "vtour-black-60",
+        "color": "black",
+        "size": "60",
+        "stock": 3
+      }
+    ],
+    "specs": {
+      "material": "ABS de alta resistência",
+      "certification": "ECE 22.06",
+      "weight": {
+        "value": 1680,
+        "unit": "g"
+      },
+      "visor": {
+        "type": "Anti-risco",
+        "pinlockReady": true,
+        "internalSunVisor": true
+      },
+      "ventilation": true,
+      "removableLiner": true,
+      "intercomReady": true,
+      "closure": "Micrométrica"
+    },
+    "stock": {
+      "available": true,
+      "quantity": 15
+    },
+    "sales": {
+      "purchasableOnline": true,
+      "requestQuote": false,
+      "testRide": false,
+      "whatsapp": true
+    },
+    "feed": {
+      "enabled": true,
+      "featured": false,
+      "order": 9,
+      "text": "Conforto e praticidade para ir mais longe."
+    },
+    "tags": [
+      "capacete",
+      "modular",
+      "viagem",
+      "touring"
+    ],
+    "seo": {
+      "title": "Capacete V-Tour Modular | Volt Moto",
+      "description": "Capacete modular confortável para viagens e uso urbano."
+    }
+  },
+  {
+    "id": 6,
+    "type": "accessory",
+    "category": "jaquetas",
+    "subcategory": "esportiva",
+    "brand": "Volt",
+    "name": "Jaqueta V-Tech Pro",
+    "slug": "jaqueta-v-tech-pro",
+    "shortDescription": "Jaqueta impermeável com proteções certificadas para motociclistas.",
+    "description": "Jaqueta de pilotagem com proteções CE, tecido resistente à abrasão e membrana impermeável.",
+    "price": 1490,
+    "oldPrice": null,
+    "installment": {
+      "enabled": true,
+      "installments": 10,
+      "value": 149
+    },
+    "media": {
+      "cover": "/images/jaquetas/v-tech-pro/capa.webp",
+      "images": [
+        "/images/jaquetas/v-tech-pro/01.webp",
+        "/images/jaquetas/v-tech-pro/02.webp",
+        "/images/jaquetas/v-tech-pro/03.webp"
+      ],
+      "video": null
+    },
+    "colors": [
+      {
+        "id": "black-red",
+        "name": "Preto e Vermelho",
+        "hex": "#111111"
+      }
+    ],
+    "variants": [
+      {
+        "id": "vtech-p",
+        "color": "black-red",
+        "size": "P",
+        "stock": 3
+      },
+      {
+        "id": "vtech-m",
+        "color": "black-red",
+        "size": "M",
+        "stock": 6
+      },
+      {
+        "id": "vtech-g",
+        "color": "black-red",
+        "size": "G",
+        "stock": 5
+      },
+      {
+        "id": "vtech-gg",
+        "color": "black-red",
+        "size": "GG",
+        "stock": 2
+      }
+    ],
+    "specs": {
+      "material": "Poliéster de alta resistência",
+      "waterproof": true,
+      "ventilation": true,
+      "protections": {
+        "shoulders": "CE Nível 2",
+        "elbows": "CE Nível 2",
+        "back": "Preparação para protetor"
+      },
+      "removableThermalLiner": true,
+      "reflectiveElements": true
+    },
+    "stock": {
+      "available": true,
+      "quantity": 16
+    },
+    "sales": {
+      "purchasableOnline": true,
+      "requestQuote": false,
+      "testRide": false,
+      "whatsapp": true
+    },
+    "feed": {
+      "enabled": true,
+      "featured": false,
+      "order": 5,
+      "text": "Proteção, conforto e estilo para qualquer estrada."
+    },
+    "tags": [
+      "jaqueta",
+      "impermeavel",
+      "protecao",
+      "motociclista"
+    ],
+    "seo": {
+      "title": "Jaqueta V-Tech Pro | Volt Moto",
+      "description": "Jaqueta para motociclistas com proteção CE e tecnologia impermeável."
+    }
+  },
+  {
+    "id": 7,
+    "type": "accessory",
+    "category": "jaquetas",
+    "subcategory": "urbana",
+    "brand": "Volt",
+    "name": "Jaqueta V-City Air",
+    "slug": "jaqueta-v-city-air",
+    "shortDescription": "Jaqueta ventilada e leve para uso urbano.",
+    "description": "Construção em tecido mesh com proteções removíveis e alta ventilação para dias quentes.",
+    "price": 890,
+    "oldPrice": 990,
+    "installment": {
+      "enabled": true,
+      "installments": 10,
+      "value": 89
+    },
+    "media": {
+      "cover": "/images/jaquetas/v-city-air/capa.webp",
+      "images": [
+        "/images/jaquetas/v-city-air/01.webp",
+        "/images/jaquetas/v-city-air/02.webp"
+      ],
+      "video": null
+    },
+    "colors": [
+      {
+        "id": "black",
+        "name": "Preto",
+        "hex": "#111111"
+      },
+      {
+        "id": "gray",
+        "name": "Cinza",
+        "hex": "#666666"
+      }
+    ],
+    "variants": [
+      {
+        "id": "vcity-black-m",
+        "color": "black",
+        "size": "M",
+        "stock": 5
+      },
+      {
+        "id": "vcity-black-g",
+        "color": "black",
+        "size": "G",
+        "stock": 5
+      },
+      {
+        "id": "vcity-gray-m",
+        "color": "gray",
+        "size": "M",
+        "stock": 3
+      },
+      {
+        "id": "vcity-gray-g",
+        "color": "gray",
+        "size": "G",
+        "stock": 3
+      }
+    ],
+    "specs": {
+      "material": "Mesh ventilado",
+      "waterproof": false,
+      "ventilation": true,
+      "protections": {
+        "shoulders": "CE Nível 1",
+        "elbows": "CE Nível 1",
+        "back": "Espuma removível"
+      },
+      "removableThermalLiner": false,
+      "reflectiveElements": true
+    },
+    "stock": {
+      "available": true,
+      "quantity": 16
+    },
+    "sales": {
+      "purchasableOnline": true,
+      "requestQuote": false,
+      "testRide": false,
+      "whatsapp": true
+    },
+    "feed": {
+      "enabled": false,
+      "featured": false,
+      "order": null,
+      "text": ""
+    },
+    "tags": [
+      "jaqueta",
+      "urbana",
+      "ventilada",
+      "mesh"
+    ],
+    "seo": {
+      "title": "Jaqueta V-City Air | Volt Moto",
+      "description": "Jaqueta ventilada para motociclistas, ideal para uso urbano."
+    }
+  },
+  {
+    "id": 8,
+    "type": "accessory",
+    "category": "luvas",
+    "subcategory": "esportiva",
+    "brand": "Volt",
+    "name": "Luva V-Grip Sport",
+    "slug": "luva-v-grip-sport",
+    "shortDescription": "Luva esportiva com proteção em carbono e compatibilidade touch.",
+    "description": "Desenvolvida para oferecer proteção e sensibilidade durante a pilotagem.",
+    "price": 490,
+    "oldPrice": null,
+    "installment": {
+      "enabled": true,
+      "installments": 5,
+      "value": 98
+    },
+    "media": {
+      "cover": "/images/luvas/v-grip-sport/capa.webp",
+      "images": [
+        "/images/luvas/v-grip-sport/01.webp",
+        "/images/luvas/v-grip-sport/02.webp"
+      ],
+      "video": null
+    },
+    "colors": [
+      {
+        "id": "black-red",
+        "name": "Preto e Vermelho",
+        "hex": "#111111"
+      }
+    ],
+    "variants": [
+      {
+        "id": "vgrip-p",
+        "color": "black-red",
+        "size": "P",
+        "stock": 4
+      },
+      {
+        "id": "vgrip-m",
+        "color": "black-red",
+        "size": "M",
+        "stock": 7
+      },
+      {
+        "id": "vgrip-g",
+        "color": "black-red",
+        "size": "G",
+        "stock": 5
+      }
+    ],
+    "specs": {
+      "material": "Couro e tecido técnico",
+      "waterproof": false,
+      "touchscreen": true,
+      "protections": {
+        "knuckles": "Carbono",
+        "palm": "Reforço antiabrasão"
+      },
+      "cuff": "Curto",
+      "ventilation": true
+    },
+    "stock": {
+      "available": true,
+      "quantity": 16
+    },
+    "sales": {
+      "purchasableOnline": true,
+      "requestQuote": false,
+      "testRide": false,
+      "whatsapp": true
+    },
+    "feed": {
+      "enabled": true,
+      "featured": false,
+      "order": 6,
+      "text": "Controle e proteção em cada movimento."
+    },
+    "tags": [
+      "luva",
+      "carbono",
+      "touchscreen"
+    ],
+    "seo": {
+      "title": "Luva V-Grip Sport | Volt Moto",
+      "description": "Luva esportiva com proteção em carbono e tecnologia touchscreen."
+    }
+  },
+  {
+    "id": 9,
+    "type": "accessory",
+    "category": "luvas",
+    "subcategory": "touring",
+    "brand": "Volt",
+    "name": "Luva V-Tour WP",
+    "slug": "luva-v-tour-wp",
+    "shortDescription": "Luva touring impermeável para viagens e clima instável.",
+    "description": "Construção de cano longo, membrana impermeável e proteções reforçadas para viagens.",
+    "price": 590,
+    "oldPrice": null,
+    "installment": {
+      "enabled": true,
+      "installments": 6,
+      "value": 98.33
+    },
+    "media": {
+      "cover": "/images/luvas/v-tour-wp/capa.webp",
+      "images": [
+        "/images/luvas/v-tour-wp/01.webp",
+        "/images/luvas/v-tour-wp/02.webp"
+      ],
+      "video": null
+    },
+    "colors": [
+      {
+        "id": "black",
+        "name": "Preto",
+        "hex": "#111111"
+      }
+    ],
+    "variants": [
+      {
+        "id": "vtour-glove-m",
+        "color": "black",
+        "size": "M",
+        "stock": 4
+      },
+      {
+        "id": "vtour-glove-g",
+        "color": "black",
+        "size": "G",
+        "stock": 6
+      },
+      {
+        "id": "vtour-glove-gg",
+        "color": "black",
+        "size": "GG",
+        "stock": 3
+      }
+    ],
+    "specs": {
+      "material": "Couro sintético e tecido técnico",
+      "waterproof": true,
+      "touchscreen": true,
+      "protections": {
+        "knuckles": "TPU",
+        "palm": "Reforço duplo"
+      },
+      "cuff": "Longo",
+      "ventilation": false
+    },
+    "stock": {
+      "available": true,
+      "quantity": 13
+    },
+    "sales": {
+      "purchasableOnline": true,
+      "requestQuote": false,
+      "testRide": false,
+      "whatsapp": true
+    },
+    "feed": {
+      "enabled": false,
+      "featured": false,
+      "order": null,
+      "text": ""
+    },
+    "tags": [
+      "luva",
+      "touring",
+      "impermeavel",
+      "viagem"
+    ],
+    "seo": {
+      "title": "Luva V-Tour WP | Volt Moto",
+      "description": "Luva touring impermeável com proteção reforçada."
+    }
+  },
+  {
+    "id": 10,
+    "type": "accessory",
+    "category": "intercomunicadores",
+    "subcategory": "bluetooth",
+    "brand": "Volt",
+    "name": "Intercom V-Connect Mesh",
+    "slug": "intercom-v-connect-mesh",
+    "shortDescription": "Intercomunicador Bluetooth Mesh para comunicação entre motociclistas.",
+    "description": "Permite comunicação entre até oito motociclistas, reprodução de música e conexão com smartphone.",
+    "price": 1290,
+    "oldPrice": null,
+    "installment": {
+      "enabled": true,
+      "installments": 10,
+      "value": 129
+    },
+    "media": {
+      "cover": "/images/intercom/v-connect-mesh/capa.webp",
+      "images": [
+        "/images/intercom/v-connect-mesh/01.webp",
+        "/images/intercom/v-connect-mesh/02.webp"
+      ],
+      "video": "/videos/v-connect-mesh.mp4"
+    },
+    "colors": [
+      {
+        "id": "black",
+        "name": "Preto",
+        "hex": "#111111"
+      }
+    ],
+    "variants": [],
+    "specs": {
+      "bluetoothVersion": "5.3",
+      "communication": {
+        "technology": "Mesh",
+        "riders": 8,
+        "range": "2 km"
+      },
+      "battery": {
+        "talkTime": "15 horas",
+        "charging": "USB-C"
+      },
+      "waterproofRating": "IP67",
+      "voiceCommands": true,
+      "musicSharing": true,
+      "gpsAudio": true
+    },
+    "stock": {
+      "available": true,
+      "quantity": 12
+    },
+    "sales": {
+      "purchasableOnline": true,
+      "requestQuote": false,
+      "testRide": false,
+      "whatsapp": true
+    },
+    "feed": {
+      "enabled": true,
+      "featured": false,
+      "order": 8,
+      "text": "Conecte sua rota."
+    },
+    "tags": [
+      "intercom",
+      "bluetooth",
+      "mesh"
+    ],
+    "seo": {
+      "title": "Intercom V-Connect Mesh | Volt Moto",
+      "description": "Intercomunicador Bluetooth Mesh para até oito motociclistas."
+    }
+  },
+  {
+    "id": 11,
+    "type": "accessory",
+    "category": "baus",
+    "subcategory": "bauleto",
+    "brand": "Volt",
+    "name": "Bauleto V-Case 45L",
+    "slug": "bauleto-v-case-45l",
+    "shortDescription": "Bauleto de 45 litros resistente e seguro para viagens e uso urbano.",
+    "description": "Construção reforçada, sistema de fechamento com chave e capacidade para capacete integral.",
+    "price": 990,
+    "oldPrice": null,
+    "installment": {
+      "enabled": true,
+      "installments": 10,
+      "value": 99
+    },
+    "media": {
+      "cover": "/images/baus/v-case-45l/capa.webp",
+      "images": [
+        "/images/baus/v-case-45l/01.webp",
+        "/images/baus/v-case-45l/02.webp"
+      ],
+      "video": null
+    },
+    "colors": [
+      {
+        "id": "black",
+        "name": "Preto",
+        "hex": "#111111"
+      }
+    ],
+    "variants": [],
+    "specs": {
+      "capacity": 45,
+      "capacityUnit": "L",
+      "material": "Polipropileno reforçado",
+      "waterproof": true,
+      "lock": "Chave",
+      "removable": true,
+      "helmetCapacity": 1,
+      "dimensions": {
+        "width": 56,
+        "height": 32,
+        "depth": 44,
+        "unit": "cm"
+      }
+    },
+    "stock": {
+      "available": true,
+      "quantity": 8
+    },
+    "sales": {
+      "purchasableOnline": true,
+      "requestQuote": false,
+      "testRide": false,
+      "whatsapp": true
+    },
+    "feed": {
+      "enabled": false,
+      "featured": false,
+      "order": null,
+      "text": ""
+    },
+    "tags": [
+      "bau",
+      "bauleto",
+      "viagem",
+      "45l"
+    ],
+    "seo": {
+      "title": "Bauleto V-Case 45L | Volt Moto",
+      "description": "Bauleto de 45 litros resistente à água para motos."
+    }
+  },
+  {
+    "id": 12,
+    "type": "part",
+    "category": "pecas",
+    "subcategory": "freios",
+    "brand": "Volt Parts",
+    "name": "Pastilha de Freio V-Brake Pro",
+    "slug": "pastilha-freio-v-brake-pro",
+    "shortDescription": "Pastilha de freio de alta performance para uso urbano e esportivo.",
+    "description": "Composto sinterizado desenvolvido para alta resistência térmica e frenagem consistente.",
+    "price": 289.9,
+    "oldPrice": null,
+    "installment": {
+      "enabled": true,
+      "installments": 3,
+      "value": 96.63
+    },
+    "media": {
+      "cover": "/images/pecas/v-brake-pro/capa.webp",
+      "images": [
+        "/images/pecas/v-brake-pro/01.webp",
+        "/images/pecas/v-brake-pro/02.webp"
+      ],
+      "video": null
+    },
+    "colors": [],
+    "variants": [],
+    "specs": {
+      "position": "Dianteira",
+      "material": "Composto sinterizado",
+      "use": [
+        "Urbano",
+        "Rodoviário",
+        "Esportivo"
+      ],
+      "compatibility": [
+        {
+          "brand": "Volt Moto",
+          "model": "VMX 700",
+          "years": "2024-2026"
+        },
+        {
+          "brand": "Volt Moto",
+          "model": "VTX 500 Adventure",
+          "years": "2025-2026"
+        }
+      ],
+      "manufacturerCode": "VBP-700-FR"
+    },
+    "stock": {
+      "available": true,
+      "quantity": 22
+    },
+    "sales": {
+      "purchasableOnline": true,
+      "requestQuote": false,
+      "testRide": false,
+      "whatsapp": true
+    },
+    "feed": {
+      "enabled": false,
+      "featured": false,
+      "order": null,
+      "text": ""
+    },
+    "tags": [
+      "freio",
+      "pastilha",
+      "vmx-700",
+      "vtx-500"
+    ],
+    "seo": {
+      "title": "Pastilha V-Brake Pro | Volt Moto",
+      "description": "Pastilha de freio sinterizada para motocicletas compatíveis."
+    }
+  },
+  {
+    "id": 13,
+    "type": "part",
+    "category": "pecas",
+    "subcategory": "transmissao",
+    "brand": "Volt Parts",
+    "name": "Kit Relação V-Drive 700",
+    "slug": "kit-relacao-v-drive-700",
+    "shortDescription": "Kit de transmissão com corrente reforçada, coroa e pinhão.",
+    "description": "Conjunto desenvolvido para entregar durabilidade e transmissão eficiente de potência.",
+    "price": 749.9,
+    "oldPrice": 829.9,
+    "installment": {
+      "enabled": true,
+      "installments": 8,
+      "value": 93.74
+    },
+    "media": {
+      "cover": "/images/pecas/v-drive-700/capa.webp",
+      "images": [
+        "/images/pecas/v-drive-700/01.webp",
+        "/images/pecas/v-drive-700/02.webp"
+      ],
+      "video": null
+    },
+    "colors": [],
+    "variants": [],
+    "specs": {
+      "chain": "520 reforçada",
+      "frontSprocket": 16,
+      "rearSprocket": 43,
+      "material": "Aço tratado",
+      "compatibility": [
+        {
+          "brand": "Volt Moto",
+          "model": "VMX 700",
+          "years": "2024-2026"
+        }
+      ],
+      "manufacturerCode": "VDR-700-520"
+    },
+    "stock": {
+      "available": true,
+      "quantity": 10
+    },
+    "sales": {
+      "purchasableOnline": true,
+      "requestQuote": false,
+      "testRide": false,
+      "whatsapp": true
+    },
+    "feed": {
+      "enabled": false,
+      "featured": false,
+      "order": null,
+      "text": ""
+    },
+    "tags": [
+      "relacao",
+      "corrente",
+      "transmissao",
+      "vmx-700"
+    ],
+    "seo": {
+      "title": "Kit Relação V-Drive 700 | Volt Moto",
+      "description": "Kit de transmissão reforçado para VMX 700."
+    }
+  },
+  {
+    "id": 14,
+    "type": "accessory",
+    "category": "acessorios",
+    "subcategory": "suporte-celular",
+    "brand": "Volt",
+    "name": "Suporte V-Mount Pro",
+    "slug": "suporte-v-mount-pro",
+    "shortDescription": "Suporte antivibração para smartphone.",
+    "description": "Fixação reforçada para guidão com sistema antivibração e ajuste rápido.",
+    "price": 249.9,
+    "oldPrice": 299.9,
+    "installment": {
+      "enabled": true,
+      "installments": 3,
+      "value": 83.3
+    },
+    "media": {
+      "cover": "/images/acessorios/v-mount-pro/capa.webp",
+      "images": [
+        "/images/acessorios/v-mount-pro/01.webp",
+        "/images/acessorios/v-mount-pro/02.webp"
+      ],
+      "video": "/videos/v-mount-pro.mp4"
+    },
+    "colors": [
+      {
+        "id": "black",
+        "name": "Preto",
+        "hex": "#111111"
+      }
+    ],
+    "variants": [],
+    "specs": {
+      "material": "Alumínio",
+      "mount": "Guidão",
+      "antiVibration": true,
+      "rotation": 360,
+      "phoneWidth": {
+        "min": 60,
+        "max": 95,
+        "unit": "mm"
+      }
+    },
+    "stock": {
+      "available": true,
+      "quantity": 30
+    },
+    "sales": {
+      "purchasableOnline": true,
+      "requestQuote": false,
+      "testRide": false,
+      "whatsapp": true
+    },
+    "feed": {
+      "enabled": true,
+      "featured": false,
+      "order": 10,
+      "text": "Seu celular seguro em qualquer rota."
+    },
+    "tags": [
+      "suporte",
+      "celular",
+      "guidao"
+    ],
+    "seo": {
+      "title": "Suporte V-Mount Pro | Volt Moto",
+      "description": "Suporte antivibração para smartphone e guidão de motocicleta."
+    }
+  },
+  {
+    "id": 15,
+    "type": "accessory",
+    "category": "acessorios",
+    "subcategory": "protecao",
+    "brand": "Volt",
+    "name": "Slider V-Guard VMX 700",
+    "slug": "slider-v-guard-vmx-700",
+    "shortDescription": "Slider de proteção para reduzir danos em quedas de baixa velocidade.",
+    "description": "Kit de proteção lateral desenvolvido especificamente para a VMX 700, com instalação nos pontos originais do chassi.",
+    "price": 399.9,
+    "oldPrice": null,
+    "installment": {
+      "enabled": true,
+      "installments": 4,
+      "value": 99.98
+    },
+    "media": {
+      "cover": "/images/acessorios/v-guard-vmx-700/capa.webp",
+      "images": [
+        "/images/acessorios/v-guard-vmx-700/01.webp",
+        "/images/acessorios/v-guard-vmx-700/02.webp"
+      ],
+      "video": null
+    },
+    "colors": [
+      {
+        "id": "black",
+        "name": "Preto",
+        "hex": "#111111"
+      }
+    ],
+    "variants": [],
+    "specs": {
+      "material": "Alumínio e polímero técnico",
+      "installation": "Pontos originais do chassi",
+      "compatibility": [
+        {
+          "brand": "Volt Moto",
+          "model": "VMX 700",
+          "years": "2024-2026"
+        }
+      ],
+      "kitIncludes": [
+        "Slider direito",
+        "Slider esquerdo",
+        "Parafusos de instalação"
+      ]
+    },
+    "stock": {
+      "available": true,
+      "quantity": 14
+    },
+    "sales": {
+      "purchasableOnline": true,
+      "requestQuote": false,
+      "testRide": false,
+      "whatsapp": true
+    },
+    "feed": {
+      "enabled": false,
+      "featured": false,
+      "order": null,
+      "text": ""
+    },
+    "tags": [
+      "slider",
+      "protecao",
+      "vmx-700",
+      "acessorio"
+    ],
+    "seo": {
+      "title": "Slider V-Guard VMX 700 | Volt Moto",
+      "description": "Slider de proteção desenvolvido para a VMX 700."
+    }
+  }
+]
