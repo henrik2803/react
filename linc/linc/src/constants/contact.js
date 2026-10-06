@@ -1,5 +1,5 @@
 export const CONTACT = {
-  whatsapp: "",
+  whatsapp: "5521990274303",
   email: "",
   instagram: "",
 };
