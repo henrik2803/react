@@ -88,9 +88,7 @@ function NFC() {
                   className={styles.application}
                   key={item.title}
                 >
-                  <div
-                    className={styles.applicationIcon}
-                  >
+                  <div className={styles.applicationIcon}>
                     <Icon size={20} />
                   </div>
 

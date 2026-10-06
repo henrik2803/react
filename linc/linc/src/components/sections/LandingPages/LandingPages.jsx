@@ -45,11 +45,10 @@ function LandingPages() {
       className={styles.section}
     >
       <Container className={styles.container}>
-                  <div
-            className={styles.visual}
-            data-reveal="left"
-            aria-hidden="true"
-          >
+        <div
+          className={styles.visual}
+          aria-hidden="true"
+        >
           <div className={styles.glow} />
 
           <div className={styles.laptop}>
@@ -59,14 +58,14 @@ function LandingPages() {
                 <span />
                 <span />
 
-                <div />
+                <div className={styles.browserAddress} />
               </div>
 
               <div className={styles.sitePreview}>
                 <div className={styles.previewNav}>
                   <strong>LINC</strong>
 
-                  <div>
+                  <div className={styles.previewNavLinks}>
                     <span />
                     <span />
                     <span />
@@ -74,7 +73,7 @@ function LandingPages() {
                 </div>
 
                 <div className={styles.previewHero}>
-                  <div>
+                  <div className={styles.previewContent}>
                     <small>
                       SOLUÇÕES DIGITAIS
                     </small>
@@ -85,12 +84,9 @@ function LandingPages() {
                       gera resultados.
                     </h3>
 
-                    <p />
+                    <div className={styles.previewText} />
 
-                    <button
-                      type="button"
-                      tabIndex="-1"
-                    />
+                    <div className={styles.previewButton} />
                   </div>
 
                   <div className={styles.previewGraphic}>
@@ -114,13 +110,9 @@ function LandingPages() {
               <MonitorSmartphone size={27} />
 
               <span />
-
               <span />
 
-              <button
-                type="button"
-                tabIndex="-1"
-              />
+              <div className={styles.phoneButton} />
             </div>
           </div>
 

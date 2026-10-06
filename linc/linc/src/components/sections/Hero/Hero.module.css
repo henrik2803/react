@@ -15,7 +15,7 @@
     radial-gradient(
       circle at 78% 35%,
       rgba(37, 99, 235, 0.08),
-      transparent 32%
+      transparent 30%
     ),
     var(--color-background);
 }
@@ -25,11 +25,11 @@
 
   grid-template-columns:
     minmax(0, 1.05fr)
-    minmax(360px, 0.95fr);
+    minmax(400px, 0.95fr);
 
   align-items: center;
 
-  gap: 60px;
+  gap: 56px;
 }
 
 /* =========================
@@ -41,7 +41,7 @@
 
   position: relative;
 
-  z-index: 2;
+  z-index: 5;
 }
 
 .badge {
@@ -205,47 +205,383 @@
 }
 
 /* =========================
-   LOGO
+   VISUAL
 ========================= */
 
 .visual {
   min-width: 0;
-  min-height: 560px;
+  min-height: 600px;
+
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.glow {
+  position: absolute;
+
+  width: 390px;
+  height: 390px;
+
+  border-radius: 50%;
+
+  background:
+    rgba(37, 99, 235, 0.17);
+
+  filter: blur(90px);
+}
+
+/* =========================
+   ORBITS
+========================= */
+
+.orbit {
+  position: absolute;
+
+  border:
+    1px solid
+    rgba(37, 99, 235, 0.13);
+
+  border-radius: 50%;
+}
+
+.orbitOne {
+  width: 360px;
+  height: 360px;
+}
+
+.orbitTwo {
+  width: 470px;
+  height: 470px;
+}
+
+.orbitThree {
+  width: 580px;
+  height: 580px;
+}
+
+.orbitDot {
+  position: absolute;
+
+  width: 8px;
+  height: 8px;
+
+  border-radius: 50%;
+
+  background: var(--color-primary);
+
+  box-shadow:
+    0 0 14px
+    rgba(37, 99, 235, 0.7);
+}
+
+.dotOne {
+  top: 74px;
+  right: 168px;
+}
+
+.dotTwo {
+  top: 290px;
+  left: 48px;
+}
+
+.dotThree {
+  right: 35px;
+  bottom: 175px;
+}
+
+/* =========================
+   FLOATING ICONS
+========================= */
+
+.floatingIcon {
+  position: absolute;
+
+  z-index: 4;
+
+  width: 70px;
+  height: 70px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  position: relative;
-}
+  color: var(--color-primary);
 
-.visual::before {
-  content: "";
-
-  width: 420px;
-  height: 420px;
-
-  position: absolute;
+  border:
+    1px solid
+    rgba(255, 255, 255, 0.8);
 
   border-radius: 50%;
 
   background:
-    rgba(37, 99, 235, 0.09);
+    rgba(255, 255, 255, 0.88);
 
-  filter: blur(90px);
+  box-shadow:
+    0 14px 35px
+    rgba(15, 23, 42, 0.08);
+
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  animation:
+    float 5s ease-in-out infinite;
 }
 
-.logo {
-  width: min(100%, 470px);
-  height: auto;
+.floatingIcon svg {
+  width: 29px;
+  height: 29px;
+}
 
+.wifi {
+  top: 90px;
+  left: 75px;
+}
+
+.cloud {
+  top: 115px;
+  right: 42px;
+
+  animation-delay: -1s;
+}
+
+.security {
+  right: 40px;
+  bottom: 90px;
+
+  animation-delay: -2s;
+}
+
+.chart {
+  left: 70px;
+  bottom: 70px;
+
+  animation-delay: -3s;
+}
+
+/* =========================
+   CSS SYMBOL
+========================= */
+
+.brandStage {
   position: relative;
 
-  z-index: 2;
+  z-index: 3;
 
-  display: block;
+  width: 360px;
+  height: 420px;
 
-  object-fit: contain;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.brandSymbol {
+  position: relative;
+
+  width: 260px;
+  height: 260px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  filter:
+    drop-shadow(
+      0 20px 25px
+      rgba(37, 99, 235, 0.18)
+    );
+}
+
+.ring {
+  position: absolute;
+
+  border-style: solid;
+
+  border-color:
+    var(--color-primary);
+
+  border-radius: 50%;
+
+  border-right-color: transparent;
+}
+
+.ring:nth-child(1) {
+  width: 250px;
+  height: 250px;
+
+  border-width: 15px;
+}
+
+.ring:nth-child(2) {
+  width: 205px;
+  height: 205px;
+
+  border-width: 14px;
+}
+
+.ring:nth-child(3) {
+  width: 160px;
+  height: 160px;
+
+  border-width: 13px;
+}
+
+.ring:nth-child(4) {
+  width: 115px;
+  height: 115px;
+
+  border-width: 12px;
+}
+
+/* conexão preta da marca */
+
+.connector {
+  position: absolute;
+
+  right: -4px;
+
+  width: 70px;
+  height: 18px;
+
+  border-radius: 999px;
+
+  background: var(--color-text);
+
+  transform: rotate(-45deg);
+}
+
+.connector i {
+  position: absolute;
+
+  top: 50%;
+
+  width: 35px;
+  height: 35px;
+
+  border-radius: 50%;
+
+  background: var(--color-text);
+
+  transform: translateY(-50%);
+}
+
+.connector i:first-child {
+  left: -10px;
+}
+
+.connector i:last-child {
+  right: -10px;
+}
+
+.connector i::before {
+  content: "";
+
+  position: absolute;
+
+  inset: 10px;
+
+  border-radius: 3px;
+
+  background:
+    linear-gradient(
+      90deg,
+      white 35%,
+      transparent 35% 65%,
+      white 65%
+    );
+}
+
+/* =========================
+   PLATFORM
+========================= */
+
+.platform {
+  position: absolute;
+
+  bottom: 22px;
+
+  width: 340px;
+  height: 58px;
+
+  border-radius: 50%;
+
+  background:
+    linear-gradient(
+      180deg,
+      #ffffff,
+      #e8eef8
+    );
+
+  box-shadow:
+    0 25px 40px
+    rgba(15, 23, 42, 0.13);
+}
+
+.platform::before {
+  content: "";
+
+  position: absolute;
+
+  inset: 0;
+
+  border-radius: inherit;
+
+  border:
+    1px solid
+    rgba(37, 99, 235, 0.15);
+}
+
+.platformLight {
+  position: absolute;
+
+  left: 8%;
+  right: 8%;
+  bottom: 5px;
+
+  height: 3px;
+
+  border-radius: 999px;
+
+  background:
+    var(--color-primary);
+
+  box-shadow:
+    0 0 15px
+    rgba(37, 99, 235, 0.75);
+}
+
+.shadow {
+  position: absolute;
+
+  bottom: 55px;
+
+  width: 240px;
+  height: 30px;
+
+  border-radius: 50%;
+
+  background:
+    rgba(37, 99, 235, 0.25);
+
+  filter: blur(20px);
+}
+
+/* =========================
+   ANIMATION
+========================= */
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
 }
 
 /* =========================
@@ -256,9 +592,9 @@
   .container {
     grid-template-columns:
       minmax(0, 1fr)
-      minmax(330px, 0.8fr);
+      minmax(360px, 0.82fr);
 
-    gap: 40px;
+    gap: 32px;
   }
 
   .title {
@@ -284,11 +620,38 @@
   }
 
   .visual {
-    min-height: 500px;
+    min-height: 540px;
   }
 
-  .logo {
-    width: min(100%, 410px);
+  .orbitOne {
+    width: 310px;
+    height: 310px;
+  }
+
+  .orbitTwo {
+    width: 400px;
+    height: 400px;
+  }
+
+  .orbitThree {
+    width: 490px;
+    height: 490px;
+  }
+
+  .wifi {
+    left: 38px;
+  }
+
+  .cloud {
+    right: 18px;
+  }
+
+  .security {
+    right: 16px;
+  }
+
+  .chart {
+    left: 38px;
   }
 }
 
@@ -300,13 +663,15 @@
   .hero {
     min-height: auto;
 
-    padding: 145px 0 70px;
+    padding:
+      145px 0
+      70px;
   }
 
   .container {
     grid-template-columns: 1fr;
 
-    gap: 40px;
+    gap: 30px;
 
     text-align: center;
   }
@@ -314,6 +679,7 @@
   .content {
     display: flex;
     flex-direction: column;
+
     align-items: center;
   }
 
@@ -339,15 +705,12 @@
   }
 
   .visual {
-    min-height: 440px;
+    width: 100%;
+    max-width: 650px;
 
-    max-width: 600px;
+    min-height: 520px;
 
     margin-inline: auto;
-  }
-
-  .logo {
-    width: min(100%, 390px);
   }
 }
 
@@ -357,11 +720,13 @@
 
 @media (max-width: 700px) {
   .hero {
-    padding: 120px 0 55px;
+    padding:
+      120px 0
+      55px;
   }
 
   .container {
-    gap: 30px;
+    gap: 24px;
   }
 
   .badge {
@@ -430,16 +795,114 @@
   }
 
   .visual {
-    min-height: 360px;
+    min-height: 440px;
   }
 
-  .visual::before {
+  .glow {
     width: 300px;
     height: 300px;
   }
 
-  .logo {
-    width: min(88%, 320px);
+  .orbitOne {
+    width: 260px;
+    height: 260px;
+  }
+
+  .orbitTwo {
+    width: 340px;
+    height: 340px;
+  }
+
+  .orbitThree {
+    width: 420px;
+    height: 420px;
+  }
+
+  .brandStage {
+    width: 300px;
+    height: 350px;
+  }
+
+  .brandSymbol {
+    width: 200px;
+    height: 200px;
+  }
+
+  .ring:nth-child(1) {
+    width: 195px;
+    height: 195px;
+
+    border-width: 12px;
+  }
+
+  .ring:nth-child(2) {
+    width: 160px;
+    height: 160px;
+
+    border-width: 11px;
+  }
+
+  .ring:nth-child(3) {
+    width: 125px;
+    height: 125px;
+
+    border-width: 10px;
+  }
+
+  .ring:nth-child(4) {
+    width: 90px;
+    height: 90px;
+
+    border-width: 9px;
+  }
+
+  .connector {
+    width: 58px;
+    height: 15px;
+  }
+
+  .connector i {
+    width: 29px;
+    height: 29px;
+  }
+
+  .connector i::before {
+    inset: 8px;
+  }
+
+  .platform {
+    width: 275px;
+    height: 48px;
+  }
+
+  .floatingIcon {
+    width: 55px;
+    height: 55px;
+  }
+
+  .floatingIcon svg {
+    width: 23px;
+    height: 23px;
+  }
+
+  .wifi {
+    top: 70px;
+    left: 28px;
+  }
+
+  .cloud {
+    top: 80px;
+    right: 24px;
+  }
+
+  .security {
+    right: 22px;
+    bottom: 70px;
+  }
+
+  .chart {
+    left: 25px;
+    bottom: 58px;
   }
 }
 
@@ -449,7 +912,9 @@
 
 @media (max-width: 430px) {
   .hero {
-    padding: 108px 0 45px;
+    padding:
+      108px 0
+      45px;
   }
 
   .badge {
@@ -474,17 +939,143 @@
   }
 
   .visual {
-    min-height: 300px;
+    min-height: 360px;
   }
 
-  .visual::before {
+  .glow {
     width: 230px;
     height: 230px;
 
     filter: blur(70px);
   }
 
-  .logo {
-    width: min(90%, 270px);
+  .orbitOne {
+    width: 210px;
+    height: 210px;
+  }
+
+  .orbitTwo {
+    width: 275px;
+    height: 275px;
+  }
+
+  .orbitThree {
+    width: 340px;
+    height: 340px;
+  }
+
+  .brandStage {
+    width: 240px;
+    height: 300px;
+  }
+
+  .brandSymbol {
+    width: 160px;
+    height: 160px;
+  }
+
+  .ring:nth-child(1) {
+    width: 155px;
+    height: 155px;
+
+    border-width: 10px;
+  }
+
+  .ring:nth-child(2) {
+    width: 127px;
+    height: 127px;
+
+    border-width: 9px;
+  }
+
+  .ring:nth-child(3) {
+    width: 99px;
+    height: 99px;
+
+    border-width: 8px;
+  }
+
+  .ring:nth-child(4) {
+    width: 71px;
+    height: 71px;
+
+    border-width: 7px;
+  }
+
+  .connector {
+    right: -2px;
+
+    width: 46px;
+    height: 12px;
+  }
+
+  .connector i {
+    width: 23px;
+    height: 23px;
+  }
+
+  .connector i:first-child {
+    left: -7px;
+  }
+
+  .connector i:last-child {
+    right: -7px;
+  }
+
+  .connector i::before {
+    inset: 6px;
+  }
+
+  .platform {
+    width: 220px;
+    height: 42px;
+
+    bottom: 18px;
+  }
+
+  .shadow {
+    width: 160px;
+
+    bottom: 47px;
+  }
+
+  .floatingIcon {
+    width: 46px;
+    height: 46px;
+  }
+
+  .floatingIcon svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .wifi {
+    top: 53px;
+    left: 12px;
+  }
+
+  .cloud {
+    top: 65px;
+    right: 8px;
+  }
+
+  .security {
+    right: 9px;
+    bottom: 58px;
+  }
+
+  .chart {
+    left: 10px;
+    bottom: 52px;
+  }
+}
+
+/* =========================
+   ACCESSIBILITY
+========================= */
+
+@media (prefers-reduced-motion: reduce) {
+  .floatingIcon {
+    animation: none;
   }
 }
