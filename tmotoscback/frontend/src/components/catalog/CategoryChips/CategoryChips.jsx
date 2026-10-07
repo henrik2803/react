@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 import styles from "./CategoryChips.module.css";
 
 const categories = [
@@ -12,10 +10,10 @@ const categories = [
   "Acessórios",
 ];
 
-function CategoryChips() {
-  const [selectedCategory, setSelectedCategory] =
-    useState("Todos");
-
+function CategoryChips({
+  selectedCategory,
+  onSelectCategory,
+}) {
   return (
     <div className={styles.wrapper}>
       {categories.map((category) => {
@@ -32,7 +30,7 @@ function CategoryChips() {
                 : styles.chip
             }
             onClick={() =>
-              setSelectedCategory(category)
+              onSelectCategory(category)
             }
           >
             {category}

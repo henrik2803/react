@@ -1,4 +1,8 @@
-import { useEffect, useState } from "react";
+import {
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 
 import Container from "../../components/layout/Container/Container";
 import SearchBar from "../../components/catalog/SearchBar/SearchBar";
@@ -13,12 +17,18 @@ function Catalog() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const [searchTerm, setSearchTerm] =
+    useState("");
+
+  const [
+    selectedCategory,
+    setSelectedCategory,
+  ] = useState("Todos");
+
   useEffect(() => {
     async function loadProducts() {
       try {
         const data = await getProducts();
-
-        console.log("PRODUTOS:", data);
 
         setProducts(data);
       } catch (error) {
@@ -33,6 +43,44 @@ function Catalog() {
 
     loadProducts();
   }, []);
+
+  const filteredProducts = useMemo(() => {
+    const normalizedSearch =
+      searchTerm
+        .trim()
+        .toLowerCase();
+
+    return products.filter((product) => {
+      const matchesCategory =
+        selectedCategory === "Todos" ||
+        product.category === selectedCategory;
+
+      const searchableText = [
+        product.name,
+        product.brand,
+        product.category,
+        product.shortDescription,
+      ]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase();
+
+      const matchesSearch =
+        !normalizedSearch ||
+        searchableText.includes(
+          normalizedSearch
+        );
+
+      return (
+        matchesCategory &&
+        matchesSearch
+      );
+    });
+  }, [
+    products,
+    searchTerm,
+    selectedCategory,
+  ]);
 
   return (
     <main className={styles.catalog}>
@@ -51,25 +99,28 @@ function Catalog() {
           </p>
         </section>
 
-        <SearchBar />
+        <SearchBar
+          value={searchTerm}
+          onChange={setSearchTerm}
+        />
 
-        <CategoryChips />
-
-        <p
-          style={{
-            marginTop: "24px",
-            color: "white",
-          }}
-        >
-          Produtos carregados: {products.length}
-        </p>
+        <CategoryChips
+          selectedCategory={
+            selectedCategory
+          }
+          onSelectCategory={
+            setSelectedCategory
+          }
+        />
 
         {loading ? (
           <div className={styles.loading}>
             Carregando produtos...
           </div>
         ) : (
-          <ProductGrid products={products} />
+          <ProductGrid
+            products={filteredProducts}
+          />
         )}
       </Container>
     </main>

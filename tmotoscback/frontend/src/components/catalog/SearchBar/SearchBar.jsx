@@ -2,7 +2,10 @@ import { Search, SlidersHorizontal } from "lucide-react";
 
 import styles from "./SearchBar.module.css";
 
-function SearchBar() {
+function SearchBar({
+  value,
+  onChange,
+}) {
   return (
     <div className={styles.wrapper}>
       <div className={styles.search}>
@@ -13,6 +16,10 @@ function SearchBar() {
 
         <input
           type="search"
+          value={value}
+          onChange={(event) =>
+            onChange(event.target.value)
+          }
           placeholder="Buscar motos, capacetes, acessórios..."
           className={styles.input}
           aria-label="Buscar produtos"
