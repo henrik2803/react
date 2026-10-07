@@ -2,7 +2,10 @@ import ProductCard from "../ProductCard/ProductCard";
 
 import styles from "./ProductGrid.module.css";
 
-function ProductGrid({ products }) {
+function ProductGrid({
+  products,
+  onSelectProduct,
+}) {
   if (!products.length) {
     return (
       <div className={styles.empty}>
@@ -21,6 +24,7 @@ function ProductGrid({ products }) {
         <ProductCard
           key={product.id}
           product={product}
+          onSelect={onSelectProduct}
         />
       ))}
     </section>

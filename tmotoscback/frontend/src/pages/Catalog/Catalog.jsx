@@ -5,26 +5,42 @@ import {
 } from "react";
 
 import Container from "../../components/layout/Container/Container";
+
 import SearchBar from "../../components/catalog/SearchBar/SearchBar";
 import CategoryChips from "../../components/catalog/CategoryChips/CategoryChips";
 import ProductGrid from "../../components/catalog/ProductGrid/ProductGrid";
+import ProductQuickView from "../../components/catalog/ProductQuickView/ProductQuickView";
 
 import { getProducts } from "../../services/productService";
 
 import styles from "./Catalog.module.css";
 
 function Catalog() {
+  // Todos os produtos carregados
   const [products, setProducts] = useState([]);
+
+  // Estado de carregamento
   const [loading, setLoading] = useState(true);
 
-  const [searchTerm, setSearchTerm] =
-    useState("");
+  // Texto digitado na busca
+  const [searchTerm, setSearchTerm] = useState("");
 
+  // Categoria selecionada
   const [
     selectedCategory,
     setSelectedCategory,
   ] = useState("Todos");
 
+  // Produto selecionado para o Quick View
+  const [
+    selectedProduct,
+    setSelectedProduct,
+  ] = useState(null);
+
+  /*
+   * Carrega os produtos quando
+   * a página é aberta.
+   */
   useEffect(() => {
     async function loadProducts() {
       try {
@@ -44,11 +60,17 @@ function Catalog() {
     loadProducts();
   }, []);
 
+  /*
+   * Produtos exibidos no catálogo.
+   *
+   * Combina:
+   * - categoria
+   * - busca
+   */
   const filteredProducts = useMemo(() => {
-    const normalizedSearch =
-      searchTerm
-        .trim()
-        .toLowerCase();
+    const normalizedSearch = searchTerm
+      .trim()
+      .toLowerCase();
 
     return products.filter((product) => {
       const matchesCategory =
@@ -85,6 +107,7 @@ function Catalog() {
   return (
     <main className={styles.catalog}>
       <Container>
+        {/* Cabeçalho */}
         <section className={styles.header}>
           <span className={styles.eyebrow}>
             TMotos Store
@@ -95,15 +118,18 @@ function Catalog() {
           </h1>
 
           <p className={styles.description}>
-            Explore motos, equipamentos, peças e acessórios.
+            Explore motos, equipamentos, peças e
+            acessórios.
           </p>
         </section>
 
+        {/* Busca */}
         <SearchBar
           value={searchTerm}
           onChange={setSearchTerm}
         />
 
+        {/* Categorias */}
         <CategoryChips
           selectedCategory={
             selectedCategory
@@ -113,15 +139,32 @@ function Catalog() {
           }
         />
 
-        {loading ? (
-          <div className={styles.loading}>
-            Carregando produtos...
+        {/* Catálogo + Quick View */}
+        <div className={styles.catalogContent}>
+          <div className={styles.productsArea}>
+            {loading ? (
+              <div className={styles.loading}>
+                Carregando produtos...
+              </div>
+            ) : (
+              <ProductGrid
+                products={filteredProducts}
+                onSelectProduct={
+                  setSelectedProduct
+                }
+              />
+            )}
           </div>
-        ) : (
-          <ProductGrid
-            products={filteredProducts}
-          />
-        )}
+
+          <div className={styles.quickViewArea}>
+            <ProductQuickView
+              product={selectedProduct}
+              onClose={() =>
+                setSelectedProduct(null)
+              }
+            />
+          </div>
+        </div>
       </Container>
     </main>
   );
