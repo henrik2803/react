@@ -1,0 +1,62 @@
+.wrapper {
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  margin-top: 20px;
+
+  overflow-x: auto;
+
+  scrollbar-width: none;
+}
+
+.wrapper::-webkit-scrollbar {
+  display: none;
+}
+
+.chip {
+  flex-shrink: 0;
+
+  min-height: 38px;
+
+  padding: 0 16px;
+
+  color: var(--color-text-secondary);
+
+  background: var(--color-surface);
+
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+
+  font-size: 0.9rem;
+  font-weight: 500;
+
+  white-space: nowrap;
+
+  transition:
+    color 0.2s ease,
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.chip:hover {
+  color: var(--color-text);
+
+  background: var(--color-surface-light);
+}
+
+.active {
+  color: #ffffff;
+
+  background: var(--color-primary);
+
+  border-color: var(--color-primary);
+}
+
+.active:hover {
+  background: var(--color-primary-hover);
+  border-color: var(--color-primary-hover);
+}
