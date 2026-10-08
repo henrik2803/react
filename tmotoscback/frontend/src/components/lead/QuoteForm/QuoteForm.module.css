@@ -1,0 +1,170 @@
+.form {
+  display: flex;
+  flex-direction: column;
+
+  gap: 18px;
+}
+
+.productInfo {
+  display: flex;
+  flex-direction: column;
+
+  gap: 5px;
+
+  padding: 16px;
+
+  background:
+    var(--color-surface-light);
+
+  border:
+    1px solid
+    var(--color-border);
+
+  border-radius:
+    var(--radius-md);
+}
+
+.productInfo span {
+  color:
+    var(--color-text-secondary);
+
+  font-size: 0.75rem;
+}
+
+.productInfo strong {
+  color:
+    var(--color-text);
+
+  font-size: 0.95rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+
+  gap: 7px;
+}
+
+.field label {
+  color:
+    var(--color-text);
+
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.field input,
+.field textarea {
+  width: 100%;
+
+  padding:
+    12px 14px;
+
+  color:
+    var(--color-text);
+
+  background:
+    var(--color-background);
+
+  border:
+    1px solid
+    var(--color-border);
+
+  border-radius:
+    var(--radius-sm);
+
+  outline: none;
+
+  font: inherit;
+}
+
+.field input:focus,
+.field textarea:focus {
+  border-color:
+    var(--color-primary);
+}
+
+.field textarea {
+  resize: vertical;
+}
+
+.error {
+  color: #ff6872;
+
+  font-size: 0.75rem;
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+
+  gap: 10px;
+}
+
+.checkbox {
+  display: flex;
+  align-items: flex-start;
+
+  gap: 10px;
+
+  color:
+    var(--color-text-secondary);
+
+  font-size: 0.82rem;
+
+  cursor: pointer;
+}
+
+.checkbox input {
+  margin-top: 2px;
+
+  accent-color:
+    var(--color-primary);
+}
+
+.notice {
+  color:
+    var(--color-text-secondary);
+
+  font-size: 0.74rem;
+  line-height: 1.5;
+}
+
+.form > button {
+  width: 100%;
+}
+
+.success {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  gap: 14px;
+
+  padding: 20px 0;
+}
+
+.successLabel {
+  color:
+    var(--color-primary);
+
+  font-size: 0.75rem;
+  font-weight: 700;
+
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.success h3 {
+  color:
+    var(--color-text);
+
+  font-size: 1.4rem;
+}
+
+.success p {
+  color:
+    var(--color-text-secondary);
+
+  line-height: 1.6;
+}

@@ -1,10 +1,18 @@
 import {
+  useState,
+} from "react";
+
+import {
   Heart,
   MessageCircle,
   ShoppingBag,
 } from "lucide-react";
 
 import Button from "../../ui/Button/Button";
+
+import LeadModal from "../../lead/LeadModal/LeadModal";
+import QuoteForm from "../../lead/QuoteForm/QuoteForm";
+import TestRideForm from "../../lead/TestRideForm/TestRideForm";
 
 import useFavorites from "../../../hooks/useFavorites";
 import useCart from "../../../hooks/useCart";
@@ -15,6 +23,16 @@ function ProductActions({
   product,
   selectedVariantId,
 }) {
+  const [
+    quoteOpen,
+    setQuoteOpen,
+  ] = useState(false);
+
+  const [
+    testRideOpen,
+    setTestRideOpen,
+  ] = useState(false);
+
   const {
     isFavorite,
     toggleFavorite,
@@ -129,107 +147,152 @@ function ProductActions({
     getHelperMessage();
 
   return (
-    <div className={styles.actions}>
-      {isMoto ? (
-        <>
-          {product.sales
-            ?.requestQuote && (
-            <Button>
-              Solicitar proposta
-            </Button>
-          )}
+    <>
+      <div
+        className={styles.actions}
+      >
+        {isMoto ? (
+          <>
+            {product.sales
+              ?.requestQuote && (
+              <Button
+                onClick={() =>
+                  setQuoteOpen(true)
+                }
+              >
+                Solicitar proposta
+              </Button>
+            )}
+
+            {product.sales
+              ?.testRide && (
+              <Button
+                variant="secondary"
+                onClick={() =>
+                  setTestRideOpen(
+                    true
+                  )
+                }
+              >
+                Agendar Test Ride
+              </Button>
+            )}
+          </>
+        ) : (
+          product.sales
+            ?.purchasableOnline && (
+            <>
+              <Button
+                disabled={
+                  !canAddToCart
+                }
+                onClick={
+                  handleAddToCart
+                }
+                title={
+                  canAddToCart
+                    ? "Adicionar ao carrinho"
+                    : helperMessage
+                }
+              >
+                <ShoppingBag
+                  size={18}
+                />
+
+                {reachedStockLimit
+                  ? "Estoque máximo atingido"
+                  : "Adicionar ao carrinho"}
+              </Button>
+
+              {helperMessage && (
+                <span
+                  className={
+                    styles.helper
+                  }
+                >
+                  {helperMessage}
+                </span>
+              )}
+            </>
+          )
+        )}
+
+        <div
+          className={
+            styles.secondaryActions
+          }
+        >
+          <Button
+            variant="ghost"
+            className={
+              favorite
+                ? styles.favoriteActive
+                : ""
+            }
+            onClick={
+              handleFavorite
+            }
+            aria-pressed={
+              favorite
+            }
+          >
+            <Heart
+              size={18}
+              fill={
+                favorite
+                  ? "currentColor"
+                  : "none"
+              }
+            />
+
+            {favorite
+              ? "Favoritado"
+              : "Favoritar"}
+          </Button>
 
           {product.sales
-            ?.testRide && (
-            <Button variant="secondary">
-              Agendar Test Ride
-            </Button>
-          )}
-        </>
-      ) : (
-        product.sales
-          ?.purchasableOnline && (
-          <>
-            <Button
-              disabled={
-                !canAddToCart
-              }
-              onClick={
-                handleAddToCart
-              }
-              title={
-                canAddToCart
-                  ? "Adicionar ao carrinho"
-                  : helperMessage
-              }
-            >
-              <ShoppingBag
+            ?.whatsapp && (
+            <Button variant="ghost">
+              <MessageCircle
                 size={18}
               />
 
-              {reachedStockLimit
-                ? "Estoque máximo atingido"
-                : "Adicionar ao carrinho"}
+              WhatsApp
             </Button>
+          )}
+        </div>
+      </div>
 
-            {helperMessage && (
-              <span
-                className={
-                  styles.helper
-                }
-              >
-                {helperMessage}
-              </span>
-            )}
-          </>
-        )
-      )}
-
-      <div
-        className={
-          styles.secondaryActions
+      <LeadModal
+        open={quoteOpen}
+        title="Solicitar proposta"
+        onClose={() =>
+          setQuoteOpen(false)
         }
       >
-        <Button
-          variant="ghost"
-          className={
-            favorite
-              ? styles.favoriteActive
-              : ""
+        <QuoteForm
+          product={product}
+          onClose={() =>
+            setQuoteOpen(false)
           }
-          onClick={
-            handleFavorite
+        />
+      </LeadModal>
+
+      <LeadModal
+        open={testRideOpen}
+        title="Agendar Test Ride"
+        onClose={() =>
+          setTestRideOpen(false)
+        }
+      >
+        <TestRideForm
+          product={product}
+          onClose={() =>
+            setTestRideOpen(false)
           }
-          aria-pressed={
-            favorite
-          }
-        >
-          <Heart
-            size={18}
-            fill={
-              favorite
-                ? "currentColor"
-                : "none"
-            }
-          />
-
-          {favorite
-            ? "Favoritado"
-            : "Favoritar"}
-        </Button>
-
-        {product.sales
-          ?.whatsapp && (
-          <Button variant="ghost">
-            <MessageCircle
-              size={18}
-            />
-
-            WhatsApp
-          </Button>
-        )}
-      </div>
-    </div>
+        />
+      </LeadModal>
+    </>
   );
 }
 

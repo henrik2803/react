@@ -8,6 +8,7 @@ import {
 } from "react-router-dom";
 
 import FeedMedia from "../FeedMedia/FeedMedia";
+import FeedActions from "../FeedActions/FeedActions";
 
 import useFavorites from "../../../hooks/useFavorites";
 
@@ -33,9 +34,6 @@ function FeedCard({
 
   const favorite =
     isFavorite(product.id);
-
-  const isMoto =
-    product.type === "moto";
 
   function handleFavorite() {
     toggleFavorite(product.id);
@@ -200,20 +198,9 @@ function FeedCard({
           </strong>
         </div>
 
-        <Link
-          to={`/produto/${product.slug}`}
-          className={
-            styles.productLink
-          }
-        >
-          {isMoto
-            ? "Conhecer a moto"
-            : "Ver produto"}
-
-          <ArrowUpRight
-            size={18}
-          />
-        </Link>
+        <FeedActions
+          product={product}
+        />
       </div>
 
       {index < total - 1 && (

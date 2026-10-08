@@ -1,4 +1,8 @@
 import {
+  useState,
+} from "react";
+
+import {
   useNavigate,
 } from "react-router-dom";
 
@@ -10,6 +14,10 @@ import {
 } from "lucide-react";
 
 import Button from "../../ui/Button/Button";
+
+import LeadModal from "../../lead/LeadModal/LeadModal";
+import QuoteForm from "../../lead/QuoteForm/QuoteForm";
+import TestRideForm from "../../lead/TestRideForm/TestRideForm";
 
 import useCart from "../../../hooks/useCart";
 import useFavorites from "../../../hooks/useFavorites";
@@ -26,6 +34,16 @@ function ProductQuickView({
 }) {
   const navigate =
     useNavigate();
+
+  const [
+    quoteOpen,
+    setQuoteOpen,
+  ] = useState(false);
+
+  const [
+    testRideOpen,
+    setTestRideOpen,
+  ] = useState(false);
 
   const {
     cartItems,
@@ -119,6 +137,22 @@ function ProductQuickView({
 
   function handleFavorite() {
     toggleFavorite(product.id);
+  }
+
+  function handleOpenQuote() {
+    setQuoteOpen(true);
+  }
+
+  function handleCloseQuote() {
+    setQuoteOpen(false);
+  }
+
+  function handleOpenTestRide() {
+    setTestRideOpen(true);
+  }
+
+  function handleCloseTestRide() {
+    setTestRideOpen(false);
   }
 
   return (
@@ -244,14 +278,24 @@ function ProductQuickView({
 
                 {product.sales
                   ?.requestQuote && (
-                  <Button variant="secondary">
+                  <Button
+                    variant="secondary"
+                    onClick={
+                      handleOpenQuote
+                    }
+                  >
                     Solicitar proposta
                   </Button>
                 )}
 
                 {product.sales
                   ?.testRide && (
-                  <Button variant="secondary">
+                  <Button
+                    variant="secondary"
+                    onClick={
+                      handleOpenTestRide
+                    }
+                  >
                     Agendar Test Ride
                   </Button>
                 )}
@@ -338,6 +382,36 @@ function ProductQuickView({
           </div>
         </div>
       </aside>
+
+      <LeadModal
+        open={quoteOpen}
+        title="Solicitar proposta"
+        onClose={
+          handleCloseQuote
+        }
+      >
+        <QuoteForm
+          product={product}
+          onClose={
+            handleCloseQuote
+          }
+        />
+      </LeadModal>
+
+      <LeadModal
+        open={testRideOpen}
+        title="Agendar Test Ride"
+        onClose={
+          handleCloseTestRide
+        }
+      >
+        <TestRideForm
+          product={product}
+          onClose={
+            handleCloseTestRide
+          }
+        />
+      </LeadModal>
     </>
   );
 }
