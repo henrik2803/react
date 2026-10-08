@@ -13,18 +13,16 @@ import {
 import styles from "./Feed.module.css";
 
 function Feed() {
-  const feedRef =
-    useRef(null);
+  const feedRef = useRef(null);
 
-  const [
-    products,
-    setProducts,
-  ] = useState([]);
+  const [products, setProducts] =
+    useState([]);
 
-  const [
-    activeProductId,
-    setActiveProductId,
-  ] = useState(null);
+  const [activeIndex, setActiveIndex] =
+    useState(0);
+
+  const [muted, setMuted] =
+    useState(true);
 
   const [loading, setLoading] =
     useState(true);
@@ -42,12 +40,7 @@ function Feed() {
           await getFeedProducts();
 
         setProducts(data);
-
-        if (data.length > 0) {
-          setActiveProductId(
-            String(data[0].id)
-          );
-        }
+        setActiveIndex(0);
       } catch (error) {
         console.error(
           "Erro ao carregar feed:",
@@ -78,7 +71,7 @@ function Feed() {
 
     const cards =
       feed.querySelectorAll(
-        "[data-feed-id]"
+        "[data-feed-index]"
       );
 
     const observer =
@@ -99,28 +92,40 @@ function Feed() {
           const mostVisible =
             visibleEntries[0];
 
+          if (!mostVisible) {
+            return;
+          }
+
           if (
-            !mostVisible ||
             mostVisible.intersectionRatio <
-              0.6
+            0.55
           ) {
             return;
           }
 
-          const id =
-            mostVisible.target.dataset
-              .feedId;
+          const index =
+            Number(
+              mostVisible.target
+                .dataset.feedIndex
+            );
 
-          setActiveProductId(id);
+          if (
+            Number.isNaN(index)
+          ) {
+            return;
+          }
+
+          setActiveIndex(index);
         },
         {
           root: feed,
 
           threshold: [
+            0.25,
             0.5,
-            0.6,
+            0.55,
             0.75,
-            0.9,
+            1,
           ],
         }
       );
@@ -133,6 +138,34 @@ function Feed() {
       observer.disconnect();
     };
   }, [products]);
+
+  function handleToggleMute() {
+    setMuted(
+      (currentMuted) =>
+        !currentMuted
+    );
+  }
+
+  function handleGoToFeedItem(
+    index
+  ) {
+    const feed =
+      feedRef.current;
+
+    if (!feed) {
+      return;
+    }
+
+    const target =
+      feed.querySelector(
+        `[data-feed-index="${index}"]`
+      );
+
+    target?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  }
 
   if (loading) {
     return (
@@ -200,18 +233,68 @@ function Feed() {
       className={styles.feed}
     >
       {products.map(
-        (product, index) => (
-          <FeedCard
-            key={product.id}
-            product={product}
-            index={index}
-            total={products.length}
-            isActive={
-              activeProductId ===
-              String(product.id)
-            }
-          />
-        )
+        (product, index) => {
+          const isActive =
+            activeIndex === index;
+
+          const shouldLoadVideo =
+            Math.abs(
+              activeIndex - index
+            ) <= 1;
+
+          return (
+            <FeedCard
+              key={product.id}
+              product={product}
+              index={index}
+              total={products.length}
+              isActive={isActive}
+              shouldLoadVideo={
+                shouldLoadVideo
+              }
+              muted={muted}
+              onToggleMute={
+                handleToggleMute
+              }
+            />
+          );
+        }
+      )}
+
+      {products.length > 1 && (
+        <nav
+          className={
+            styles.progress
+          }
+          aria-label="Publicações do feed"
+        >
+          {products.map(
+            (product, index) => (
+              <button
+                key={product.id}
+                type="button"
+                className={
+                  activeIndex ===
+                  index
+                    ? `${styles.progressDot} ${styles.progressDotActive}`
+                    : styles.progressDot
+                }
+                onClick={() =>
+                  handleGoToFeedItem(
+                    index
+                  )
+                }
+                aria-label={`Ir para ${product.name}`}
+                aria-current={
+                  activeIndex ===
+                  index
+                    ? "true"
+                    : undefined
+                }
+              />
+            )
+          )}
+        </nav>
       )}
     </main>
   );

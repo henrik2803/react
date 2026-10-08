@@ -22,6 +22,9 @@ function FeedCard({
   index,
   total,
   isActive,
+  shouldLoadVideo,
+  muted,
+  onToggleMute,
 }) {
   const {
     isFavorite,
@@ -41,12 +44,19 @@ function FeedCard({
   return (
     <article
       className={styles.card}
-      data-feed-id={product.id}
+      data-feed-index={index}
     >
       <FeedMedia
         product={product}
-        isActive={isActive}
         index={index}
+        isActive={isActive}
+        shouldLoadVideo={
+          shouldLoadVideo
+        }
+        muted={muted}
+        onToggleMute={
+          onToggleMute
+        }
       />
 
       <div

@@ -1,4 +1,6 @@
 .feed {
+  position: relative;
+
   height:
     calc(100dvh - 72px);
 
@@ -21,6 +23,55 @@
 .feed > article {
   scroll-snap-align: start;
   scroll-snap-stop: always;
+}
+
+.progress {
+  position: fixed;
+
+  top: 50%;
+  right: 18px;
+
+  z-index: 50;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 8px;
+
+  transform:
+    translateY(-50%);
+}
+
+.progressDot {
+  width: 6px;
+  height: 18px;
+
+  padding: 0;
+
+  background:
+    rgba(255, 255, 255, 0.28);
+
+  border: 0;
+  border-radius: 999px;
+
+  cursor: pointer;
+
+  transition:
+    height 0.2s ease,
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.progressDot:hover {
+  background:
+    rgba(255, 255, 255, 0.6);
+}
+
+.progressDotActive {
+  height: 34px;
+
+  background:
+    var(--color-primary);
 }
 
 .statusPage {
@@ -67,5 +118,20 @@
   .statusPage {
     min-height:
       calc(100dvh - 64px);
+  }
+
+  .progress {
+    right: 7px;
+
+    gap: 6px;
+  }
+
+  .progressDot {
+    width: 4px;
+    height: 12px;
+  }
+
+  .progressDotActive {
+    height: 24px;
   }
 }

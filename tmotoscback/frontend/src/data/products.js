@@ -36,7 +36,7 @@ const products = [
         "https://images.unsplash.com/photo-1558981806-ec527fa84c39?auto=format&fit=crop&w=1400&q=85",
       ],
 
-      video: null,
+      video: "/videos/mt07.mp4",
     },
 
     colors: [
