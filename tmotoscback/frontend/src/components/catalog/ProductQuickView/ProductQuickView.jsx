@@ -52,7 +52,7 @@ function ProductQuickView({
 
         <div className={styles.media}>
           <img
-            src={product.image}
+            src={product.media.cover}
             alt={product.name}
             className={styles.image}
           />
