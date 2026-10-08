@@ -1,11 +1,13 @@
 import {
   Heart,
   MessageCircle,
+  ShoppingBag,
 } from "lucide-react";
 
 import Button from "../../ui/Button/Button";
 
 import useFavorites from "../../../hooks/useFavorites";
+import useCart from "../../../hooks/useCart";
 
 import styles from "./ProductActions.module.css";
 
@@ -17,6 +19,10 @@ function ProductActions({
     isFavorite,
     toggleFavorite,
   } = useFavorites();
+
+  const {
+    addItem,
+  } = useCart();
 
   const isMoto =
     product.type === "moto";
@@ -33,6 +39,23 @@ function ProductActions({
 
   function handleFavorite() {
     toggleFavorite(product.id);
+  }
+
+  function handleAddToCart() {
+    if (!canAddToCart) {
+      return;
+    }
+
+    addItem({
+      productId:
+        product.id,
+
+      variantId:
+        selectedVariantId ||
+        null,
+
+      quantity: 1,
+    });
   }
 
   return (
@@ -61,12 +84,19 @@ function ProductActions({
               disabled={
                 !canAddToCart
               }
+              onClick={
+                handleAddToCart
+              }
               title={
                 canAddToCart
                   ? "Adicionar ao carrinho"
                   : "Selecione uma opção antes de adicionar ao carrinho"
               }
             >
+              <ShoppingBag
+                size={18}
+              />
+
               Adicionar ao carrinho
             </Button>
 

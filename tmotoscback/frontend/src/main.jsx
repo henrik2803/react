@@ -16,6 +16,10 @@ import {
   FavoritesProvider,
 } from "./context/FavoritesContext";
 
+import {
+  CartProvider,
+} from "./context/CartContext";
+
 import "./styles/variables.css";
 import "./styles/reset.css";
 import "./styles/globals.css";
@@ -28,7 +32,9 @@ createRoot(
   <StrictMode>
     <BrowserRouter>
       <FavoritesProvider>
-        <App />
+        <CartProvider>
+          <App />
+        </CartProvider>
       </FavoritesProvider>
     </BrowserRouter>
   </StrictMode>
