@@ -2,25 +2,22 @@ import {
   useEffect,
   useState,
 } from "react";
-import ProductSpecs from "../../components/product/ProductSpecs/ProductSpecs";
+
 import {
   Link,
   useParams,
 } from "react-router-dom";
 
-import {
-  ArrowLeft,
-  Heart,
-  MessageCircle,
-} from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 
 import Container from "../../components/layout/Container/Container";
-import Button from "../../components/ui/Button/Button";
 
 import ProductGallery from "../../components/product/ProductGallery/ProductGallery";
 import ProductPrice from "../../components/product/ProductPrice/ProductPrice";
 import ProductColors from "../../components/product/ProductColors/ProductColors";
 import ProductVariants from "../../components/product/ProductVariants/ProductVariants";
+import ProductSpecs from "../../components/product/ProductSpecs/ProductSpecs";
+import ProductActions from "../../components/product/ProductActions/ProductActions";
 
 import { getProductBySlug } from "../../services/productService";
 
@@ -98,18 +95,6 @@ function Product() {
   ) {
     setSelectedColorId(colorId);
 
-    /*
-     * Quando a cor muda,
-     * removemos a variante anterior.
-     *
-     * Exemplo:
-     * Preto tamanho 58
-     * ↓
-     * muda para Branco
-     * ↓
-     * tamanho precisa ser escolhido
-     * novamente.
-     */
     setSelectedVariantId("");
   }
 
@@ -143,9 +128,6 @@ function Product() {
       </Container>
     );
   }
-
-  const isMoto =
-    product.type === "moto";
 
   const hasVariants =
     product.variants?.length > 0;
@@ -242,57 +224,12 @@ function Product() {
               />
             )}
 
-            <div
-              className={styles.actions}
-            >
-              {isMoto ? (
-                <>
-                  {product.sales
-                    ?.requestQuote && (
-                    <Button>
-                      Solicitar proposta
-                    </Button>
-                  )}
-
-                  {product.sales
-                    ?.testRide && (
-                    <Button variant="secondary">
-                      Agendar Test Ride
-                    </Button>
-                  )}
-                </>
-              ) : (
-                product.sales
-                  ?.purchasableOnline && (
-                  <Button>
-                    Adicionar ao carrinho
-                  </Button>
-                )
-              )}
-
-              <div
-                className={
-                  styles.secondaryActions
-                }
-              >
-                <Button variant="ghost">
-                  <Heart size={18} />
-
-                  Favoritar
-                </Button>
-
-                {product.sales
-                  ?.whatsapp && (
-                  <Button variant="ghost">
-                    <MessageCircle
-                      size={18}
-                    />
-
-                    WhatsApp
-                  </Button>
-                )}
-              </div>
-            </div>
+            <ProductActions
+              product={product}
+              selectedVariantId={
+                selectedVariantId
+              }
+            />
           </div>
         </section>
 
@@ -307,6 +244,7 @@ function Product() {
             {product.description}
           </p>
         </section>
+
         <ProductSpecs
           specs={product.specs}
         />

@@ -157,3 +157,6 @@
 
   font-size: 1.12rem;
 }
+.favoriteActive {
+  color: var(--color-primary);
+}
