@@ -77,7 +77,12 @@ function CartProvider({
     productId,
     variantId = null,
     quantity = 1,
+    maxQuantity = null,
   }) {
+    if (quantity <= 0) {
+      return;
+    }
+
     setCartItems(
       (currentItems) => {
         const existingItem =
@@ -90,6 +95,26 @@ function CartProvider({
           );
 
         if (existingItem) {
+          const newQuantity =
+            existingItem.quantity +
+            quantity;
+
+          const finalQuantity =
+            typeof maxQuantity ===
+            "number"
+              ? Math.min(
+                  newQuantity,
+                  maxQuantity
+                )
+              : newQuantity;
+
+          if (
+            finalQuantity ===
+            existingItem.quantity
+          ) {
+            return currentItems;
+          }
+
           return currentItems.map(
             (item) => {
               const isSameItem =
@@ -106,8 +131,7 @@ function CartProvider({
                 ...item,
 
                 quantity:
-                  item.quantity +
-                  quantity,
+                  finalQuantity,
 
                 updatedAt:
                   Date.now(),
@@ -116,12 +140,28 @@ function CartProvider({
           );
         }
 
+        const initialQuantity =
+          typeof maxQuantity ===
+          "number"
+            ? Math.min(
+                quantity,
+                maxQuantity
+              )
+            : quantity;
+
+        if (initialQuantity <= 0) {
+          return currentItems;
+        }
+
         return [
           ...currentItems,
           {
             productId,
             variantId,
-            quantity,
+
+            quantity:
+              initialQuantity,
+
             updatedAt:
               Date.now(),
           },
@@ -151,7 +191,8 @@ function CartProvider({
   function updateQuantity(
     productId,
     variantId,
-    quantity
+    quantity,
+    maxQuantity = null
   ) {
     if (quantity <= 0) {
       removeItem(
@@ -176,10 +217,20 @@ function CartProvider({
               return item;
             }
 
+            const finalQuantity =
+              typeof maxQuantity ===
+              "number"
+                ? Math.min(
+                    quantity,
+                    maxQuantity
+                  )
+                : quantity;
+
             return {
               ...item,
 
-              quantity,
+              quantity:
+                finalQuantity,
 
               updatedAt:
                 Date.now(),

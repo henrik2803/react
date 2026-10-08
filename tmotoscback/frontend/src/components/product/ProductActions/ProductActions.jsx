@@ -21,6 +21,7 @@ function ProductActions({
   } = useFavorites();
 
   const {
+    cartItems,
     addItem,
   } = useCart();
 
@@ -30,9 +31,50 @@ function ProductActions({
   const hasVariants =
     product.variants?.length > 0;
 
-  const canAddToCart =
+  const selectedVariant =
+    hasVariants
+      ? product.variants.find(
+          (variant) =>
+            variant.id ===
+            selectedVariantId
+        )
+      : null;
+
+  const maxStock =
+    hasVariants
+      ? selectedVariant?.stock
+      : product.stock?.quantity;
+
+  const currentCartItem =
+    cartItems.find(
+      (item) =>
+        item.productId ===
+          product.id &&
+        item.variantId ===
+          (selectedVariantId ||
+            null)
+    );
+
+  const quantityInCart =
+    currentCartItem?.quantity ?? 0;
+
+  const productAvailable =
+    product.stock?.available !==
+    false;
+
+  const hasRequiredSelection =
     !hasVariants ||
-    Boolean(selectedVariantId);
+    Boolean(selectedVariant);
+
+  const reachedStockLimit =
+    typeof maxStock ===
+      "number" &&
+    quantityInCart >= maxStock;
+
+  const canAddToCart =
+    productAvailable &&
+    hasRequiredSelection &&
+    !reachedStockLimit;
 
   const favorite =
     isFavorite(product.id);
@@ -55,8 +97,36 @@ function ProductActions({
         null,
 
       quantity: 1,
+
+      maxQuantity:
+        typeof maxStock ===
+        "number"
+          ? maxStock
+          : null,
     });
   }
+
+  function getHelperMessage() {
+    if (!productAvailable) {
+      return "Produto indisponível.";
+    }
+
+    if (
+      hasVariants &&
+      !selectedVariant
+    ) {
+      return "Selecione o tamanho antes de adicionar ao carrinho.";
+    }
+
+    if (reachedStockLimit) {
+      return "Quantidade máxima disponível em estoque atingida.";
+    }
+
+    return "";
+  }
+
+  const helperMessage =
+    getHelperMessage();
 
   return (
     <div className={styles.actions}>
@@ -90,24 +160,25 @@ function ProductActions({
               title={
                 canAddToCart
                   ? "Adicionar ao carrinho"
-                  : "Selecione uma opção antes de adicionar ao carrinho"
+                  : helperMessage
               }
             >
               <ShoppingBag
                 size={18}
               />
 
-              Adicionar ao carrinho
+              {reachedStockLimit
+                ? "Estoque máximo atingido"
+                : "Adicionar ao carrinho"}
             </Button>
 
-            {!canAddToCart && (
+            {helperMessage && (
               <span
                 className={
                   styles.helper
                 }
               >
-                Selecione o tamanho antes
-                de adicionar ao carrinho.
+                {helperMessage}
               </span>
             )}
           </>
