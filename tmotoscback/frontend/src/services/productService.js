@@ -10,8 +10,13 @@ export async function getProductBySlug(slug) {
   );
 }
 
-export async function getProductsByCategory(category) {
-  if (!category || category === "Todos") {
+export async function getProductsByCategory(
+  category
+) {
+  if (
+    !category ||
+    category === "Todos"
+  ) {
     return products;
   }
 
@@ -21,7 +26,9 @@ export async function getProductsByCategory(category) {
   );
 }
 
-export async function getProductsByIds(ids = []) {
+export async function getProductsByIds(
+  ids = []
+) {
   if (!ids.length) {
     return [];
   }
@@ -30,4 +37,17 @@ export async function getProductsByIds(ids = []) {
     (product) =>
       ids.includes(product.id)
   );
+}
+
+export async function getFeedProducts() {
+  return products
+    .filter(
+      (product) =>
+        product.feed?.enabled
+    )
+    .sort(
+      (a, b) =>
+        (a.feed?.order ?? 999) -
+        (b.feed?.order ?? 999)
+    );
 }

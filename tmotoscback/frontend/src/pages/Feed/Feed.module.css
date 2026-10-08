@@ -1,0 +1,71 @@
+.feed {
+  height:
+    calc(100dvh - 72px);
+
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  scroll-snap-type:
+    y mandatory;
+
+  overscroll-behavior-y:
+    contain;
+
+  scrollbar-width: none;
+}
+
+.feed::-webkit-scrollbar {
+  display: none;
+}
+
+.feed > article {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+.statusPage {
+  min-height:
+    calc(100dvh - 72px);
+
+  display: grid;
+  place-items: center;
+
+  padding: 32px;
+
+  background:
+    var(--color-background);
+}
+
+.status {
+  max-width: 520px;
+
+  color:
+    var(--color-text-secondary);
+
+  text-align: center;
+}
+
+.status h1 {
+  margin-bottom: 12px;
+
+  color:
+    var(--color-text);
+
+  font-size: 1.6rem;
+}
+
+.status p {
+  line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+  .feed {
+    height:
+      calc(100dvh - 64px);
+  }
+
+  .statusPage {
+    min-height:
+      calc(100dvh - 64px);
+  }
+}
