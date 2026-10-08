@@ -17,8 +17,12 @@ import {
 import Container from "../../components/layout/Container/Container";
 import Button from "../../components/ui/Button/Button";
 
+import ProductGallery from "../../components/product/ProductGallery/ProductGallery";
+import ProductPrice from "../../components/product/ProductPrice/ProductPrice";
+import ProductColors from "../../components/product/ProductColors/ProductColors";
+import ProductVariants from "../../components/product/ProductVariants/ProductVariants";
+
 import { getProductBySlug } from "../../services/productService";
-import { formatBRL } from "../../utils/currency";
 
 import styles from "./Product.module.css";
 
@@ -34,11 +38,25 @@ function Product() {
   const [error, setError] =
     useState("");
 
+  const [
+    selectedColorId,
+    setSelectedColorId,
+  ] = useState("");
+
+  const [
+    selectedVariantId,
+    setSelectedVariantId,
+  ] = useState("");
+
   useEffect(() => {
     async function loadProduct() {
       try {
         setLoading(true);
         setError("");
+        setProduct(null);
+
+        setSelectedColorId("");
+        setSelectedVariantId("");
 
         const data =
           await getProductBySlug(slug);
@@ -52,6 +70,12 @@ function Product() {
         }
 
         setProduct(data);
+
+        if (data.colors?.length) {
+          setSelectedColorId(
+            data.colors[0].id
+          );
+        }
       } catch (error) {
         console.error(
           "Erro ao carregar produto:",
@@ -68,6 +92,26 @@ function Product() {
 
     loadProduct();
   }, [slug]);
+
+  function handleSelectColor(
+    colorId
+  ) {
+    setSelectedColorId(colorId);
+
+    /*
+     * Quando a cor muda,
+     * removemos a variante anterior.
+     *
+     * Exemplo:
+     * Preto tamanho 58
+     * ↓
+     * muda para Branco
+     * ↓
+     * tamanho precisa ser escolhido
+     * novamente.
+     */
+    setSelectedVariantId("");
+  }
 
   if (loading) {
     return (
@@ -88,7 +132,8 @@ function Product() {
           </h1>
 
           <p>
-            {error}
+            {error ||
+              "O produto solicitado não existe."}
           </p>
 
           <Link to="/catalogo">
@@ -101,6 +146,9 @@ function Product() {
 
   const isMoto =
     product.type === "moto";
+
+  const hasVariants =
+    product.variants?.length > 0;
 
   return (
     <main className={styles.product}>
@@ -115,13 +163,10 @@ function Product() {
         </Link>
 
         <section className={styles.main}>
-          <div className={styles.gallery}>
-            <img
-              src={product.media.cover}
-              alt={product.name}
-              className={styles.image}
-            />
-          </div>
+          <ProductGallery
+            key={product.id}
+            product={product}
+          />
 
           <div className={styles.info}>
             <span className={styles.brand}>
@@ -140,8 +185,11 @@ function Product() {
               {product.shortDescription}
             </p>
 
-            {product.badges?.length > 0 && (
-              <div className={styles.badges}>
+            {product.badges?.length >
+              0 && (
+              <div
+                className={styles.badges}
+              >
                 {product.badges.map(
                   (badge) => (
                     <span
@@ -157,96 +205,54 @@ function Product() {
               </div>
             )}
 
-            <div className={styles.priceArea}>
-              {product.oldPrice && (
-                <span
-                  className={
-                    styles.oldPrice
-                  }
-                >
-                  {formatBRL(
-                    product.oldPrice
-                  )}
-                </span>
-              )}
+            <ProductPrice
+              price={product.price}
+              oldPrice={product.oldPrice}
+              installment={
+                product.installment
+              }
+            />
 
-              <strong
-                className={styles.price}
-              >
-                {formatBRL(
-                  product.price
-                )}
-              </strong>
+            <ProductColors
+              colors={
+                product.colors
+              }
+              selectedColorId={
+                selectedColorId
+              }
+              onSelectColor={
+                handleSelectColor
+              }
+            />
 
-              {product.installment
-                ?.enabled && (
-                <span
-                  className={
-                    styles.installment
-                  }
-                >
-                  {
-                    product.installment
-                      .installments
-                  }
-                  x de{" "}
-                  {formatBRL(
-                    product.installment
-                      .value
-                  )}
-                </span>
-              )}
-            </div>
-
-            {product.colors?.length >
-              0 && (
-              <div
-                className={
-                  styles.colorsArea
+            {hasVariants && (
+              <ProductVariants
+                variants={
+                  product.variants
                 }
-              >
-                <span
-                  className={
-                    styles.sectionLabel
-                  }
-                >
-                  Cores disponíveis
-                </span>
-
-                <div
-                  className={
-                    styles.colors
-                  }
-                >
-                  {product.colors.map(
-                    (color) => (
-                      <button
-                        key={color.id}
-                        type="button"
-                        className={
-                          styles.color
-                        }
-                        title={color.name}
-                        aria-label={
-                          color.name
-                        }
-                        style={{
-                          background:
-                            color.hex,
-                        }}
-                      />
-                    )
-                  )}
-                </div>
-              </div>
+                selectedColorId={
+                  selectedColorId
+                }
+                selectedVariantId={
+                  selectedVariantId
+                }
+                onSelectVariant={
+                  setSelectedVariantId
+                }
+              />
             )}
 
-            <div className={styles.actions}>
+            <div
+              className={styles.actions}
+            >
               {isMoto ? (
                 <>
-                  <Button>
-                    Solicitar proposta
-                  </Button>
+                  {product.sales
+                    ?.requestQuote && (
+                    <Button>
+                      Solicitar proposta
+                    </Button>
+                  )}
 
                   {product.sales
                     ?.testRide && (
@@ -256,9 +262,12 @@ function Product() {
                   )}
                 </>
               ) : (
-                <Button>
-                  Adicionar ao carrinho
-                </Button>
+                product.sales
+                  ?.purchasableOnline && (
+                  <Button>
+                    Adicionar ao carrinho
+                  </Button>
+                )
               )}
 
               <div
@@ -290,7 +299,9 @@ function Product() {
         <section
           className={styles.description}
         >
-          <h2>Sobre o produto</h2>
+          <h2>
+            Sobre o produto
+          </h2>
 
           <p>
             {product.description}

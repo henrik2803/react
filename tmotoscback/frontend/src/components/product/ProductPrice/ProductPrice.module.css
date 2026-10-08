@@ -1,0 +1,35 @@
+.priceArea {
+  display: flex;
+  flex-direction: column;
+
+  margin-top: 28px;
+}
+
+.oldPrice {
+  color: var(--color-text-secondary);
+
+  font-size: 0.9rem;
+
+  text-decoration: line-through;
+}
+
+.price {
+  color: var(--color-text);
+
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.installment {
+  margin-top: 4px;
+
+  color: var(--color-text-secondary);
+
+  font-size: 0.9rem;
+}
+
+@media (max-width: 600px) {
+  .price {
+    font-size: 1.6rem;
+  }
+}
