@@ -21,12 +21,12 @@ function ProductGrid({
   return (
     <section className={styles.grid}>
       {products.map((product) => (
-        <ProductCard
-          key={product.id}
-          product={product}
-          onSelect={onSelectProduct}
-        />
-      ))}
+            <ProductCard
+            key={product.id}
+            product={product}
+            onSelect={() => onSelectProduct(product)}
+          />
+                ))}
     </section>
   );
 }
