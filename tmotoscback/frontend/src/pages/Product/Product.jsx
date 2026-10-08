@@ -2,7 +2,7 @@ import {
   useEffect,
   useState,
 } from "react";
-
+import ProductSpecs from "../../components/product/ProductSpecs/ProductSpecs";
 import {
   Link,
   useParams,
@@ -307,6 +307,9 @@ function Product() {
             {product.description}
           </p>
         </section>
+        <ProductSpecs
+          specs={product.specs}
+        />
       </Container>
     </main>
   );
