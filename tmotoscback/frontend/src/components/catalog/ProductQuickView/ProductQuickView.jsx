@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import {
   Heart,
   MessageCircle,
@@ -14,6 +15,9 @@ function ProductQuickView({
   product,
   onClose,
 }) {
+
+  const navigate = useNavigate();
+  
   if (!product) {
     return (
       <aside className={styles.empty}>
@@ -84,44 +88,50 @@ function ProductQuickView({
           </div>
 
           <div className={styles.actions}>
-            {isMoto ? (
-              <>
-                <Button>
-                  Solicitar proposta
+              <Button
+                onClick={() =>
+                  navigate(`/produto/${product.slug}`)
+                }
+              >
+                Ver detalhes
+              </Button>
+
+              {isMoto ? (
+                <>
+                  {product.sales?.requestQuote && (
+                    <Button variant="secondary">
+                      Solicitar proposta
+                    </Button>
+                  )}
+
+                  {product.sales?.testRide && (
+                    <Button variant="secondary">
+                      Agendar Test Ride
+                    </Button>
+                  )}
+                </>
+              ) : (
+                product.sales?.purchasableOnline && (
+                  <Button variant="secondary">
+                    Adicionar ao carrinho
+                  </Button>
+                )
+              )}
+
+              <div className={styles.secondaryActions}>
+                <Button variant="ghost">
+                  <Heart size={18} />
+                  Favoritar
                 </Button>
 
-                {product.sales?.testRide && (
-                  <Button variant="secondary">
-                    Agendar Test Ride
+                {product.sales?.whatsapp && (
+                  <Button variant="ghost">
+                    <MessageCircle size={18} />
+                    WhatsApp
                   </Button>
                 )}
-              </>
-            ) : (
-              <Button>
-                Adicionar ao carrinho
-              </Button>
-            )}
-
-            <div
-              className={
-                styles.secondaryActions
-              }
-            >
-              <Button variant="ghost">
-                <Heart size={18} />
-
-                Favoritar
-              </Button>
-
-              {product.sales?.whatsapp && (
-                <Button variant="ghost">
-                  <MessageCircle size={18} />
-
-                  WhatsApp
-                </Button>
-              )}
+              </div>
             </div>
-          </div>
         </div>
       </aside>
     </>
