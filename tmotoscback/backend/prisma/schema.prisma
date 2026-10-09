@@ -1,0 +1,28 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum ProductType {
+  MOTO
+  ACCESSORY
+}
+
+model Product {
+  id       Int         @id @default(autoincrement())
+  slug     String      @unique
+  name     String
+  brand    String
+  type     ProductType
+  category String
+  price    Decimal     @db.Decimal(12, 2)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("products")
+}
