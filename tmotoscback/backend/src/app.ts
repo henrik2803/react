@@ -1,5 +1,5 @@
 import Fastify from "fastify";
-
+import leadsRoutes from "./modules/leads/leads.routes.js";
 import cors from "@fastify/cors";
 
 import { env } from "./config/env.js";
@@ -21,6 +21,14 @@ function buildApp() {
   app.register(
     healthRoutes
   );
+
+  app.register(
+  leadsRoutes,
+  {
+    prefix:
+      "/api/v1/leads",
+  }
+);
 
   app.register(
     productsRoutes,
