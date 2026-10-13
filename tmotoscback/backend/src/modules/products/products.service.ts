@@ -9,6 +9,11 @@ import {
 export async function listProducts() {
   const products =
     await prisma.product.findMany({
+      include: {
+        colors: true,
+        variants: true,
+      },
+
       orderBy: {
         id: "asc",
       },
@@ -26,6 +31,11 @@ export async function findProductBySlug(
     await prisma.product.findUnique({
       where: {
         slug,
+      },
+
+      include: {
+        colors: true,
+        variants: true,
       },
     });
 
