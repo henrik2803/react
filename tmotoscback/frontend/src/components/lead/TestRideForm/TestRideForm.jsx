@@ -4,6 +4,10 @@ import {
 
 import Button from "../../ui/Button/Button";
 
+import {
+  createTestRideLead,
+} from "../../../services/leadService";
+
 import styles from "./TestRideForm.module.css";
 
 const initialForm = {
@@ -47,6 +51,14 @@ function TestRideForm({
   const [submitted, setSubmitted] =
     useState(false);
 
+  const [loading, setLoading] =
+    useState(false);
+
+  const [
+    submitError,
+    setSubmitError,
+  ] = useState("");
+
   const today = getToday();
 
   function handleChange(event) {
@@ -68,6 +80,8 @@ function TestRideForm({
         [name]: "",
       })
     );
+
+    setSubmitError("");
   }
 
   function validate() {
@@ -109,7 +123,9 @@ function TestRideForm({
     return newErrors;
   }
 
-  function handleSubmit(event) {
+  async function handleSubmit(
+    event
+  ) {
     event.preventDefault();
 
     const validationErrors =
@@ -127,19 +143,47 @@ function TestRideForm({
       return;
     }
 
-    /*
-     * Futuramente:
-     *
-     * await createTestRideLead({
-     *   productId: product.id,
-     *   ...form,
-     * });
-     *
-     * Nenhum dado pessoal será
-     * salvo no localStorage.
-     */
+    try {
+      setLoading(true);
+      setSubmitError("");
 
-    setSubmitted(true);
+      await createTestRideLead({
+        productId:
+          product.id,
+
+        name:
+          form.name,
+
+        phone:
+          form.phone,
+
+        email:
+          form.email,
+
+        preferredDate:
+          form.preferredDate,
+
+        period:
+          form.period,
+
+        message:
+          form.message,
+      });
+
+      setSubmitted(true);
+    } catch (error) {
+      console.error(
+        "Erro ao enviar Test Ride:",
+        error
+      );
+
+      setSubmitError(
+        error.message ||
+          "Não foi possível solicitar o Test Ride."
+      );
+    } finally {
+      setLoading(false);
+    }
   }
 
   if (submitted) {
@@ -158,15 +202,12 @@ function TestRideForm({
         </span>
 
         <h3>
-          Solicitação preparada.
+          Solicitação enviada.
         </h3>
 
         <p>
-          O agendamento foi validado
-          pelo frontend. Quando
-          conectarmos o backend,
-          essa solicitação será
-          enviada para a TMotos.
+          Recebemos sua solicitação de
+          Test Ride.
         </p>
 
         <div
@@ -203,6 +244,13 @@ function TestRideForm({
           </strong>
         </div>
 
+        <p>
+          A data representa uma
+          preferência. A equipe da
+          TMotos confirmará a
+          disponibilidade.
+        </p>
+
         <Button
           onClick={onClose}
         >
@@ -233,12 +281,8 @@ function TestRideForm({
         </strong>
       </div>
 
-      <div
-        className={styles.field}
-      >
-        <label
-          htmlFor="test-ride-name"
-        >
+      <div className={styles.field}>
+        <label htmlFor="test-ride-name">
           Nome *
         </label>
 
@@ -250,6 +294,7 @@ function TestRideForm({
           onChange={handleChange}
           autoComplete="name"
           placeholder="Seu nome"
+          disabled={loading}
         />
 
         {errors.name && (
@@ -263,12 +308,8 @@ function TestRideForm({
         )}
       </div>
 
-      <div
-        className={styles.field}
-      >
-        <label
-          htmlFor="test-ride-phone"
-        >
+      <div className={styles.field}>
+        <label htmlFor="test-ride-phone">
           Telefone / WhatsApp *
         </label>
 
@@ -280,6 +321,7 @@ function TestRideForm({
           onChange={handleChange}
           autoComplete="tel"
           placeholder="(00) 00000-0000"
+          disabled={loading}
         />
 
         {errors.phone && (
@@ -293,12 +335,8 @@ function TestRideForm({
         )}
       </div>
 
-      <div
-        className={styles.field}
-      >
-        <label
-          htmlFor="test-ride-email"
-        >
+      <div className={styles.field}>
+        <label htmlFor="test-ride-email">
           E-mail
         </label>
 
@@ -310,6 +348,7 @@ function TestRideForm({
           onChange={handleChange}
           autoComplete="email"
           placeholder="voce@email.com"
+          disabled={loading}
         />
 
         {errors.email && (
@@ -328,12 +367,8 @@ function TestRideForm({
           styles.schedule
         }
       >
-        <div
-          className={styles.field}
-        >
-          <label
-            htmlFor="test-ride-date"
-          >
+        <div className={styles.field}>
+          <label htmlFor="test-ride-date">
             Data desejada *
           </label>
 
@@ -348,6 +383,7 @@ function TestRideForm({
             onChange={
               handleChange
             }
+            disabled={loading}
           />
 
           {errors.preferredDate && (
@@ -363,12 +399,8 @@ function TestRideForm({
           )}
         </div>
 
-        <div
-          className={styles.field}
-        >
-          <label
-            htmlFor="test-ride-period"
-          >
+        <div className={styles.field}>
+          <label htmlFor="test-ride-period">
             Período *
           </label>
 
@@ -379,6 +411,7 @@ function TestRideForm({
             onChange={
               handleChange
             }
+            disabled={loading}
           >
             <option value="">
               Selecione
@@ -405,12 +438,8 @@ function TestRideForm({
         </div>
       </div>
 
-      <div
-        className={styles.field}
-      >
-        <label
-          htmlFor="test-ride-message"
-        >
+      <div className={styles.field}>
+        <label htmlFor="test-ride-message">
           Observações
         </label>
 
@@ -421,11 +450,24 @@ function TestRideForm({
           onChange={handleChange}
           rows={4}
           placeholder="Alguma preferência ou observação?"
+          disabled={loading}
         />
       </div>
 
+      {submitError && (
+        <span
+          className={
+            styles.error
+          }
+        >
+          {submitError}
+        </span>
+      )}
+
       <div
-        className={styles.notice}
+        className={
+          styles.notice
+        }
       >
         A data escolhida representa uma
         preferência. A confirmação do
@@ -433,8 +475,13 @@ function TestRideForm({
         contato da concessionária.
       </div>
 
-      <Button type="submit">
-        Solicitar Test Ride
+      <Button
+        type="submit"
+        disabled={loading}
+      >
+        {loading
+          ? "Enviando..."
+          : "Solicitar Test Ride"}
       </Button>
     </form>
   );

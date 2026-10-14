@@ -4,6 +4,10 @@ import {
 
 import Button from "../../ui/Button/Button";
 
+import {
+  createQuoteLead,
+} from "../../../services/leadService";
+
 import styles from "./QuoteForm.module.css";
 
 const initialForm = {
@@ -27,6 +31,14 @@ function QuoteForm({
 
   const [submitted, setSubmitted] =
     useState(false);
+
+  const [loading, setLoading] =
+    useState(false);
+
+  const [
+    submitError,
+    setSubmitError,
+  ] = useState("");
 
   function handleChange(event) {
     const {
@@ -53,6 +65,8 @@ function QuoteForm({
         [name]: "",
       })
     );
+
+    setSubmitError("");
   }
 
   function validate() {
@@ -79,7 +93,9 @@ function QuoteForm({
     return newErrors;
   }
 
-  function handleSubmit(event) {
+  async function handleSubmit(
+    event
+  ) {
     event.preventDefault();
 
     const validationErrors =
@@ -97,19 +113,47 @@ function QuoteForm({
       return;
     }
 
-    /*
-     * IMPORTANTE:
-     *
-     * Ainda não enviamos os dados
-     * para localStorage.
-     *
-     * Quando o backend existir,
-     * entra aqui:
-     *
-     * await createQuoteLead(...)
-     */
+    try {
+      setLoading(true);
+      setSubmitError("");
 
-    setSubmitted(true);
+      await createQuoteLead({
+        productId:
+          product.id,
+
+        name:
+          form.name,
+
+        phone:
+          form.phone,
+
+        email:
+          form.email,
+
+        tradeIn:
+          form.tradeIn,
+
+        financing:
+          form.financing,
+
+        message:
+          form.message,
+      });
+
+      setSubmitted(true);
+    } catch (error) {
+      console.error(
+        "Erro ao enviar proposta:",
+        error
+      );
+
+      setSubmitError(
+        error.message ||
+          "Não foi possível enviar a solicitação."
+      );
+    } finally {
+      setLoading(false);
+    }
   }
 
   if (submitted) {
@@ -124,18 +168,27 @@ function QuoteForm({
             styles.successLabel
           }
         >
-          Formulário validado
+          Proposta
         </span>
 
         <h3>
-          Solicitação preparada.
+          Solicitação enviada.
         </h3>
 
         <p>
-          A interface está funcionando.
-          O envio definitivo será
-          conectado ao backend na etapa
-          de leads.
+          Recebemos sua solicitação de
+          proposta para{" "}
+          <strong>
+            {product.brand}{" "}
+            {product.name}
+          </strong>
+          .
+        </p>
+
+        <p>
+          A equipe da TMotos poderá
+          entrar em contato pelos dados
+          informados.
         </p>
 
         <Button
@@ -181,6 +234,7 @@ function QuoteForm({
           onChange={handleChange}
           autoComplete="name"
           placeholder="Seu nome"
+          disabled={loading}
         />
 
         {errors.name && (
@@ -207,6 +261,7 @@ function QuoteForm({
           onChange={handleChange}
           autoComplete="tel"
           placeholder="(00) 00000-0000"
+          disabled={loading}
         />
 
         {errors.phone && (
@@ -233,6 +288,7 @@ function QuoteForm({
           onChange={handleChange}
           autoComplete="email"
           placeholder="voce@email.com"
+          disabled={loading}
         />
 
         {errors.email && (
@@ -265,6 +321,7 @@ function QuoteForm({
             onChange={
               handleChange
             }
+            disabled={loading}
           />
 
           <span>
@@ -287,6 +344,7 @@ function QuoteForm({
             onChange={
               handleChange
             }
+            disabled={loading}
           />
 
           <span>
@@ -308,8 +366,19 @@ function QuoteForm({
           onChange={handleChange}
           rows={4}
           placeholder="Conte como podemos ajudar..."
+          disabled={loading}
         />
       </div>
+
+      {submitError && (
+        <span
+          className={
+            styles.error
+          }
+        >
+          {submitError}
+        </span>
+      )}
 
       <div
         className={
@@ -320,8 +389,13 @@ function QuoteForm({
         no navegador.
       </div>
 
-      <Button type="submit">
-        Continuar solicitação
+      <Button
+        type="submit"
+        disabled={loading}
+      >
+        {loading
+          ? "Enviando..."
+          : "Enviar solicitação"}
       </Button>
     </form>
   );
