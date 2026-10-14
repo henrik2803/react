@@ -19,6 +19,21 @@ const envSchema = z.object({
     .default(
       "http://localhost:5173"
     ),
+
+  JWT_SECRET: z
+    .string()
+    .min(
+      32,
+      "JWT_SECRET deve ter pelo menos 32 caracteres."
+    ),
+
+  ADMIN_EMAIL: z
+    .string()
+    .email(),
+
+  ADMIN_PASSWORD_HASH: z
+    .string()
+    .min(20),
 });
 
 const parsedEnv =

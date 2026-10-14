@@ -15,6 +15,9 @@ enum ProductType {
 
 enum LeadStatus {
   NEW
+  CONTACTED
+  CLOSED
+  CANCELLED
 }
 
 enum TestRidePeriod {
