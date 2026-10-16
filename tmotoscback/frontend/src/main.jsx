@@ -1,7 +1,9 @@
 import {
   StrictMode,
 } from "react";
-
+import {
+  AdminAuthProvider,
+} from "./context/AdminAuthContext";
 import {
   createRoot,
 } from "react-dom/client";
@@ -29,13 +31,13 @@ createRoot(
     "root"
   )
 ).render(
-  <StrictMode>
-    <BrowserRouter>
-      <FavoritesProvider>
-        <CartProvider>
-          <App />
-        </CartProvider>
-      </FavoritesProvider>
-    </BrowserRouter>
-  </StrictMode>
+  <BrowserRouter>
+  <AdminAuthProvider>
+    <FavoritesProvider>
+      <CartProvider>
+        <App />
+      </CartProvider>
+    </FavoritesProvider>
+  </AdminAuthProvider>
+</BrowserRouter>
 );
