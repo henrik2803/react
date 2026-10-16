@@ -20,9 +20,24 @@ function buildApp() {
   });
 
   app.register(cors, {
-    origin:
-      env.FRONTEND_URL,
-  });
+  origin:
+    env.FRONTEND_URL,
+
+  methods: [
+    "GET",
+    "HEAD",
+    "POST",
+    "PUT",
+    "PATCH",
+    "DELETE",
+    "OPTIONS",
+  ],
+
+  allowedHeaders: [
+    "Content-Type",
+    "Authorization",
+  ],
+});
 
   app.register(jwt, {
     secret:
