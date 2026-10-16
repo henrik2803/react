@@ -13,14 +13,27 @@ import {
   updateTestRideLeadStatusController,
 } from "./admin-leads.controller.js";
 
+import {
+  getAdminProductController,
+  listAdminProductsController,
+  updateAdminProductStatusController,
+} from "./admin-products.controller.js";
+
 const adminRoutes:
   FastifyPluginAsync =
     async (app) => {
+      /*
+       * Todas as rotas deste módulo
+       * exigem autenticação administrativa.
+       */
       app.addHook(
         "preHandler",
         authenticateAdmin
       );
 
+      /*
+       * Teste da área administrativa.
+       */
       app.get(
         "/ping",
         async () => {
@@ -32,14 +45,12 @@ const adminRoutes:
         }
       );
 
+      /*
+       * LEADS - PROPOSTAS
+       */
       app.get(
         "/leads/quotes",
         listQuoteLeadsController
-      );
-
-      app.get(
-        "/leads/test-rides",
-        listTestRideLeadsController
       );
 
       app.patch(
@@ -47,9 +58,35 @@ const adminRoutes:
         updateQuoteLeadStatusController
       );
 
+      /*
+       * LEADS - TEST RIDES
+       */
+      app.get(
+        "/leads/test-rides",
+        listTestRideLeadsController
+      );
+
       app.patch(
         "/leads/test-rides/:id/status",
         updateTestRideLeadStatusController
+      );
+
+      /*
+       * PRODUTOS
+       */
+      app.get(
+        "/products",
+        listAdminProductsController
+      );
+
+      app.get(
+        "/products/:id",
+        getAdminProductController
+      );
+
+      app.patch(
+        "/products/:id/status",
+        updateAdminProductStatusController
       );
     };
 
