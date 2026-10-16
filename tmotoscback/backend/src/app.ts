@@ -2,6 +2,7 @@ import Fastify from "fastify";
 
 import cors from "@fastify/cors";
 import jwt from "@fastify/jwt";
+import adminRoutes from "./modules/admin/admin.routes.js";
 
 import {
   env,
@@ -55,6 +56,14 @@ function buildApp() {
         "/api/v1/auth",
     }
   );
+
+  app.register(
+  adminRoutes,
+  {
+    prefix:
+      "/api/v1/admin",
+  }
+);
 
   return app;
 }
