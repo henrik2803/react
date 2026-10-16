@@ -14,26 +14,21 @@ import {
 } from "./admin-leads.controller.js";
 
 import {
+  createAdminProductController,
   getAdminProductController,
   listAdminProductsController,
+  updateAdminProductController,
   updateAdminProductStatusController,
 } from "./admin-products.controller.js";
 
 const adminRoutes:
   FastifyPluginAsync =
     async (app) => {
-      /*
-       * Todas as rotas deste módulo
-       * exigem autenticação administrativa.
-       */
       app.addHook(
         "preHandler",
         authenticateAdmin
       );
 
-      /*
-       * Teste da área administrativa.
-       */
       app.get(
         "/ping",
         async () => {
@@ -46,7 +41,7 @@ const adminRoutes:
       );
 
       /*
-       * LEADS - PROPOSTAS
+       * PROPOSTAS
        */
       app.get(
         "/leads/quotes",
@@ -59,7 +54,7 @@ const adminRoutes:
       );
 
       /*
-       * LEADS - TEST RIDES
+       * TEST RIDES
        */
       app.get(
         "/leads/test-rides",
@@ -82,6 +77,16 @@ const adminRoutes:
       app.get(
         "/products/:id",
         getAdminProductController
+      );
+
+      app.post(
+        "/products",
+        createAdminProductController
+      );
+
+      app.patch(
+        "/products/:id",
+        updateAdminProductController
       );
 
       app.patch(
