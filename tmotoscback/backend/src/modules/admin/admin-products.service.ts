@@ -25,6 +25,19 @@ const productInclude = {
   variants: true,
 };
 
+type ProductColorInput = {
+  key: string;
+  name: string;
+  hex: string;
+};
+
+type ProductVariantInput = {
+  key: string;
+  colorKey: string | null;
+  size?: string | null;
+  stock: number;
+};
+
 type ProductData = {
   type?:
     | "MOTO"
@@ -32,7 +45,9 @@ type ProductData = {
     | "PART";
 
   category?: string;
-  subcategory?: string | null;
+  subcategory?:
+    | string
+    | null;
 
   brand?: string;
   name?: string;
@@ -40,7 +55,9 @@ type ProductData = {
 
   active?: boolean;
 
-  condition?: string | null;
+  condition?:
+    | string
+    | null;
 
   shortDescription?:
     | string
@@ -51,18 +68,33 @@ type ProductData = {
     | null;
 
   price?: number;
-  oldPrice?: number | null;
+
+  oldPrice?:
+    | number
+    | null;
 
   installment?: {
     enabled?: boolean;
-    count?: number | null;
-    value?: number | null;
+
+    count?:
+      | number
+      | null;
+
+    value?:
+      | number
+      | null;
   };
 
   media?: {
-    cover?: string | null;
+    cover?:
+      | string
+      | null;
+
     images?: string[];
-    video?: string | null;
+
+    video?:
+      | string
+      | null;
   };
 
   specs?: Record<
@@ -74,7 +106,10 @@ type ProductData = {
 
   stock?: {
     available?: boolean;
-    quantity?: number | null;
+
+    quantity?:
+      | number
+      | null;
   };
 
   sales?: {
@@ -87,25 +122,41 @@ type ProductData = {
   feed?: {
     enabled?: boolean;
     featured?: boolean;
-    order?: number | null;
-    text?: string | null;
+
+    order?:
+      | number
+      | null;
+
+    text?:
+      | string
+      | null;
   };
 
   tags?: string[];
 
   seo?: {
-    title?: string | null;
+    title?:
+      | string
+      | null;
+
     description?:
       | string
       | null;
   };
+
+  colors?: ProductColorInput[];
+
+  variants?: ProductVariantInput[];
 };
 
 function mapProduct(
   product: any
 ) {
   const colorKeyById =
-    new Map(
+    new Map<
+      number,
+      string
+    >(
       product.colors.map(
         (color: any) => [
           color.id,
@@ -115,9 +166,11 @@ function mapProduct(
     );
 
   return {
-    id: product.id,
+    id:
+      product.id,
 
-    type: product.type,
+    type:
+      product.type,
 
     category:
       product.category,
@@ -147,10 +200,13 @@ function mapProduct(
       product.description,
 
     price:
-      Number(product.price),
+      Number(
+        product.price
+      ),
 
     oldPrice:
-      product.oldPrice === null
+      product.oldPrice ===
+      null
         ? null
         : Number(
             product.oldPrice
@@ -184,7 +240,8 @@ function mapProduct(
     },
 
     specs:
-      product.specs ?? {},
+      product.specs ??
+      {},
 
     badges:
       product.badges,
@@ -239,18 +296,28 @@ function mapProduct(
     colors:
       product.colors.map(
         (color: any) => ({
-          id: color.id,
-          key: color.key,
-          name: color.name,
-          hex: color.hex,
+          id:
+            color.id,
+
+          key:
+            color.key,
+
+          name:
+            color.name,
+
+          hex:
+            color.hex,
         })
       ),
 
     variants:
       product.variants.map(
         (variant: any) => ({
-          id: variant.id,
-          key: variant.key,
+          id:
+            variant.id,
+
+          key:
+            variant.key,
 
           colorId:
             variant.colorId,
@@ -261,7 +328,8 @@ function mapProduct(
               ? null
               : colorKeyById.get(
                   variant.colorId
-                ) ?? null,
+                ) ??
+                null,
 
           size:
             variant.size,
@@ -283,8 +351,10 @@ function buildProductData(
   data: ProductData
 ) {
   return {
-    ...(data.type !== undefined && {
-      type: data.type,
+    ...(data.type !==
+      undefined && {
+      type:
+        data.type,
     }),
 
     ...(data.category !==
@@ -296,25 +366,32 @@ function buildProductData(
     ...(data.subcategory !==
       undefined && {
       subcategory:
-        data.subcategory,
+        data.subcategory ===
+        null
+          ? null
+          : data.subcategory.trim(),
     }),
 
-    ...(data.brand !== undefined && {
+    ...(data.brand !==
+      undefined && {
       brand:
         data.brand.trim(),
     }),
 
-    ...(data.name !== undefined && {
+    ...(data.name !==
+      undefined && {
       name:
         data.name.trim(),
     }),
 
-    ...(data.slug !== undefined && {
+    ...(data.slug !==
+      undefined && {
       slug:
         data.slug.trim(),
     }),
 
-    ...(data.active !== undefined && {
+    ...(data.active !==
+      undefined && {
       active:
         data.active,
     }),
@@ -322,22 +399,32 @@ function buildProductData(
     ...(data.condition !==
       undefined && {
       condition:
-        data.condition,
+        data.condition ===
+        null
+          ? null
+          : data.condition.trim(),
     }),
 
     ...(data.shortDescription !==
       undefined && {
       shortDescription:
-        data.shortDescription,
+        data.shortDescription ===
+        null
+          ? null
+          : data.shortDescription.trim(),
     }),
 
     ...(data.description !==
       undefined && {
       description:
-        data.description,
+        data.description ===
+        null
+          ? null
+          : data.description.trim(),
     }),
 
-    ...(data.price !== undefined && {
+    ...(data.price !==
+      undefined && {
       price:
         data.price,
     }),
@@ -349,19 +436,22 @@ function buildProductData(
     }),
 
     ...(data.installment
-      ?.enabled !== undefined && {
+      ?.enabled !==
+      undefined && {
       installmentEnabled:
         data.installment.enabled,
     }),
 
     ...(data.installment
-      ?.count !== undefined && {
+      ?.count !==
+      undefined && {
       installmentCount:
         data.installment.count,
     }),
 
     ...(data.installment
-      ?.value !== undefined && {
+      ?.value !==
+      undefined && {
       installmentValue:
         data.installment.value,
     }),
@@ -384,24 +474,28 @@ function buildProductData(
         data.media.video,
     }),
 
-    ...(data.specs !== undefined && {
+    ...(data.specs !==
+      undefined && {
       specs:
         data.specs,
     }),
 
-    ...(data.badges !== undefined && {
+    ...(data.badges !==
+      undefined && {
       badges:
         data.badges,
     }),
 
     ...(data.stock
-      ?.available !== undefined && {
+      ?.available !==
+      undefined && {
       stockAvailable:
         data.stock.available,
     }),
 
     ...(data.stock
-      ?.quantity !== undefined && {
+      ?.quantity !==
+      undefined && {
       stockQuantity:
         data.stock.quantity,
     }),
@@ -418,46 +512,56 @@ function buildProductData(
       ?.requestQuote !==
       undefined && {
       requestQuote:
-        data.sales.requestQuote,
+        data.sales
+          .requestQuote,
     }),
 
     ...(data.sales
-      ?.testRide !== undefined && {
+      ?.testRide !==
+      undefined && {
       testRide:
-        data.sales.testRide,
+        data.sales
+          .testRide,
     }),
 
     ...(data.sales
-      ?.whatsapp !== undefined && {
+      ?.whatsapp !==
+      undefined && {
       whatsapp:
-        data.sales.whatsapp,
+        data.sales
+          .whatsapp,
     }),
 
     ...(data.feed
-      ?.enabled !== undefined && {
+      ?.enabled !==
+      undefined && {
       feedEnabled:
         data.feed.enabled,
     }),
 
     ...(data.feed
-      ?.featured !== undefined && {
+      ?.featured !==
+      undefined && {
       feedFeatured:
         data.feed.featured,
     }),
 
     ...(data.feed
-      ?.order !== undefined && {
+      ?.order !==
+      undefined && {
       feedOrder:
         data.feed.order,
     }),
 
     ...(data.feed
-      ?.text !== undefined && {
+      ?.text !==
+      undefined && {
       feedText:
         data.feed.text,
     }),
 
-    ...(data.tags !== undefined && {
+    ...(data.tags !==
+      undefined && {
       tags:
         data.tags,
     }),
@@ -503,6 +607,93 @@ async function ensureSlugAvailable(
   }
 }
 
+function validateProductRelations(
+  colors:
+    | ProductColorInput[]
+    | undefined,
+
+  variants:
+    | ProductVariantInput[]
+    | undefined
+) {
+  const colorList =
+    colors ?? [];
+
+  const variantList =
+    variants ?? [];
+
+  /*
+   * Impede duas cores com a
+   * mesma key.
+   */
+  const colorKeys =
+    new Set<string>();
+
+  for (
+    const color of
+    colorList
+  ) {
+    if (
+      colorKeys.has(
+        color.key
+      )
+    ) {
+      throw new AdminProductError(
+        `Cor duplicada: "${color.key}".`,
+        400
+      );
+    }
+
+    colorKeys.add(
+      color.key
+    );
+  }
+
+  /*
+   * Impede duas variantes com
+   * a mesma key.
+   */
+  const variantKeys =
+    new Set<string>();
+
+  for (
+    const variant of
+    variantList
+  ) {
+    if (
+      variantKeys.has(
+        variant.key
+      )
+    ) {
+      throw new AdminProductError(
+        `Variante duplicada: "${variant.key}".`,
+        400
+      );
+    }
+
+    variantKeys.add(
+      variant.key
+    );
+
+    /*
+     * Se a variante possui cor,
+     * ela precisa existir na lista.
+     */
+    if (
+      variant.colorKey !==
+        null &&
+      !colorKeys.has(
+        variant.colorKey
+      )
+    ) {
+      throw new AdminProductError(
+        `A variante "${variant.key}" referencia uma cor inexistente: "${variant.colorKey}".`,
+        400
+      );
+    }
+  }
+}
+
 export async function listAdminProducts() {
   const products =
     await prisma.product.findMany({
@@ -539,9 +730,17 @@ export async function getAdminProduct(
     );
   }
 
-  return mapProduct(product);
+  return mapProduct(
+    product
+  );
 }
 
+/*
+ * CREATE
+ *
+ * Produto + cores + variantes
+ * são gravados na mesma transação.
+ */
 export async function createAdminProduct(
   data: ProductData
 ) {
@@ -556,20 +755,182 @@ export async function createAdminProduct(
     data.slug
   );
 
-  const product =
-    await prisma.product.create({
-      data:
-        buildProductData(
-          data
-        ) as any,
+  const colors =
+    data.colors ?? [];
 
-      include:
-        productInclude,
-    });
+  const variants =
+    data.variants ?? [];
 
-  return mapProduct(product);
+  validateProductRelations(
+    colors,
+    variants
+  );
+
+  const {
+    colors:
+      _colors,
+
+    variants:
+      _variants,
+
+    ...baseData
+  } = data;
+
+  return prisma.$transaction(
+    async (tx) => {
+      const product =
+        await tx.product.create({
+          data:
+            buildProductData(
+              baseData
+            ) as any,
+        });
+
+      const colorIds =
+        new Map<
+          string,
+          number
+        >();
+
+      /*
+       * Cria cores.
+       */
+      for (
+        const color of
+        colors
+      ) {
+        const createdColor =
+          await tx.productColor.create({
+            data: {
+              productId:
+                product.id,
+
+              key:
+                color.key,
+
+              name:
+                color.name,
+
+              hex:
+                color.hex,
+            },
+          });
+
+        colorIds.set(
+          color.key,
+          createdColor.id
+        );
+      }
+
+      /*
+       * Cria variantes.
+       */
+      for (
+        const variant of
+        variants
+      ) {
+        const colorId =
+          variant.colorKey ===
+          null
+            ? null
+            : colorIds.get(
+                variant.colorKey
+              ) ??
+              null;
+
+        await tx.productVariant.create({
+          data: {
+            productId:
+              product.id,
+
+            colorId,
+
+            key:
+              variant.key,
+
+            size:
+              variant.size ??
+              null,
+
+            stock:
+              variant.stock,
+          },
+        });
+      }
+
+      /*
+       * Quando existem variantes,
+       * o estoque total passa a ser
+       * calculado automaticamente.
+       */
+      if (
+        variants.length >
+        0
+      ) {
+        const totalStock =
+          variants.reduce(
+            (
+              total,
+              variant
+            ) =>
+              total +
+              variant.stock,
+            0
+          );
+
+        await tx.product.update({
+          where: {
+            id:
+              product.id,
+          },
+
+          data: {
+            stockQuantity:
+              totalStock,
+
+            stockAvailable:
+              totalStock >
+              0,
+          },
+        });
+      }
+
+      const savedProduct =
+        await tx.product.findUnique({
+          where: {
+            id:
+              product.id,
+          },
+
+          include:
+            productInclude,
+        });
+
+      if (
+        !savedProduct
+      ) {
+        throw new AdminProductError(
+          "Erro ao carregar produto criado.",
+          500
+        );
+      }
+
+      return mapProduct(
+        savedProduct
+      );
+    }
+  );
 }
 
+/*
+ * UPDATE
+ *
+ * Campos básicos podem ser
+ * alterados isoladamente.
+ *
+ * Para alterar cores/variantes,
+ * as duas listas devem ser enviadas.
+ */
 export async function updateAdminProduct(
   id: number,
   data: ProductData
@@ -580,9 +941,9 @@ export async function updateAdminProduct(
         id,
       },
 
-      select: {
-        id: true,
-        slug: true,
+      include: {
+        colors: true,
+        variants: true,
       },
     });
 
@@ -594,8 +955,10 @@ export async function updateAdminProduct(
   }
 
   if (
-    data.slug !== undefined &&
-    data.slug !== existing.slug
+    data.slug !==
+      undefined &&
+    data.slug !==
+      existing.slug
   ) {
     await ensureSlugAvailable(
       data.slug,
@@ -603,36 +966,248 @@ export async function updateAdminProduct(
     );
   }
 
-  const product =
-    await prisma.product.update({
-      where: {
-        id,
-      },
+  const changingRelations =
+    data.colors !==
+      undefined ||
+    data.variants !==
+      undefined;
 
-      data:
-        buildProductData(
-          data
-        ) as any,
+  /*
+   * Evita substituir somente cores
+   * ou somente variantes.
+   */
+  if (
+    changingRelations &&
+    (
+      data.colors ===
+        undefined ||
+      data.variants ===
+        undefined
+    )
+  ) {
+    throw new AdminProductError(
+      "Para alterar cores ou variantes, envie colors e variants juntos.",
+      400
+    );
+  }
 
-      include:
-        productInclude,
-    });
+  if (
+    changingRelations
+  ) {
+    validateProductRelations(
+      data.colors,
+      data.variants
+    );
+  }
 
-  return mapProduct(product);
+  const {
+    colors,
+    variants,
+    ...baseData
+  } = data;
+
+  return prisma.$transaction(
+    async (tx) => {
+      /*
+       * Atualiza dados principais.
+       */
+      await tx.product.update({
+        where: {
+          id,
+        },
+
+        data:
+          buildProductData(
+            baseData
+          ) as any,
+      });
+
+      /*
+       * Se colors/variants foram
+       * enviados, substituímos toda
+       * a estrutura.
+       */
+      if (
+        changingRelations
+      ) {
+        /*
+         * Primeiro remove variantes
+         * porque elas referenciam cores.
+         */
+        await tx.productVariant.deleteMany({
+          where: {
+            productId:
+              id,
+          },
+        });
+
+        await tx.productColor.deleteMany({
+          where: {
+            productId:
+              id,
+          },
+        });
+
+        const colorIds =
+          new Map<
+            string,
+            number
+          >();
+
+        /*
+         * Recria cores.
+         */
+        for (
+          const color of
+          colors ?? []
+        ) {
+          const createdColor =
+            await tx.productColor.create({
+              data: {
+                productId:
+                  id,
+
+                key:
+                  color.key,
+
+                name:
+                  color.name,
+
+                hex:
+                  color.hex,
+              },
+            });
+
+          colorIds.set(
+            color.key,
+            createdColor.id
+          );
+        }
+
+        /*
+         * Recria variantes.
+         */
+        for (
+          const variant of
+          variants ?? []
+        ) {
+          const colorId =
+            variant.colorKey ===
+            null
+              ? null
+              : colorIds.get(
+                  variant.colorKey
+                ) ??
+                null;
+
+          await tx.productVariant.create({
+            data: {
+              productId:
+                id,
+
+              colorId,
+
+              key:
+                variant.key,
+
+              size:
+                variant.size ??
+                null,
+
+              stock:
+                variant.stock,
+            },
+          });
+        }
+
+        /*
+         * Se existem variantes,
+         * o estoque total é a soma
+         * dos estoques das variantes.
+         */
+        if (
+          (
+            variants ??
+            []
+          ).length >
+          0
+        ) {
+          const totalStock =
+            (
+              variants ??
+              []
+            ).reduce(
+              (
+                total,
+                variant
+              ) =>
+                total +
+                variant.stock,
+              0
+            );
+
+          await tx.product.update({
+            where: {
+              id,
+            },
+
+            data: {
+              stockQuantity:
+                totalStock,
+
+              stockAvailable:
+                totalStock >
+                0,
+            },
+          });
+        }
+      }
+
+      const savedProduct =
+        await tx.product.findUnique({
+          where: {
+            id,
+          },
+
+          include:
+            productInclude,
+        });
+
+      if (
+        !savedProduct
+      ) {
+        throw new AdminProductError(
+          "Produto não encontrado.",
+          404
+        );
+      }
+
+      return mapProduct(
+        savedProduct
+      );
+    }
+  );
 }
 
+/*
+ * ATIVAR / DESATIVAR
+ */
 export async function updateAdminProductStatus(
   id: number,
   active: boolean
 ) {
-  const product =
+  const existing =
     await prisma.product.findUnique({
       where: {
         id,
       },
+
+      select: {
+        id: true,
+      },
     });
 
-  if (!product) {
+  if (!existing) {
     throw new AdminProductError(
       "Produto não encontrado.",
       404
@@ -653,5 +1228,7 @@ export async function updateAdminProductStatus(
         productInclude,
     });
 
-  return mapProduct(updated);
+  return mapProduct(
+    updated
+  );
 }

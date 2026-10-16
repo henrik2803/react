@@ -34,13 +34,14 @@ const productTypeSchema =
   ]);
 
 /*
- * Texto opcional/null
+ * Texto que também pode ser null
  */
 const nullableText =
   z.union([
     z
       .string()
       .trim(),
+
     z.null(),
   ]);
 
@@ -156,9 +157,74 @@ const seoSchema =
   });
 
 /*
+ * Cores
+ */
+const colorSchema =
+  z.object({
+    key: z
+      .string()
+      .trim()
+      .min(
+        1,
+        "Identificador da cor é obrigatório."
+      )
+      .max(80),
+
+    name: z
+      .string()
+      .trim()
+      .min(
+        1,
+        "Nome da cor é obrigatório."
+      )
+      .max(100),
+
+    hex: z
+      .string()
+      .trim()
+      .regex(
+        /^#[0-9a-fA-F]{6}$/,
+        "Cor hexadecimal inválida."
+      ),
+  });
+
+/*
+ * Variantes
+ */
+const variantSchema =
+  z.object({
+    key: z
+      .string()
+      .trim()
+      .min(
+        1,
+        "Identificador da variante é obrigatório."
+      )
+      .max(120),
+
+    colorKey: z
+      .string()
+      .trim()
+      .min(1)
+      .nullable(),
+
+    size: z
+      .string()
+      .trim()
+      .min(1)
+      .nullable()
+      .optional(),
+
+    stock: z
+      .number()
+      .int()
+      .nonnegative(),
+  });
+
+/*
  * CREATE
  *
- * Usado no POST.
+ * POST /api/v1/admin/products
  */
 const createProductSchema =
   z.object({
@@ -246,7 +312,9 @@ const createProductSchema =
 
     badges: z
       .array(
-        z.string().trim()
+        z
+          .string()
+          .trim()
       )
       .default([]),
 
@@ -264,44 +332,63 @@ const createProductSchema =
 
     tags: z
       .array(
-        z.string().trim()
+        z
+          .string()
+          .trim()
       )
       .default([]),
 
     seo:
       seoSchema
         .optional(),
+
+    /*
+     * Cores e variantes
+     */
+    colors: z
+      .array(
+        colorSchema
+      )
+      .default([]),
+
+    variants: z
+      .array(
+        variantSchema
+      )
+      .default([]),
   });
 
 /*
  * UPDATE
  *
- * Usado no PATCH.
+ * PATCH /api/v1/admin/products/:id
  *
- * Importante:
- * badges, tags, active e images
- * NÃO possuem default aqui.
- *
- * Assim um PATCH parcial não
- * apaga dados que não foram enviados.
+ * Os campos não possuem defaults aqui,
+ * para que um PATCH parcial não apague
+ * informações existentes.
  */
 const updateProductSchema =
   createProductSchema
     .partial()
     .extend({
       active:
-        z.boolean()
+        z
+          .boolean()
           .optional(),
 
       badges: z
         .array(
-          z.string().trim()
+          z
+            .string()
+            .trim()
         )
         .optional(),
 
       tags: z
         .array(
-          z.string().trim()
+          z
+            .string()
+            .trim()
         )
         .optional(),
 
@@ -313,7 +400,8 @@ const updateProductSchema =
       media: z
         .object({
           cover:
-            nullableText.optional(),
+            nullableText
+              .optional(),
 
           images: z
             .array(
@@ -325,7 +413,8 @@ const updateProductSchema =
             .optional(),
 
           video:
-            nullableText.optional(),
+            nullableText
+              .optional(),
         })
         .optional(),
 
@@ -348,10 +437,22 @@ const updateProductSchema =
         seoSchema
           .partial()
           .optional(),
+
+      colors: z
+        .array(
+          colorSchema
+        )
+        .optional(),
+
+      variants: z
+        .array(
+          variantSchema
+        )
+        .optional(),
     });
 
 /*
- * Ativar / desativar
+ * Ativar/desativar produto
  */
 const statusSchema =
   z.object({
@@ -360,7 +461,7 @@ const statusSchema =
   });
 
 /*
- * Tratamento de erros
+ * Tratamento padrão de erros
  */
 function handleAdminProductError(
   error: unknown,
@@ -371,14 +472,18 @@ function handleAdminProductError(
     AdminProductError
   ) {
     return reply
-      .status(error.statusCode)
+      .status(
+        error.statusCode
+      )
       .send({
         message:
           error.message,
       });
   }
 
-  console.error(error);
+  console.error(
+    error
+  );
 
   return reply
     .status(500)
@@ -389,7 +494,7 @@ function handleAdminProductError(
 }
 
 /*
- * GET /admin/products
+ * GET /api/v1/admin/products
  */
 export async function listAdminProductsController(
   request: FastifyRequest,
@@ -402,7 +507,8 @@ export async function listAdminProductsController(
     return reply
       .status(200)
       .send({
-        data: products,
+        data:
+          products,
       });
   } catch (error) {
     return handleAdminProductError(
@@ -413,7 +519,7 @@ export async function listAdminProductsController(
 }
 
 /*
- * GET /admin/products/:id
+ * GET /api/v1/admin/products/:id
  */
 export async function getAdminProductController(
   request: FastifyRequest,
@@ -428,7 +534,9 @@ export async function getAdminProductController(
       ).id
     );
 
-  if (!parsed.success) {
+  if (
+    !parsed.success
+  ) {
     return reply
       .status(400)
       .send({
@@ -446,7 +554,8 @@ export async function getAdminProductController(
     return reply
       .status(200)
       .send({
-        data: product,
+        data:
+          product,
       });
   } catch (error) {
     return handleAdminProductError(
@@ -457,7 +566,7 @@ export async function getAdminProductController(
 }
 
 /*
- * POST /admin/products
+ * POST /api/v1/admin/products
  */
 export async function createAdminProductController(
   request: FastifyRequest,
@@ -468,7 +577,9 @@ export async function createAdminProductController(
       request.body
     );
 
-  if (!parsed.success) {
+  if (
+    !parsed.success
+  ) {
     return reply
       .status(400)
       .send({
@@ -476,7 +587,8 @@ export async function createAdminProductController(
           "Dados inválidos.",
 
         errors:
-          parsed.error.flatten(),
+          parsed.error
+            .flatten(),
       });
   }
 
@@ -489,7 +601,8 @@ export async function createAdminProductController(
     return reply
       .status(201)
       .send({
-        data: product,
+        data:
+          product,
       });
   } catch (error) {
     return handleAdminProductError(
@@ -500,7 +613,7 @@ export async function createAdminProductController(
 }
 
 /*
- * PATCH /admin/products/:id
+ * PATCH /api/v1/admin/products/:id
  */
 export async function updateAdminProductController(
   request: FastifyRequest,
@@ -515,7 +628,9 @@ export async function updateAdminProductController(
       ).id
     );
 
-  if (!idResult.success) {
+  if (
+    !idResult.success
+  ) {
     return reply
       .status(400)
       .send({
@@ -529,7 +644,9 @@ export async function updateAdminProductController(
       request.body
     );
 
-  if (!bodyResult.success) {
+  if (
+    !bodyResult.success
+  ) {
     return reply
       .status(400)
       .send({
@@ -553,7 +670,8 @@ export async function updateAdminProductController(
     return reply
       .status(200)
       .send({
-        data: product,
+        data:
+          product,
       });
   } catch (error) {
     return handleAdminProductError(
@@ -564,7 +682,7 @@ export async function updateAdminProductController(
 }
 
 /*
- * PATCH /admin/products/:id/status
+ * PATCH /api/v1/admin/products/:id/status
  */
 export async function updateAdminProductStatusController(
   request: FastifyRequest,
@@ -579,7 +697,9 @@ export async function updateAdminProductStatusController(
       ).id
     );
 
-  if (!idResult.success) {
+  if (
+    !idResult.success
+  ) {
     return reply
       .status(400)
       .send({
@@ -593,7 +713,9 @@ export async function updateAdminProductStatusController(
       request.body
     );
 
-  if (!bodyResult.success) {
+  if (
+    !bodyResult.success
+  ) {
     return reply
       .status(400)
       .send({
@@ -606,13 +728,15 @@ export async function updateAdminProductStatusController(
     const product =
       await updateAdminProductStatus(
         idResult.data,
-        bodyResult.data.active
+        bodyResult.data
+          .active
       );
 
     return reply
       .status(200)
       .send({
-        data: product,
+        data:
+          product,
       });
   } catch (error) {
     return handleAdminProductError(
