@@ -1,0 +1,182 @@
+.layout {
+  min-height: 100vh;
+
+  display: grid;
+
+  grid-template-columns:
+    250px minmax(0, 1fr);
+}
+
+.sidebar {
+  position: sticky;
+  top: 0;
+
+  height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+
+  padding: 28px 18px;
+
+  background:
+    var(--color-surface);
+
+  border-right:
+    1px solid
+      var(--color-border);
+}
+
+.brand {
+  padding: 0 12px 28px;
+
+  font-size: 1.4rem;
+  font-weight: 800;
+}
+
+.brand span {
+  color:
+    var(--color-primary);
+}
+
+.brand small {
+  display: block;
+
+  margin-top: 5px;
+
+  color:
+    var(--color-text-secondary);
+
+  font-size: 0.7rem;
+  font-weight: 500;
+
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.navigation {
+  display: flex;
+  flex-direction: column;
+
+  gap: 6px;
+}
+
+.link {
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 12px 14px;
+
+  color:
+    var(--color-text-secondary);
+
+  border-radius:
+    var(--radius-sm);
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.link:hover {
+  color:
+    var(--color-text);
+
+  background:
+    var(--color-surface-light);
+}
+
+.active {
+  color:
+    var(--color-text);
+
+  background:
+    var(--color-surface-light);
+}
+
+.active svg {
+  color:
+    var(--color-primary);
+}
+
+.logout {
+  margin-top: auto;
+
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  width: 100%;
+
+  padding: 12px 14px;
+
+  color:
+    var(--color-text-secondary);
+
+  background: transparent;
+
+  border: 0;
+
+  border-radius:
+    var(--radius-sm);
+
+  cursor: pointer;
+}
+
+.logout:hover {
+  color:
+    var(--color-text);
+
+  background:
+    var(--color-surface-light);
+}
+
+.content {
+  min-width: 0;
+}
+
+@media (
+  max-width: 800px
+) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    position: static;
+
+    width: 100%;
+    height: auto;
+
+    padding: 16px;
+
+    border-right: 0;
+
+    border-bottom:
+      1px solid
+        var(--color-border);
+  }
+
+  .brand {
+    padding:
+      0 4px 16px;
+  }
+
+  .navigation {
+    flex-direction: row;
+
+    overflow-x: auto;
+  }
+
+  .link {
+    flex-shrink: 0;
+  }
+
+  .logout {
+    margin-top: 12px;
+
+    width: auto;
+  }
+}
