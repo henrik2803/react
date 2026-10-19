@@ -6,11 +6,18 @@ import {
 
 import {
   ArrowLeft,
+  BadgePercent,
   Boxes,
+  Image,
+  Megaphone,
+  Package,
   Palette,
   Plus,
   Save,
+  Search,
+  Tags,
   Trash2,
+  WalletCards,
 } from "lucide-react";
 
 import {
@@ -34,13 +41,11 @@ const INITIAL_FORM = {
 
   category: "",
   subcategory: "",
-
   brand: "",
   name: "",
   slug: "",
 
   active: true,
-
   condition: "novo",
 
   shortDescription: "",
@@ -48,6 +53,28 @@ const INITIAL_FORM = {
 
   price: "",
   oldPrice: "",
+
+  installmentEnabled: false,
+  installmentCount: "",
+  installmentValue: "",
+
+  stockAvailable: true,
+  stockQuantity: "",
+
+  cover: "",
+  video: "",
+  images: "",
+
+  feedEnabled: false,
+  feedFeatured: false,
+  feedOrder: "",
+  feedText: "",
+
+  badges: "",
+  tags: "",
+
+  seoTitle: "",
+  seoDescription: "",
 
   purchasableOnline: true,
   requestQuote: false,
@@ -58,82 +85,65 @@ const INITIAL_FORM = {
 function createSlug(value) {
   return value
     .normalize("NFD")
-    .replace(
-      /[\u0300-\u036f]/g,
-      ""
-    )
+    .replace(/[\u0300-\u036f]/g, "")
     .toLowerCase()
     .trim()
-    .replace(
-      /[^a-z0-9]+/g,
-      "-"
-    )
-    .replace(
-      /^-+|-+$/g,
-      ""
-    );
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
 }
 
 function createKey(value) {
-  return createSlug(
-    value
-  );
+  return createSlug(value);
+}
+
+function parseList(value) {
+  return value
+    .split(",")
+    .map((item) => item.trim())
+    .filter(Boolean);
+}
+
+function parseImages(value) {
+  return value
+    .split("\n")
+    .map((item) => item.trim())
+    .filter(Boolean);
 }
 
 function AdminProductForm() {
-  const {
-    id,
-  } = useParams();
+  const { id } = useParams();
 
-  const navigate =
-    useNavigate();
+  const navigate = useNavigate();
 
   const {
     token,
     logout,
   } = useAdminAuth();
 
-  const editing =
-    Boolean(id);
+  const editing = Boolean(id);
 
-  const [
-    form,
-    setForm,
-  ] = useState(
-    INITIAL_FORM
-  );
+  const [form, setForm] =
+    useState(INITIAL_FORM);
 
-  const [
-    colors,
-    setColors,
-  ] = useState([]);
+  const [colors, setColors] =
+    useState([]);
 
-  const [
-    variants,
-    setVariants,
-  ] = useState([]);
+  const [variants, setVariants] =
+    useState([]);
 
   const [
     relationsDirty,
     setRelationsDirty,
   ] = useState(false);
 
-  const [
-    loading,
-    setLoading,
-  ] = useState(
-    editing
-  );
+  const [loading, setLoading] =
+    useState(editing);
 
-  const [
-    saving,
-    setSaving,
-  ] = useState(false);
+  const [saving, setSaving] =
+    useState(false);
 
-  const [
-    error,
-    setError,
-  ] = useState("");
+  const [error, setError] =
+    useState("");
 
   const [
     slugEdited,
@@ -164,24 +174,19 @@ function AdminProductForm() {
             product.type,
 
           category:
-            product.category ||
-            "",
+            product.category || "",
 
           subcategory:
-            product.subcategory ||
-            "",
+            product.subcategory || "",
 
           brand:
-            product.brand ||
-            "",
+            product.brand || "",
 
           name:
-            product.name ||
-            "",
+            product.name || "",
 
           slug:
-            product.slug ||
-            "",
+            product.slug || "",
 
           active:
             Boolean(
@@ -189,24 +194,88 @@ function AdminProductForm() {
             ),
 
           condition:
-            product.condition ||
-            "",
+            product.condition || "",
 
           shortDescription:
             product.shortDescription ||
             "",
 
           description:
-            product.description ||
-            "",
+            product.description || "",
 
           price:
-            product.price ??
-            "",
+            product.price ?? "",
 
           oldPrice:
-            product.oldPrice ??
-            "",
+            product.oldPrice ?? "",
+
+          installmentEnabled:
+            product.installment
+              ?.enabled ?? false,
+
+          installmentCount:
+            product.installment
+              ?.count ?? "",
+
+          installmentValue:
+            product.installment
+              ?.value ?? "",
+
+          stockAvailable:
+            product.stock
+              ?.available ?? true,
+
+          stockQuantity:
+            product.stock
+              ?.quantity ?? "",
+
+          cover:
+            product.media
+              ?.cover || "",
+
+          video:
+            product.media
+              ?.video || "",
+
+          images:
+            (
+              product.media
+                ?.images || []
+            ).join("\n"),
+
+          feedEnabled:
+            product.feed
+              ?.enabled ?? false,
+
+          feedFeatured:
+            product.feed
+              ?.featured ?? false,
+
+          feedOrder:
+            product.feed
+              ?.order ?? "",
+
+          feedText:
+            product.feed
+              ?.text || "",
+
+          badges:
+            (
+              product.badges || []
+            ).join(", "),
+
+          tags:
+            (
+              product.tags || []
+            ).join(", "),
+
+          seoTitle:
+            product.seo
+              ?.title || "",
+
+          seoDescription:
+            product.seo
+              ?.description || "",
 
           purchasableOnline:
             product.sales
@@ -215,66 +284,52 @@ function AdminProductForm() {
 
           requestQuote:
             product.sales
-              ?.requestQuote ??
-            false,
+              ?.requestQuote ?? false,
 
           testRide:
             product.sales
-              ?.testRide ??
-            false,
+              ?.testRide ?? false,
 
           whatsapp:
             product.sales
-              ?.whatsapp ??
-            true,
+              ?.whatsapp ?? true,
         });
 
         setColors(
-          (product.colors || []).map(
-            (color) => ({
-              key:
-                color.key,
+          (
+            product.colors || []
+          ).map((color) => ({
+            key:
+              color.key,
 
-              name:
-                color.name,
+            name:
+              color.name,
 
-              hex:
-                color.hex,
-            })
-          )
+            hex:
+              color.hex,
+          }))
         );
 
         setVariants(
           (
-            product.variants ||
-            []
-          ).map(
-            (variant) => ({
-              key:
-                variant.key,
+            product.variants || []
+          ).map((variant) => ({
+            key:
+              variant.key,
 
-              colorKey:
-                variant.colorKey ??
-                "",
+            colorKey:
+              variant.colorKey ?? "",
 
-              size:
-                variant.size ??
-                "",
+            size:
+              variant.size ?? "",
 
-              stock:
-                variant.stock ??
-                0,
-            })
-          )
+            stock:
+              variant.stock ?? 0,
+          }))
         );
 
-        setRelationsDirty(
-          false
-        );
-
-        setSlugEdited(
-          true
-        );
+        setRelationsDirty(false);
+        setSlugEdited(true);
       } catch (error) {
         if (
           error.status === 401 ||
@@ -284,9 +339,7 @@ function AdminProductForm() {
           return;
         }
 
-        setError(
-          error.message
-        );
+        setError(error.message);
       } finally {
         setLoading(false);
       }
@@ -297,29 +350,24 @@ function AdminProductForm() {
     editing,
     id,
     token,
+    logout,
   ]);
 
   const totalVariantStock =
     useMemo(
       () =>
         variants.reduce(
-          (
-            total,
-            variant
-          ) =>
+          (total, variant) =>
             total +
             Number(
-              variant.stock ||
-              0
+              variant.stock || 0
             ),
           0
         ),
       [variants]
     );
 
-  function handleChange(
-    event
-  ) {
+  function handleChange(event) {
     const {
       name,
       value,
@@ -327,34 +375,25 @@ function AdminProductForm() {
       checked,
     } = event.target;
 
-    if (
-      name === "name"
-    ) {
+    if (name === "name") {
       setForm(
         (current) => ({
           ...current,
 
-          name:
-            value,
+          name: value,
 
           slug:
             slugEdited
               ? current.slug
-              : createSlug(
-                  value
-                ),
+              : createSlug(value),
         })
       );
 
       return;
     }
 
-    if (
-      name === "slug"
-    ) {
-      setSlugEdited(
-        true
-      );
+    if (name === "slug") {
+      setSlugEdited(true);
     }
 
     setForm(
@@ -362,8 +401,7 @@ function AdminProductForm() {
         ...current,
 
         [name]:
-          type ===
-          "checkbox"
+          type === "checkbox"
             ? checked
             : value,
       })
@@ -374,7 +412,6 @@ function AdminProductForm() {
     setColors(
       (current) => [
         ...current,
-
         {
           key: "",
           name: "",
@@ -383,9 +420,7 @@ function AdminProductForm() {
       ]
     );
 
-    setRelationsDirty(
-      true
-    );
+    setRelationsDirty(true);
   }
 
   function updateColor(
@@ -401,16 +436,14 @@ function AdminProductForm() {
             colorIndex
           ) => {
             if (
-              colorIndex !==
-              index
+              colorIndex !== index
             ) {
               return color;
             }
 
             const next = {
               ...color,
-              [field]:
-                value,
+              [field]: value,
             };
 
             if (
@@ -418,9 +451,7 @@ function AdminProductForm() {
               !color.key
             ) {
               next.key =
-                createKey(
-                  value
-                );
+                createKey(value);
             }
 
             return next;
@@ -428,32 +459,22 @@ function AdminProductForm() {
         )
     );
 
-    setRelationsDirty(
-      true
-    );
+    setRelationsDirty(true);
   }
 
-  function removeColor(
-    index
-  ) {
+  function removeColor(index) {
     const removed =
       colors[index];
 
     setColors(
       (current) =>
         current.filter(
-          (
-            _,
-            colorIndex
-          ) =>
-            colorIndex !==
-            index
+          (_, colorIndex) =>
+            colorIndex !== index
         )
     );
 
-    if (
-      removed?.key
-    ) {
+    if (removed?.key) {
       setVariants(
         (current) =>
           current.map(
@@ -462,39 +483,31 @@ function AdminProductForm() {
               removed.key
                 ? {
                     ...variant,
-                    colorKey:
-                      "",
+                    colorKey: "",
                   }
                 : variant
           )
       );
     }
 
-    setRelationsDirty(
-      true
-    );
+    setRelationsDirty(true);
   }
 
   function addVariant() {
     setVariants(
       (current) => [
         ...current,
-
         {
           key: "",
           colorKey:
-            colors[0]
-              ?.key ||
-            "",
+            colors[0]?.key || "",
           size: "",
           stock: 0,
         },
       ]
     );
 
-    setRelationsDirty(
-      true
-    );
+    setRelationsDirty(true);
   }
 
   function updateVariant(
@@ -509,65 +522,46 @@ function AdminProductForm() {
             variant,
             variantIndex
           ) =>
-            variantIndex ===
-            index
+            variantIndex === index
               ? {
                   ...variant,
-
-                  [field]:
-                    field ===
-                    "stock"
-                      ? value
-                      : value,
+                  [field]: value,
                 }
               : variant
         )
     );
 
-    setRelationsDirty(
-      true
-    );
+    setRelationsDirty(true);
   }
 
-  function removeVariant(
-    index
-  ) {
+  function removeVariant(index) {
     setVariants(
       (current) =>
         current.filter(
-          (
-            _,
-            variantIndex
-          ) =>
-            variantIndex !==
-            index
+          (_, variantIndex) =>
+            variantIndex !== index
         )
     );
 
-    setRelationsDirty(
-      true
-    );
+    setRelationsDirty(true);
   }
 
   function validateRelations() {
     const normalizedColors =
-      colors.map(
-        (color) => ({
-          key:
-            color.key.trim(),
+      colors.map((color) => ({
+        key:
+          color.key.trim(),
 
-          name:
-            color.name.trim(),
+        name:
+          color.name.trim(),
 
-          hex:
-            color.hex.trim(),
-        })
-      );
+        hex:
+          color.hex.trim(),
+      }));
 
     const colorKeys =
       normalizedColors.map(
-        (color) =>
-          color.key
+        (color) => color.key
       );
 
     if (
@@ -584,9 +578,7 @@ function AdminProductForm() {
     }
 
     if (
-      new Set(
-        colorKeys
-      ).size !==
+      new Set(colorKeys).size !==
       colorKeys.length
     ) {
       throw new Error(
@@ -601,19 +593,16 @@ function AdminProductForm() {
             variant.key.trim(),
 
           colorKey:
-            variant.colorKey
-              ? variant.colorKey
-              : null,
+            variant.colorKey ||
+            null,
 
           size:
-            variant.size.trim()
-              ? variant.size.trim()
-              : null,
+            variant.size.trim() ||
+            null,
 
           stock:
             Number(
-              variant.stock ||
-              0
+              variant.stock || 0
             ),
         })
       );
@@ -647,9 +636,7 @@ function AdminProductForm() {
     }
 
     const validColorKeys =
-      new Set(
-        colorKeys
-      );
+      new Set(colorKeys);
 
     const invalidVariant =
       normalizedVariants.find(
@@ -660,9 +647,7 @@ function AdminProductForm() {
           )
       );
 
-    if (
-      invalidVariant
-    ) {
+    if (invalidVariant) {
       throw new Error(
         `A variante "${invalidVariant.key}" possui uma cor inválida.`
       );
@@ -674,12 +659,11 @@ function AdminProductForm() {
           !Number.isInteger(
             variant.stock
           ) ||
-          variant.stock <
-            0
+          variant.stock < 0
       )
     ) {
       throw new Error(
-        "O estoque das variantes deve ser um número inteiro igual ou maior que zero."
+        "O estoque das variantes deve ser inteiro e igual ou maior que zero."
       );
     }
 
@@ -692,6 +676,122 @@ function AdminProductForm() {
     };
   }
 
+  function validateForm() {
+    if (
+      !form.category.trim() ||
+      !form.brand.trim() ||
+      !form.name.trim() ||
+      !form.slug.trim()
+    ) {
+      throw new Error(
+        "Preencha os campos obrigatórios."
+      );
+    }
+
+    const price =
+      Number(form.price);
+
+    if (
+      Number.isNaN(price) ||
+      price < 0
+    ) {
+      throw new Error(
+        "Informe um preço válido."
+      );
+    }
+
+    if (
+      form.oldPrice !== "" &&
+      (
+        Number.isNaN(
+          Number(
+            form.oldPrice
+          )
+        ) ||
+        Number(
+          form.oldPrice
+        ) < 0
+      )
+    ) {
+      throw new Error(
+        "Informe um preço anterior válido."
+      );
+    }
+
+    if (
+      form.installmentEnabled
+    ) {
+      const count =
+        Number(
+          form.installmentCount
+        );
+
+      const value =
+        Number(
+          form.installmentValue
+        );
+
+      if (
+        !Number.isInteger(count) ||
+        count <= 0
+      ) {
+        throw new Error(
+          "Informe uma quantidade válida de parcelas."
+        );
+      }
+
+      if (
+        Number.isNaN(value) ||
+        value < 0
+      ) {
+        throw new Error(
+          "Informe um valor válido para a parcela."
+        );
+      }
+    }
+
+    if (
+      variants.length === 0 &&
+      form.stockQuantity !== ""
+    ) {
+      const quantity =
+        Number(
+          form.stockQuantity
+        );
+
+      if (
+        !Number.isInteger(
+          quantity
+        ) ||
+        quantity < 0
+      ) {
+        throw new Error(
+          "O estoque manual deve ser inteiro e igual ou maior que zero."
+        );
+      }
+    }
+
+    if (
+      form.feedOrder !== ""
+    ) {
+      const order =
+        Number(
+          form.feedOrder
+        );
+
+      if (
+        !Number.isInteger(order) ||
+        order < 0
+      ) {
+        throw new Error(
+          "A ordem do feed deve ser um número inteiro igual ou maior que zero."
+        );
+      }
+    }
+
+    return price;
+  }
+
   async function handleSubmit(
     event
   ) {
@@ -701,32 +801,8 @@ function AdminProductForm() {
       setSaving(true);
       setError("");
 
-      if (
-        !form.category.trim() ||
-        !form.brand.trim() ||
-        !form.name.trim() ||
-        !form.slug.trim()
-      ) {
-        throw new Error(
-          "Preencha os campos obrigatórios."
-        );
-      }
-
       const price =
-        Number(
-          form.price
-        );
-
-      if (
-        Number.isNaN(
-          price
-        ) ||
-        price < 0
-      ) {
-        throw new Error(
-          "Informe um preço válido."
-        );
-      }
+        validateForm();
 
       const relations =
         validateRelations();
@@ -739,8 +815,7 @@ function AdminProductForm() {
           form.category.trim(),
 
         subcategory:
-          form.subcategory
-            .trim() ||
+          form.subcategory.trim() ||
           null,
 
         brand:
@@ -756,8 +831,7 @@ function AdminProductForm() {
           form.active,
 
         condition:
-          form.condition
-            .trim() ||
+          form.condition.trim() ||
           null,
 
         shortDescription:
@@ -773,12 +847,59 @@ function AdminProductForm() {
         price,
 
         oldPrice:
-          form.oldPrice ===
-          ""
+          form.oldPrice === ""
             ? null
             : Number(
                 form.oldPrice
               ),
+
+        installment: {
+          enabled:
+            form.installmentEnabled,
+
+          count:
+            form.installmentEnabled &&
+            form.installmentCount !==
+              ""
+              ? Number(
+                  form.installmentCount
+                )
+              : null,
+
+          value:
+            form.installmentEnabled &&
+            form.installmentValue !==
+              ""
+              ? Number(
+                  form.installmentValue
+                )
+              : null,
+        },
+
+        media: {
+          cover:
+            form.cover.trim() ||
+            null,
+
+          images:
+            parseImages(
+              form.images
+            ),
+
+          video:
+            form.video.trim() ||
+            null,
+        },
+
+        badges:
+          parseList(
+            form.badges
+          ),
+
+        tags:
+          parseList(
+            form.tags
+          ),
 
         sales: {
           purchasableOnline:
@@ -793,8 +914,67 @@ function AdminProductForm() {
           whatsapp:
             form.whatsapp,
         },
+
+        feed: {
+          enabled:
+            form.feedEnabled,
+
+          featured:
+            form.feedFeatured,
+
+          order:
+            form.feedOrder === ""
+              ? null
+              : Number(
+                  form.feedOrder
+                ),
+
+          text:
+            form.feedText.trim() ||
+            null,
+        },
+
+        seo: {
+          title:
+            form.seoTitle.trim() ||
+            null,
+
+          description:
+            form.seoDescription
+              .trim() ||
+            null,
+        },
       };
 
+      /*
+       * Sem variantes, o estoque
+       * é informado manualmente.
+       */
+      if (
+        relations.variants
+          .length === 0
+      ) {
+        payload.stock = {
+          available:
+            form.stockAvailable,
+
+          quantity:
+            form.stockQuantity ===
+            ""
+              ? null
+              : Number(
+                  form.stockQuantity
+                ),
+        };
+      }
+
+      /*
+       * No cadastro novo sempre
+       * enviamos as relações.
+       *
+       * Na edição só enviamos
+       * quando foram alteradas.
+       */
       if (
         !editing ||
         relationsDirty
@@ -832,8 +1012,7 @@ function AdminProductForm() {
       }
 
       console.error(
-        error.data ||
-        error
+        error.data || error
       );
 
       setError(
@@ -842,8 +1021,7 @@ function AdminProductForm() {
 
       window.scrollTo({
         top: 0,
-        behavior:
-          "smooth",
+        behavior: "smooth",
       });
     } finally {
       setSaving(false);
@@ -931,760 +1109,669 @@ function AdminProductForm() {
           handleSubmit
         }
       >
-        <section
-          className={
-            styles.section
-          }
-        >
-          <div
-            className={
-              styles.sectionHeader
-            }
-          >
-            <h2>
-              Informações básicas
-            </h2>
-
-            <p>
-              Identificação principal
-              do produto.
-            </p>
+        <section className={styles.section}>
+          <div className={styles.sectionHeader}>
+            <h2>Informações básicas</h2>
+            <p>Identificação principal do produto.</p>
           </div>
 
-          <div
-            className={
-              styles.grid
-            }
-          >
+          <div className={styles.grid}>
             <label>
               Tipo
-
               <select
                 name="type"
-                value={
-                  form.type
-                }
-                onChange={
-                  handleChange
-                }
+                value={form.type}
+                onChange={handleChange}
               >
-                <option value="MOTO">
-                  Moto
-                </option>
-
-                <option value="ACCESSORY">
-                  Acessório
-                </option>
-
-                <option value="PART">
-                  Peça
-                </option>
+                <option value="MOTO">Moto</option>
+                <option value="ACCESSORY">Acessório</option>
+                <option value="PART">Peça</option>
               </select>
             </label>
 
             <label>
               Condição
-
               <input
-                type="text"
                 name="condition"
-                value={
-                  form.condition
-                }
-                onChange={
-                  handleChange
-                }
+                value={form.condition}
+                onChange={handleChange}
                 placeholder="novo"
               />
             </label>
 
             <label>
               Categoria *
-
               <input
-                type="text"
                 name="category"
-                value={
-                  form.category
-                }
-                onChange={
-                  handleChange
-                }
+                value={form.category}
+                onChange={handleChange}
                 required
               />
             </label>
 
             <label>
               Subcategoria
-
               <input
-                type="text"
                 name="subcategory"
-                value={
-                  form.subcategory
-                }
-                onChange={
-                  handleChange
-                }
+                value={form.subcategory}
+                onChange={handleChange}
               />
             </label>
 
             <label>
               Marca *
-
               <input
-                type="text"
                 name="brand"
-                value={
-                  form.brand
-                }
-                onChange={
-                  handleChange
-                }
+                value={form.brand}
+                onChange={handleChange}
                 required
               />
             </label>
 
             <label>
               Nome *
-
               <input
-                type="text"
                 name="name"
-                value={
-                  form.name
-                }
-                onChange={
-                  handleChange
-                }
+                value={form.name}
+                onChange={handleChange}
                 required
               />
             </label>
 
-            <label
-              className={
-                styles.full
-              }
-            >
+            <label className={styles.full}>
               Slug *
-
               <input
-                type="text"
                 name="slug"
-                value={
-                  form.slug
-                }
-                onChange={
-                  handleChange
-                }
+                value={form.slug}
+                onChange={handleChange}
                 required
               />
 
               <small>
-                Usado na URL pública
-                do produto.
+                Usado na URL pública do produto.
               </small>
             </label>
           </div>
         </section>
 
-        <section
-          className={
-            styles.section
-          }
-        >
-          <div
-            className={
-              styles.sectionHeader
-            }
-          >
-            <h2>
-              Preços
-            </h2>
-
-            <p>
-              Informe o preço atual
-              e o preço anterior,
-              quando houver.
-            </p>
+        <section className={styles.section}>
+          <div className={styles.sectionHeader}>
+            <div className={styles.titleWithIcon}>
+              <BadgePercent size={19} />
+              <h2>Preços e parcelamento</h2>
+            </div>
           </div>
 
-          <div
-            className={
-              styles.grid
-            }
-          >
+          <div className={styles.grid}>
             <label>
               Preço atual *
-
               <input
                 type="number"
                 name="price"
-                value={
-                  form.price
-                }
-                onChange={
-                  handleChange
-                }
-                step="0.01"
+                value={form.price}
+                onChange={handleChange}
                 min="0"
+                step="0.01"
                 required
               />
             </label>
 
             <label>
               Preço anterior
-
               <input
                 type="number"
                 name="oldPrice"
-                value={
-                  form.oldPrice
-                }
-                onChange={
-                  handleChange
-                }
-                step="0.01"
+                value={form.oldPrice}
+                onChange={handleChange}
                 min="0"
+                step="0.01"
               />
             </label>
           </div>
+
+          <div className={styles.optionBox}>
+            <label className={styles.toggleLabel}>
+              <input
+                type="checkbox"
+                name="installmentEnabled"
+                checked={
+                  form.installmentEnabled
+                }
+                onChange={handleChange}
+              />
+
+              <WalletCards size={18} />
+
+              Permitir parcelamento
+            </label>
+
+            {form.installmentEnabled && (
+              <div className={styles.grid}>
+                <label>
+                  Número de parcelas
+                  <input
+                    type="number"
+                    name="installmentCount"
+                    value={
+                      form.installmentCount
+                    }
+                    onChange={handleChange}
+                    min="1"
+                    step="1"
+                  />
+                </label>
+
+                <label>
+                  Valor da parcela
+                  <input
+                    type="number"
+                    name="installmentValue"
+                    value={
+                      form.installmentValue
+                    }
+                    onChange={handleChange}
+                    min="0"
+                    step="0.01"
+                  />
+                </label>
+              </div>
+            )}
+          </div>
         </section>
 
-        <section
-          className={
-            styles.section
-          }
-        >
-          <div
-            className={
-              styles.sectionHeader
-            }
-          >
-            <h2>
-              Descrições
-            </h2>
-
-            <p>
-              Textos apresentados
-              ao cliente.
-            </p>
+        <section className={styles.section}>
+          <div className={styles.sectionHeader}>
+            <h2>Descrições</h2>
           </div>
 
-          <div
-            className={
-              styles.stack
-            }
-          >
+          <div className={styles.stack}>
             <label>
               Descrição curta
-
               <textarea
                 name="shortDescription"
                 value={
                   form.shortDescription
                 }
-                onChange={
-                  handleChange
-                }
+                onChange={handleChange}
                 rows="3"
               />
             </label>
 
             <label>
               Descrição completa
-
               <textarea
                 name="description"
                 value={
                   form.description
                 }
-                onChange={
-                  handleChange
-                }
+                onChange={handleChange}
                 rows="7"
               />
             </label>
           </div>
         </section>
 
-        <section
-          className={
-            styles.section
-          }
-        >
-          <div
-            className={
-              styles.relationHeader
-            }
-          >
-            <div>
-              <div
-                className={
-                  styles.titleWithIcon
-                }
-              >
-                <Palette
-                  size={19}
-                />
+        <section className={styles.section}>
+          <div className={styles.sectionHeader}>
+            <div className={styles.titleWithIcon}>
+              <Image size={19} />
+              <h2>Mídia</h2>
+            </div>
 
-                <h2>
-                  Cores
-                </h2>
+            <p>
+              Por enquanto trabalharemos com URLs. Upload de arquivos pode ser adicionado depois.
+            </p>
+          </div>
+
+          <div className={styles.stack}>
+            <label>
+              Imagem de capa
+              <input
+                name="cover"
+                value={form.cover}
+                onChange={handleChange}
+                placeholder="https://..."
+              />
+            </label>
+
+            <label>
+              Galeria
+              <textarea
+                name="images"
+                value={form.images}
+                onChange={handleChange}
+                rows="5"
+                placeholder={
+                  "Uma URL por linha\nhttps://...\nhttps://..."
+                }
+              />
+            </label>
+
+            <label>
+              Vídeo
+              <input
+                name="video"
+                value={form.video}
+                onChange={handleChange}
+                placeholder="/videos/produto.mp4 ou https://..."
+              />
+            </label>
+          </div>
+        </section>
+
+        <section className={styles.section}>
+          <div className={styles.relationHeader}>
+            <div>
+              <div className={styles.titleWithIcon}>
+                <Palette size={19} />
+                <h2>Cores</h2>
               </div>
 
               <p>
-                Cadastre as cores
-                disponíveis para o
-                produto.
+                Cadastre as cores disponíveis para o produto.
               </p>
             </div>
 
             <button
               type="button"
-              className={
-                styles.secondaryButton
-              }
-              onClick={
-                addColor
-              }
+              className={styles.secondaryButton}
+              onClick={addColor}
             >
-              <Plus
-                size={16}
-              />
-
+              <Plus size={16} />
               Adicionar cor
             </button>
           </div>
 
-          {colors.length ===
-          0 ? (
-            <div
-              className={
-                styles.relationEmpty
-              }
-            >
-              Nenhuma cor
-              cadastrada.
+          {colors.length === 0 ? (
+            <div className={styles.relationEmpty}>
+              Nenhuma cor cadastrada.
             </div>
           ) : (
-            <div
-              className={
-                styles.colorList
-              }
-            >
-              {colors.map(
-                (
-                  color,
-                  index
-                ) => (
-                  <div
-                    className={
-                      styles.colorRow
-                    }
-                    key={
-                      `color-${index}`
-                    }
-                  >
-                    <label>
-                      Nome
-
-                      <input
-                        value={
-                          color.name
-                        }
-                        onChange={(
-                          event
-                        ) =>
-                          updateColor(
-                            index,
-                            "name",
-                            event
-                              .target
-                              .value
-                          )
-                        }
-                        placeholder="Preto"
-                      />
-                    </label>
-
-                    <label>
-                      Identificador
-
-                      <input
-                        value={
-                          color.key
-                        }
-                        onChange={(
-                          event
-                        ) =>
-                          updateColor(
-                            index,
-                            "key",
-                            createKey(
-                              event
-                                .target
-                                .value
-                            )
-                          )
-                        }
-                        placeholder="black"
-                      />
-                    </label>
-
-                    <label>
-                      Cor
-
-                      <div
-                        className={
-                          styles.colorInput
-                        }
-                      >
-                        <input
-                          type="color"
-                          value={
-                            color.hex
-                          }
-                          onChange={(
-                            event
-                          ) =>
-                            updateColor(
-                              index,
-                              "hex",
-                              event
-                                .target
-                                .value
-                            )
-                          }
-                        />
-
-                        <input
-                          type="text"
-                          value={
-                            color.hex
-                          }
-                          onChange={(
-                            event
-                          ) =>
-                            updateColor(
-                              index,
-                              "hex",
-                              event
-                                .target
-                                .value
-                            )
-                          }
-                        />
-                      </div>
-                    </label>
-
-                    <button
-                      type="button"
-                      className={
-                        styles.removeButton
-                      }
-                      title="Remover cor"
-                      onClick={() =>
-                        removeColor(
-                          index
+            <div className={styles.colorList}>
+              {colors.map((color, index) => (
+                <div
+                  className={styles.colorRow}
+                  key={`color-${index}`}
+                >
+                  <label>
+                    Nome
+                    <input
+                      value={color.name}
+                      onChange={(event) =>
+                        updateColor(
+                          index,
+                          "name",
+                          event.target.value
                         )
                       }
-                    >
-                      <Trash2
-                        size={17}
+                    />
+                  </label>
+
+                  <label>
+                    Identificador
+                    <input
+                      value={color.key}
+                      onChange={(event) =>
+                        updateColor(
+                          index,
+                          "key",
+                          createKey(
+                            event.target.value
+                          )
+                        )
+                      }
+                    />
+                  </label>
+
+                  <label>
+                    Cor
+                    <div className={styles.colorInput}>
+                      <input
+                        type="color"
+                        value={color.hex}
+                        onChange={(event) =>
+                          updateColor(
+                            index,
+                            "hex",
+                            event.target.value
+                          )
+                        }
                       />
-                    </button>
-                  </div>
-                )
-              )}
+
+                      <input
+                        value={color.hex}
+                        onChange={(event) =>
+                          updateColor(
+                            index,
+                            "hex",
+                            event.target.value
+                          )
+                        }
+                      />
+                    </div>
+                  </label>
+
+                  <button
+                    type="button"
+                    className={styles.removeButton}
+                    onClick={() =>
+                      removeColor(index)
+                    }
+                  >
+                    <Trash2 size={17} />
+                  </button>
+                </div>
+              ))}
             </div>
           )}
         </section>
 
-        <section
-          className={
-            styles.section
-          }
-        >
-          <div
-            className={
-              styles.relationHeader
-            }
-          >
+        <section className={styles.section}>
+          <div className={styles.relationHeader}>
             <div>
-              <div
-                className={
-                  styles.titleWithIcon
-                }
-              >
-                <Boxes
-                  size={19}
-                />
-
-                <h2>
-                  Variantes
-                </h2>
+              <div className={styles.titleWithIcon}>
+                <Boxes size={19} />
+                <h2>Variantes e estoque</h2>
               </div>
 
               <p>
-                Defina tamanho,
-                cor e estoque de
-                cada opção.
+                O estoque das variantes substitui o estoque manual.
               </p>
             </div>
 
             <button
               type="button"
-              className={
-                styles.secondaryButton
-              }
-              onClick={
-                addVariant
-              }
+              className={styles.secondaryButton}
+              onClick={addVariant}
             >
-              <Plus
-                size={16}
-              />
-
+              <Plus size={16} />
               Adicionar variante
             </button>
           </div>
 
-          <div
-            className={
-              styles.stockSummary
-            }
-          >
-            <span>
-              Estoque calculado
-            </span>
+          {variants.length > 0 ? (
+            <>
+              <div className={styles.stockSummary}>
+                <span>Estoque calculado</span>
+                <strong>
+                  {totalVariantStock}
+                </strong>
+              </div>
 
-            <strong>
-              {totalVariantStock}
-            </strong>
-          </div>
-
-          {variants.length ===
-          0 ? (
-            <div
-              className={
-                styles.relationEmpty
-              }
-            >
-              Nenhuma variante
-              cadastrada.
-            </div>
-          ) : (
-            <div
-              className={
-                styles.variantList
-              }
-            >
-              {variants.map(
-                (
-                  variant,
-                  index
-                ) => (
-                  <div
-                    className={
-                      styles.variantRow
-                    }
-                    key={
-                      `variant-${index}`
-                    }
-                  >
-                    <label>
-                      Identificador
-
-                      <input
-                        value={
-                          variant.key
-                        }
-                        onChange={(
-                          event
-                        ) =>
-                          updateVariant(
-                            index,
-                            "key",
-                            createKey(
-                              event
-                                .target
-                                .value
+              <div className={styles.variantList}>
+                {variants.map(
+                  (variant, index) => (
+                    <div
+                      className={styles.variantRow}
+                      key={`variant-${index}`}
+                    >
+                      <label>
+                        Identificador
+                        <input
+                          value={variant.key}
+                          onChange={(event) =>
+                            updateVariant(
+                              index,
+                              "key",
+                              createKey(
+                                event.target.value
+                              )
                             )
-                          )
-                        }
-                        placeholder="capacete-black-58"
-                      />
-                    </label>
+                          }
+                        />
+                      </label>
 
-                    <label>
-                      Cor
+                      <label>
+                        Cor
+                        <select
+                          value={
+                            variant.colorKey
+                          }
+                          onChange={(event) =>
+                            updateVariant(
+                              index,
+                              "colorKey",
+                              event.target.value
+                            )
+                          }
+                        >
+                          <option value="">
+                            Sem cor
+                          </option>
 
-                      <select
-                        value={
-                          variant.colorKey
-                        }
-                        onChange={(
-                          event
-                        ) =>
-                          updateVariant(
-                            index,
-                            "colorKey",
-                            event
-                              .target
-                              .value
-                          )
+                          {colors.map(
+                            (color, colorIndex) => (
+                              <option
+                                key={`${colorIndex}-${color.key}`}
+                                value={color.key}
+                              >
+                                {color.name ||
+                                  color.key ||
+                                  `Cor ${colorIndex + 1}`}
+                              </option>
+                            )
+                          )}
+                        </select>
+                      </label>
+
+                      <label>
+                        Tamanho
+                        <input
+                          value={variant.size}
+                          onChange={(event) =>
+                            updateVariant(
+                              index,
+                              "size",
+                              event.target.value
+                            )
+                          }
+                        />
+                      </label>
+
+                      <label>
+                        Estoque
+                        <input
+                          type="number"
+                          min="0"
+                          step="1"
+                          value={variant.stock}
+                          onChange={(event) =>
+                            updateVariant(
+                              index,
+                              "stock",
+                              event.target.value
+                            )
+                          }
+                        />
+                      </label>
+
+                      <button
+                        type="button"
+                        className={styles.removeButton}
+                        onClick={() =>
+                          removeVariant(index)
                         }
                       >
-                        <option value="">
-                          Sem cor
-                        </option>
+                        <Trash2 size={17} />
+                      </button>
+                    </div>
+                  )
+                )}
+              </div>
+            </>
+          ) : (
+            <div className={styles.manualStock}>
+              <div className={styles.titleWithIcon}>
+                <Package size={18} />
+                <strong>Estoque manual</strong>
+              </div>
 
-                        {colors.map(
-                          (
-                            color,
-                            colorIndex
-                          ) => (
-                            <option
-                              key={
-                                `option-${colorIndex}-${color.key}`
-                              }
-                              value={
-                                color.key
-                              }
-                            >
-                              {color.name ||
-                                color.key ||
-                                `Cor ${colorIndex + 1}`}
-                            </option>
-                          )
-                        )}
-                      </select>
-                    </label>
+              <div className={styles.grid}>
+                <label>
+                  Quantidade
+                  <input
+                    type="number"
+                    name="stockQuantity"
+                    value={
+                      form.stockQuantity
+                    }
+                    onChange={handleChange}
+                    min="0"
+                    step="1"
+                  />
+                </label>
 
-                    <label>
-                      Tamanho
-
-                      <input
-                        value={
-                          variant.size
-                        }
-                        onChange={(
-                          event
-                        ) =>
-                          updateVariant(
-                            index,
-                            "size",
-                            event
-                              .target
-                              .value
-                          )
-                        }
-                        placeholder="M / 58 / Único"
-                      />
-                    </label>
-
-                    <label>
-                      Estoque
-
-                      <input
-                        type="number"
-                        min="0"
-                        step="1"
-                        value={
-                          variant.stock
-                        }
-                        onChange={(
-                          event
-                        ) =>
-                          updateVariant(
-                            index,
-                            "stock",
-                            event
-                              .target
-                              .value
-                          )
-                        }
-                      />
-                    </label>
-
-                    <button
-                      type="button"
-                      className={
-                        styles.removeButton
-                      }
-                      title="Remover variante"
-                      onClick={() =>
-                        removeVariant(
-                          index
-                        )
-                      }
-                    >
-                      <Trash2
-                        size={17}
-                      />
-                    </button>
-                  </div>
-                )
-              )}
+                <label className={styles.toggleCard}>
+                  <input
+                    type="checkbox"
+                    name="stockAvailable"
+                    checked={
+                      form.stockAvailable
+                    }
+                    onChange={handleChange}
+                  />
+                  Produto disponível
+                </label>
+              </div>
             </div>
           )}
-
-          <p
-            className={
-              styles.relationNote
-            }
-          >
-            Quando existem
-            variantes, o estoque
-            geral é calculado
-            automaticamente pela
-            soma dos estoques das
-            variantes.
-          </p>
         </section>
 
-        <section
-          className={
-            styles.section
-          }
-        >
-          <div
-            className={
-              styles.sectionHeader
-            }
-          >
-            <h2>
-              Comercial
-            </h2>
+        <section className={styles.section}>
+          <div className={styles.sectionHeader}>
+            <div className={styles.titleWithIcon}>
+              <Megaphone size={19} />
+              <h2>Feed</h2>
+            </div>
+          </div>
+
+          <div className={styles.checkboxes}>
+            <label>
+              <input
+                type="checkbox"
+                name="feedEnabled"
+                checked={form.feedEnabled}
+                onChange={handleChange}
+              />
+              Exibir no feed
+            </label>
+
+            <label>
+              <input
+                type="checkbox"
+                name="feedFeatured"
+                checked={form.feedFeatured}
+                onChange={handleChange}
+              />
+              Produto em destaque
+            </label>
+          </div>
+
+          <div className={styles.gridTop}>
+            <label>
+              Ordem
+              <input
+                type="number"
+                name="feedOrder"
+                value={form.feedOrder}
+                onChange={handleChange}
+                min="0"
+                step="1"
+              />
+            </label>
+
+            <label>
+              Texto do feed
+              <input
+                name="feedText"
+                value={form.feedText}
+                onChange={handleChange}
+              />
+            </label>
+          </div>
+        </section>
+
+        <section className={styles.section}>
+          <div className={styles.sectionHeader}>
+            <div className={styles.titleWithIcon}>
+              <Tags size={19} />
+              <h2>Badges e tags</h2>
+            </div>
 
             <p>
-              Controle publicação
-              e ações disponíveis
-              para o cliente.
+              Separe os itens por vírgula.
             </p>
           </div>
 
-          <div
-            className={
-              styles.checkboxes
-            }
-          >
+          <div className={styles.grid}>
+            <label>
+              Badges
+              <input
+                name="badges"
+                value={form.badges}
+                onChange={handleChange}
+                placeholder="Destaque, Promoção"
+              />
+            </label>
+
+            <label>
+              Tags
+              <input
+                name="tags"
+                value={form.tags}
+                onChange={handleChange}
+                placeholder="moto, yamaha, naked"
+              />
+            </label>
+          </div>
+        </section>
+
+        <section className={styles.section}>
+          <div className={styles.sectionHeader}>
+            <div className={styles.titleWithIcon}>
+              <Search size={19} />
+              <h2>SEO</h2>
+            </div>
+          </div>
+
+          <div className={styles.stack}>
+            <label>
+              Título SEO
+              <input
+                name="seoTitle"
+                value={form.seoTitle}
+                onChange={handleChange}
+              />
+            </label>
+
+            <label>
+              Descrição SEO
+              <textarea
+                name="seoDescription"
+                value={
+                  form.seoDescription
+                }
+                onChange={handleChange}
+                rows="3"
+              />
+            </label>
+          </div>
+        </section>
+
+        <section className={styles.section}>
+          <div className={styles.sectionHeader}>
+            <h2>Comercial</h2>
+          </div>
+
+          <div className={styles.checkboxes}>
             <label>
               <input
                 type="checkbox"
                 name="active"
-                checked={
-                  form.active
-                }
-                onChange={
-                  handleChange
-                }
+                checked={form.active}
+                onChange={handleChange}
               />
-
-              <span>
-                Produto ativo
-              </span>
+              Produto ativo
             </label>
 
             <label>
@@ -1694,14 +1781,9 @@ function AdminProductForm() {
                 checked={
                   form.purchasableOnline
                 }
-                onChange={
-                  handleChange
-                }
+                onChange={handleChange}
               />
-
-              <span>
-                Compra online
-              </span>
+              Compra online
             </label>
 
             <label>
@@ -1711,78 +1793,47 @@ function AdminProductForm() {
                 checked={
                   form.requestQuote
                 }
-                onChange={
-                  handleChange
-                }
+                onChange={handleChange}
               />
-
-              <span>
-                Solicitar proposta
-              </span>
+              Solicitar proposta
             </label>
 
             <label>
               <input
                 type="checkbox"
                 name="testRide"
-                checked={
-                  form.testRide
-                }
-                onChange={
-                  handleChange
-                }
+                checked={form.testRide}
+                onChange={handleChange}
               />
-
-              <span>
-                Test ride
-              </span>
+              Test ride
             </label>
 
             <label>
               <input
                 type="checkbox"
                 name="whatsapp"
-                checked={
-                  form.whatsapp
-                }
-                onChange={
-                  handleChange
-                }
+                checked={form.whatsapp}
+                onChange={handleChange}
               />
-
-              <span>
-                WhatsApp
-              </span>
+              WhatsApp
             </label>
           </div>
         </section>
 
-        <footer
-          className={
-            styles.actions
-          }
-        >
+        <footer className={styles.actions}>
           <Link
             to="/admin/produtos"
-            className={
-              styles.cancelButton
-            }
+            className={styles.cancelButton}
           >
             Cancelar
           </Link>
 
           <button
             type="submit"
-            className={
-              styles.saveButton
-            }
-            disabled={
-              saving
-            }
+            className={styles.saveButton}
+            disabled={saving}
           >
-            <Save
-              size={18}
-            />
+            <Save size={18} />
 
             {saving
               ? "Salvando..."
