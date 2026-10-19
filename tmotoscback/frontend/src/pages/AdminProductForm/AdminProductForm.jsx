@@ -34,6 +34,8 @@ import {
   updateAdminProduct,
 } from "../../services/adminService";
 
+import ProductSpecsEditor from "../../components/admin/ProductSpecsEditor/ProductSpecsEditor";
+
 import styles from "./AdminProductForm.module.css";
 
 const INITIAL_FORM = {
@@ -41,11 +43,13 @@ const INITIAL_FORM = {
 
   category: "",
   subcategory: "",
+
   brand: "",
   name: "",
   slug: "",
 
   active: true,
+
   condition: "novo",
 
   shortDescription: "",
@@ -85,11 +89,20 @@ const INITIAL_FORM = {
 function createSlug(value) {
   return value
     .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
+    .replace(
+      /[\u0300-\u036f]/g,
+      ""
+    )
     .toLowerCase()
     .trim()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
+    .replace(
+      /[^a-z0-9]+/g,
+      "-"
+    )
+    .replace(
+      /^-+|-+$/g,
+      ""
+    );
 }
 
 function createKey(value) {
@@ -99,51 +112,132 @@ function createKey(value) {
 function parseList(value) {
   return value
     .split(",")
-    .map((item) => item.trim())
+    .map(
+      (item) =>
+        item.trim()
+    )
     .filter(Boolean);
 }
 
 function parseImages(value) {
   return value
     .split("\n")
-    .map((item) => item.trim())
+    .map(
+      (item) =>
+        item.trim()
+    )
     .filter(Boolean);
 }
 
-function AdminProductForm() {
-  const { id } = useParams();
+function stringifySpecValue(
+  value
+) {
+  if (
+    typeof value ===
+    "string"
+  ) {
+    return value;
+  }
 
-  const navigate = useNavigate();
+  if (
+    value === null ||
+    value === undefined
+  ) {
+    return "";
+  }
+
+  if (
+    typeof value ===
+    "object"
+  ) {
+    return JSON.stringify(
+      value,
+      null,
+      2
+    );
+  }
+
+  return String(value);
+}
+
+function parseSpecValue(
+  value
+) {
+  const trimmed =
+    value.trim();
+
+  if (
+    trimmed === ""
+  ) {
+    return "";
+  }
+
+  try {
+    return JSON.parse(
+      trimmed
+    );
+  } catch {
+    return trimmed;
+  }
+}
+
+function AdminProductForm() {
+  const {
+    id,
+  } = useParams();
+
+  const navigate =
+    useNavigate();
 
   const {
     token,
     logout,
   } = useAdminAuth();
 
-  const editing = Boolean(id);
+  const editing =
+    Boolean(id);
 
-  const [form, setForm] =
-    useState(INITIAL_FORM);
+  const [
+    form,
+    setForm,
+  ] = useState(
+    INITIAL_FORM
+  );
 
-  const [colors, setColors] =
-    useState([]);
+  const [
+    colors,
+    setColors,
+  ] = useState([]);
 
-  const [variants, setVariants] =
-    useState([]);
+  const [
+    variants,
+    setVariants,
+  ] = useState([]);
+
+  const [
+    specs,
+    setSpecs,
+  ] = useState([]);
 
   const [
     relationsDirty,
     setRelationsDirty,
   ] = useState(false);
 
-  const [loading, setLoading] =
-    useState(editing);
+  const [
+    loading,
+    setLoading,
+  ] = useState(editing);
 
-  const [saving, setSaving] =
-    useState(false);
+  const [
+    saving,
+    setSaving,
+  ] = useState(false);
 
-  const [error, setError] =
-    useState("");
+  const [
+    error,
+    setError,
+  ] = useState("");
 
   const [
     slugEdited,
@@ -174,19 +268,24 @@ function AdminProductForm() {
             product.type,
 
           category:
-            product.category || "",
+            product.category ||
+            "",
 
           subcategory:
-            product.subcategory || "",
+            product.subcategory ||
+            "",
 
           brand:
-            product.brand || "",
+            product.brand ||
+            "",
 
           name:
-            product.name || "",
+            product.name ||
+            "",
 
           slug:
-            product.slug || "",
+            product.slug ||
+            "",
 
           active:
             Boolean(
@@ -194,88 +293,108 @@ function AdminProductForm() {
             ),
 
           condition:
-            product.condition || "",
+            product.condition ||
+            "",
 
           shortDescription:
             product.shortDescription ||
             "",
 
           description:
-            product.description || "",
+            product.description ||
+            "",
 
           price:
-            product.price ?? "",
+            product.price ??
+            "",
 
           oldPrice:
-            product.oldPrice ?? "",
+            product.oldPrice ??
+            "",
 
           installmentEnabled:
             product.installment
-              ?.enabled ?? false,
+              ?.enabled ??
+            false,
 
           installmentCount:
             product.installment
-              ?.count ?? "",
+              ?.count ??
+            "",
 
           installmentValue:
             product.installment
-              ?.value ?? "",
+              ?.value ??
+            "",
 
           stockAvailable:
             product.stock
-              ?.available ?? true,
+              ?.available ??
+            true,
 
           stockQuantity:
             product.stock
-              ?.quantity ?? "",
+              ?.quantity ??
+            "",
 
           cover:
             product.media
-              ?.cover || "",
+              ?.cover ||
+            "",
 
           video:
             product.media
-              ?.video || "",
+              ?.video ||
+            "",
 
           images:
             (
               product.media
-                ?.images || []
+                ?.images ||
+              []
             ).join("\n"),
 
           feedEnabled:
             product.feed
-              ?.enabled ?? false,
+              ?.enabled ??
+            false,
 
           feedFeatured:
             product.feed
-              ?.featured ?? false,
+              ?.featured ??
+            false,
 
           feedOrder:
             product.feed
-              ?.order ?? "",
+              ?.order ??
+            "",
 
           feedText:
             product.feed
-              ?.text || "",
+              ?.text ||
+            "",
 
           badges:
             (
-              product.badges || []
+              product.badges ||
+              []
             ).join(", "),
 
           tags:
             (
-              product.tags || []
+              product.tags ||
+              []
             ).join(", "),
 
           seoTitle:
             product.seo
-              ?.title || "",
+              ?.title ||
+            "",
 
           seoDescription:
             product.seo
-              ?.description || "",
+              ?.description ||
+            "",
 
           purchasableOnline:
             product.sales
@@ -284,62 +403,102 @@ function AdminProductForm() {
 
           requestQuote:
             product.sales
-              ?.requestQuote ?? false,
+              ?.requestQuote ??
+            false,
 
           testRide:
             product.sales
-              ?.testRide ?? false,
+              ?.testRide ??
+            false,
 
           whatsapp:
             product.sales
-              ?.whatsapp ?? true,
+              ?.whatsapp ??
+            true,
         });
 
         setColors(
           (
-            product.colors || []
-          ).map((color) => ({
-            key:
-              color.key,
+            product.colors ||
+            []
+          ).map(
+            (color) => ({
+              key:
+                color.key,
 
-            name:
-              color.name,
+              name:
+                color.name,
 
-            hex:
-              color.hex,
-          }))
+              hex:
+                color.hex,
+            })
+          )
         );
 
         setVariants(
           (
-            product.variants || []
-          ).map((variant) => ({
-            key:
-              variant.key,
+            product.variants ||
+            []
+          ).map(
+            (variant) => ({
+              key:
+                variant.key,
 
-            colorKey:
-              variant.colorKey ?? "",
+              colorKey:
+                variant.colorKey ??
+                "",
 
-            size:
-              variant.size ?? "",
+              size:
+                variant.size ??
+                "",
 
-            stock:
-              variant.stock ?? 0,
-          }))
+              stock:
+                variant.stock ??
+                0,
+            })
+          )
         );
 
-        setRelationsDirty(false);
-        setSlugEdited(true);
+        setSpecs(
+          Object.entries(
+            product.specs ||
+              {}
+          ).map(
+            ([
+              key,
+              value,
+            ]) => ({
+              key,
+
+              value:
+                stringifySpecValue(
+                  value
+                ),
+            })
+          )
+        );
+
+        setRelationsDirty(
+          false
+        );
+
+        setSlugEdited(
+          true
+        );
       } catch (error) {
         if (
-          error.status === 401 ||
-          error.status === 403
+          error.status ===
+            401 ||
+          error.status ===
+            403
         ) {
           logout();
           return;
         }
 
-        setError(error.message);
+        setError(
+          error.message
+        );
       } finally {
         setLoading(false);
       }
@@ -357,17 +516,32 @@ function AdminProductForm() {
     useMemo(
       () =>
         variants.reduce(
-          (total, variant) =>
+          (
+            total,
+            variant
+          ) =>
             total +
             Number(
-              variant.stock || 0
+              variant.stock ||
+                0
             ),
           0
         ),
       [variants]
     );
 
-  function handleChange(event) {
+  const galleryImages =
+    useMemo(
+      () =>
+        parseImages(
+          form.images
+        ),
+      [form.images]
+    );
+
+  function handleChange(
+    event
+  ) {
     const {
       name,
       value,
@@ -375,24 +549,31 @@ function AdminProductForm() {
       checked,
     } = event.target;
 
-    if (name === "name") {
+    if (
+      name === "name"
+    ) {
       setForm(
         (current) => ({
           ...current,
 
-          name: value,
+          name:
+            value,
 
           slug:
             slugEdited
               ? current.slug
-              : createSlug(value),
+              : createSlug(
+                  value
+                ),
         })
       );
 
       return;
     }
 
-    if (name === "slug") {
+    if (
+      name === "slug"
+    ) {
       setSlugEdited(true);
     }
 
@@ -401,12 +582,19 @@ function AdminProductForm() {
         ...current,
 
         [name]:
-          type === "checkbox"
+          type ===
+          "checkbox"
             ? checked
             : value,
       })
     );
   }
+
+  /*
+   * =====================================================
+   * CORES
+   * =====================================================
+   */
 
   function addColor() {
     setColors(
@@ -436,22 +624,27 @@ function AdminProductForm() {
             colorIndex
           ) => {
             if (
-              colorIndex !== index
+              colorIndex !==
+              index
             ) {
               return color;
             }
 
             const next = {
               ...color,
-              [field]: value,
+              [field]:
+                value,
             };
 
             if (
-              field === "name" &&
+              field ===
+                "name" &&
               !color.key
             ) {
               next.key =
-                createKey(value);
+                createKey(
+                  value
+                );
             }
 
             return next;
@@ -462,19 +655,27 @@ function AdminProductForm() {
     setRelationsDirty(true);
   }
 
-  function removeColor(index) {
+  function removeColor(
+    index
+  ) {
     const removed =
       colors[index];
 
     setColors(
       (current) =>
         current.filter(
-          (_, colorIndex) =>
-            colorIndex !== index
+          (
+            _,
+            colorIndex
+          ) =>
+            colorIndex !==
+            index
         )
     );
 
-    if (removed?.key) {
+    if (
+      removed?.key
+    ) {
       setVariants(
         (current) =>
           current.map(
@@ -483,7 +684,8 @@ function AdminProductForm() {
               removed.key
                 ? {
                     ...variant,
-                    colorKey: "",
+                    colorKey:
+                      "",
                   }
                 : variant
           )
@@ -493,15 +695,26 @@ function AdminProductForm() {
     setRelationsDirty(true);
   }
 
+  /*
+   * =====================================================
+   * VARIANTES
+   * =====================================================
+   */
+
   function addVariant() {
     setVariants(
       (current) => [
         ...current,
         {
           key: "",
+
           colorKey:
-            colors[0]?.key || "",
+            colors[0]
+              ?.key ||
+            "",
+
           size: "",
+
           stock: 0,
         },
       ]
@@ -522,10 +735,12 @@ function AdminProductForm() {
             variant,
             variantIndex
           ) =>
-            variantIndex === index
+            variantIndex ===
+            index
               ? {
                   ...variant,
-                  [field]: value,
+                  [field]:
+                    value,
                 }
               : variant
         )
@@ -534,34 +749,145 @@ function AdminProductForm() {
     setRelationsDirty(true);
   }
 
-  function removeVariant(index) {
+  function removeVariant(
+    index
+  ) {
     setVariants(
       (current) =>
         current.filter(
-          (_, variantIndex) =>
-            variantIndex !== index
+          (
+            _,
+            variantIndex
+          ) =>
+            variantIndex !==
+            index
         )
     );
 
     setRelationsDirty(true);
   }
 
+  /*
+   * =====================================================
+   * ESPECIFICAÇÕES
+   * =====================================================
+   */
+
+  function addSpec() {
+    setSpecs(
+      (current) => [
+        ...current,
+        {
+          key: "",
+          value: "",
+        },
+      ]
+    );
+  }
+
+  function updateSpec(
+    index,
+    field,
+    value
+  ) {
+    setSpecs(
+      (current) =>
+        current.map(
+          (
+            spec,
+            specIndex
+          ) =>
+            specIndex ===
+            index
+              ? {
+                  ...spec,
+                  [field]:
+                    value,
+                }
+              : spec
+        )
+    );
+  }
+
+  function removeSpec(
+    index
+  ) {
+    setSpecs(
+      (current) =>
+        current.filter(
+          (
+            _,
+            specIndex
+          ) =>
+            specIndex !==
+            index
+        )
+    );
+  }
+
+  function buildSpecs() {
+    const result = {};
+
+    for (
+      const spec of
+      specs
+    ) {
+      const key =
+        spec.key.trim();
+
+      if (!key) {
+        throw new Error(
+          "Todas as especificações precisam de um nome."
+        );
+      }
+
+      if (
+        Object.prototype
+          .hasOwnProperty
+          .call(
+            result,
+            key
+          )
+      ) {
+        throw new Error(
+          `Especificação duplicada: "${key}".`
+        );
+      }
+
+      result[key] =
+        parseSpecValue(
+          spec.value
+        );
+    }
+
+    return result;
+  }
+
+  /*
+   * =====================================================
+   * VALIDAÇÃO CORES / VARIANTES
+   * =====================================================
+   */
+
   function validateRelations() {
     const normalizedColors =
-      colors.map((color) => ({
-        key:
-          color.key.trim(),
+      colors.map(
+        (color) => ({
+          key:
+            color.key.trim(),
 
-        name:
-          color.name.trim(),
+          name:
+            color.name.trim(),
 
-        hex:
-          color.hex.trim(),
-      }));
+          hex:
+            color.hex.trim(),
+        })
+      );
 
     const colorKeys =
       normalizedColors.map(
-        (color) => color.key
+        (color) =>
+          color.key
       );
 
     if (
@@ -578,7 +904,9 @@ function AdminProductForm() {
     }
 
     if (
-      new Set(colorKeys).size !==
+      new Set(
+        colorKeys
+      ).size !==
       colorKeys.length
     ) {
       throw new Error(
@@ -602,7 +930,8 @@ function AdminProductForm() {
 
           stock:
             Number(
-              variant.stock || 0
+              variant.stock ||
+                0
             ),
         })
       );
@@ -636,7 +965,9 @@ function AdminProductForm() {
     }
 
     const validColorKeys =
-      new Set(colorKeys);
+      new Set(
+        colorKeys
+      );
 
     const invalidVariant =
       normalizedVariants.find(
@@ -647,7 +978,9 @@ function AdminProductForm() {
           )
       );
 
-    if (invalidVariant) {
+    if (
+      invalidVariant
+    ) {
       throw new Error(
         `A variante "${invalidVariant.key}" possui uma cor inválida.`
       );
@@ -659,7 +992,8 @@ function AdminProductForm() {
           !Number.isInteger(
             variant.stock
           ) ||
-          variant.stock < 0
+          variant.stock <
+            0
       )
     ) {
       throw new Error(
@@ -675,6 +1009,12 @@ function AdminProductForm() {
         normalizedVariants,
     };
   }
+
+  /*
+   * =====================================================
+   * VALIDAÇÃO GERAL
+   * =====================================================
+   */
 
   function validateForm() {
     if (
@@ -692,7 +1032,9 @@ function AdminProductForm() {
       Number(form.price);
 
     if (
-      Number.isNaN(price) ||
+      Number.isNaN(
+        price
+      ) ||
       price < 0
     ) {
       throw new Error(
@@ -701,7 +1043,8 @@ function AdminProductForm() {
     }
 
     if (
-      form.oldPrice !== "" &&
+      form.oldPrice !==
+        "" &&
       (
         Number.isNaN(
           Number(
@@ -732,7 +1075,9 @@ function AdminProductForm() {
         );
 
       if (
-        !Number.isInteger(count) ||
+        !Number.isInteger(
+          count
+        ) ||
         count <= 0
       ) {
         throw new Error(
@@ -741,7 +1086,9 @@ function AdminProductForm() {
       }
 
       if (
-        Number.isNaN(value) ||
+        Number.isNaN(
+          value
+        ) ||
         value < 0
       ) {
         throw new Error(
@@ -751,8 +1098,10 @@ function AdminProductForm() {
     }
 
     if (
-      variants.length === 0 &&
-      form.stockQuantity !== ""
+      variants.length ===
+        0 &&
+      form.stockQuantity !==
+        ""
     ) {
       const quantity =
         Number(
@@ -772,7 +1121,8 @@ function AdminProductForm() {
     }
 
     if (
-      form.feedOrder !== ""
+      form.feedOrder !==
+      ""
     ) {
       const order =
         Number(
@@ -780,7 +1130,9 @@ function AdminProductForm() {
         );
 
       if (
-        !Number.isInteger(order) ||
+        !Number.isInteger(
+          order
+        ) ||
         order < 0
       ) {
         throw new Error(
@@ -791,6 +1143,12 @@ function AdminProductForm() {
 
     return price;
   }
+
+  /*
+   * =====================================================
+   * SALVAR
+   * =====================================================
+   */
 
   async function handleSubmit(
     event
@@ -807,6 +1165,9 @@ function AdminProductForm() {
       const relations =
         validateRelations();
 
+      const normalizedSpecs =
+        buildSpecs();
+
       const payload = {
         type:
           form.type,
@@ -815,7 +1176,8 @@ function AdminProductForm() {
           form.category.trim(),
 
         subcategory:
-          form.subcategory.trim() ||
+          form.subcategory
+            .trim() ||
           null,
 
         brand:
@@ -831,7 +1193,8 @@ function AdminProductForm() {
           form.active,
 
         condition:
-          form.condition.trim() ||
+          form.condition
+            .trim() ||
           null,
 
         shortDescription:
@@ -847,7 +1210,8 @@ function AdminProductForm() {
         price,
 
         oldPrice:
-          form.oldPrice === ""
+          form.oldPrice ===
+          ""
             ? null
             : Number(
                 form.oldPrice
@@ -891,6 +1255,9 @@ function AdminProductForm() {
             null,
         },
 
+        specs:
+          normalizedSpecs,
+
         badges:
           parseList(
             form.badges
@@ -923,20 +1290,23 @@ function AdminProductForm() {
             form.feedFeatured,
 
           order:
-            form.feedOrder === ""
+            form.feedOrder ===
+            ""
               ? null
               : Number(
                   form.feedOrder
                 ),
 
           text:
-            form.feedText.trim() ||
+            form.feedText
+              .trim() ||
             null,
         },
 
         seo: {
           title:
-            form.seoTitle.trim() ||
+            form.seoTitle
+              .trim() ||
             null,
 
           description:
@@ -947,8 +1317,8 @@ function AdminProductForm() {
       };
 
       /*
-       * Sem variantes, o estoque
-       * é informado manualmente.
+       * Sem variantes:
+       * estoque é manual.
        */
       if (
         relations.variants
@@ -969,11 +1339,13 @@ function AdminProductForm() {
       }
 
       /*
-       * No cadastro novo sempre
-       * enviamos as relações.
+       * Novo produto:
+       * sempre envia cores
+       * e variantes.
        *
-       * Na edição só enviamos
-       * quando foram alteradas.
+       * Edição:
+       * só envia quando houve
+       * alteração nas relações.
        */
       if (
         !editing ||
@@ -1004,15 +1376,18 @@ function AdminProductForm() {
       );
     } catch (error) {
       if (
-        error.status === 401 ||
-        error.status === 403
+        error.status ===
+          401 ||
+        error.status ===
+          403
       ) {
         logout();
         return;
       }
 
       console.error(
-        error.data || error
+        error.data ||
+          error
       );
 
       setError(
@@ -1021,12 +1396,19 @@ function AdminProductForm() {
 
       window.scrollTo({
         top: 0,
-        behavior: "smooth",
+        behavior:
+          "smooth",
       });
     } finally {
       setSaving(false);
     }
   }
+
+  /*
+   * =====================================================
+   * LOADING
+   * =====================================================
+   */
 
   if (loading) {
     return (
@@ -1045,6 +1427,12 @@ function AdminProductForm() {
       </main>
     );
   }
+
+  /*
+   * =====================================================
+   * RENDER
+   * =====================================================
+   */
 
   return (
     <main
@@ -1109,107 +1497,208 @@ function AdminProductForm() {
           handleSubmit
         }
       >
-        <section className={styles.section}>
-          <div className={styles.sectionHeader}>
-            <h2>Informações básicas</h2>
-            <p>Identificação principal do produto.</p>
+        {/* =========================================
+            INFORMAÇÕES BÁSICAS
+        ========================================== */}
+
+        <section
+          className={
+            styles.section
+          }
+        >
+          <div
+            className={
+              styles.sectionHeader
+            }
+          >
+            <h2>
+              Informações básicas
+            </h2>
+
+            <p>
+              Identificação principal
+              do produto.
+            </p>
           </div>
 
-          <div className={styles.grid}>
+          <div
+            className={
+              styles.grid
+            }
+          >
             <label>
               Tipo
+
               <select
                 name="type"
-                value={form.type}
-                onChange={handleChange}
+                value={
+                  form.type
+                }
+                onChange={
+                  handleChange
+                }
               >
-                <option value="MOTO">Moto</option>
-                <option value="ACCESSORY">Acessório</option>
-                <option value="PART">Peça</option>
+                <option value="MOTO">
+                  Moto
+                </option>
+
+                <option value="ACCESSORY">
+                  Acessório
+                </option>
+
+                <option value="PART">
+                  Peça
+                </option>
               </select>
             </label>
 
             <label>
               Condição
+
               <input
                 name="condition"
-                value={form.condition}
-                onChange={handleChange}
+                value={
+                  form.condition
+                }
+                onChange={
+                  handleChange
+                }
                 placeholder="novo"
               />
             </label>
 
             <label>
               Categoria *
+
               <input
                 name="category"
-                value={form.category}
-                onChange={handleChange}
+                value={
+                  form.category
+                }
+                onChange={
+                  handleChange
+                }
                 required
               />
             </label>
 
             <label>
               Subcategoria
+
               <input
                 name="subcategory"
-                value={form.subcategory}
-                onChange={handleChange}
+                value={
+                  form.subcategory
+                }
+                onChange={
+                  handleChange
+                }
               />
             </label>
 
             <label>
               Marca *
+
               <input
                 name="brand"
-                value={form.brand}
-                onChange={handleChange}
+                value={
+                  form.brand
+                }
+                onChange={
+                  handleChange
+                }
                 required
               />
             </label>
 
             <label>
               Nome *
+
               <input
                 name="name"
-                value={form.name}
-                onChange={handleChange}
+                value={
+                  form.name
+                }
+                onChange={
+                  handleChange
+                }
                 required
               />
             </label>
 
-            <label className={styles.full}>
+            <label
+              className={
+                styles.full
+              }
+            >
               Slug *
+
               <input
                 name="slug"
-                value={form.slug}
-                onChange={handleChange}
+                value={
+                  form.slug
+                }
+                onChange={
+                  handleChange
+                }
                 required
               />
 
               <small>
-                Usado na URL pública do produto.
+                Usado na URL
+                pública do produto.
               </small>
             </label>
           </div>
         </section>
 
-        <section className={styles.section}>
-          <div className={styles.sectionHeader}>
-            <div className={styles.titleWithIcon}>
-              <BadgePercent size={19} />
-              <h2>Preços e parcelamento</h2>
+        {/* =========================================
+            PREÇOS / PARCELAMENTO
+        ========================================== */}
+
+        <section
+          className={
+            styles.section
+          }
+        >
+          <div
+            className={
+              styles.sectionHeader
+            }
+          >
+            <div
+              className={
+                styles.titleWithIcon
+              }
+            >
+              <BadgePercent
+                size={19}
+              />
+
+              <h2>
+                Preços e
+                parcelamento
+              </h2>
             </div>
           </div>
 
-          <div className={styles.grid}>
+          <div
+            className={
+              styles.grid
+            }
+          >
             <label>
               Preço atual *
+
               <input
                 type="number"
                 name="price"
-                value={form.price}
-                onChange={handleChange}
+                value={
+                  form.price
+                }
+                onChange={
+                  handleChange
+                }
                 min="0"
                 step="0.01"
                 required
@@ -1218,44 +1707,70 @@ function AdminProductForm() {
 
             <label>
               Preço anterior
+
               <input
                 type="number"
                 name="oldPrice"
-                value={form.oldPrice}
-                onChange={handleChange}
+                value={
+                  form.oldPrice
+                }
+                onChange={
+                  handleChange
+                }
                 min="0"
                 step="0.01"
               />
             </label>
           </div>
 
-          <div className={styles.optionBox}>
-            <label className={styles.toggleLabel}>
+          <div
+            className={
+              styles.optionBox
+            }
+          >
+            <label
+              className={
+                styles.toggleLabel
+              }
+            >
               <input
                 type="checkbox"
                 name="installmentEnabled"
                 checked={
                   form.installmentEnabled
                 }
-                onChange={handleChange}
+                onChange={
+                  handleChange
+                }
               />
 
-              <WalletCards size={18} />
+              <WalletCards
+                size={18}
+              />
 
-              Permitir parcelamento
+              Permitir
+              parcelamento
             </label>
 
             {form.installmentEnabled && (
-              <div className={styles.grid}>
+              <div
+                className={
+                  styles.grid
+                }
+              >
                 <label>
-                  Número de parcelas
+                  Número de
+                  parcelas
+
                   <input
                     type="number"
                     name="installmentCount"
                     value={
                       form.installmentCount
                     }
-                    onChange={handleChange}
+                    onChange={
+                      handleChange
+                    }
                     min="1"
                     step="1"
                   />
@@ -1263,13 +1778,16 @@ function AdminProductForm() {
 
                 <label>
                   Valor da parcela
+
                   <input
                     type="number"
                     name="installmentValue"
                     value={
                       form.installmentValue
                     }
-                    onChange={handleChange}
+                    onChange={
+                      handleChange
+                    }
                     min="0"
                     step="0.01"
                   />
@@ -1279,259 +1797,605 @@ function AdminProductForm() {
           </div>
         </section>
 
-        <section className={styles.section}>
-          <div className={styles.sectionHeader}>
-            <h2>Descrições</h2>
+        {/* =========================================
+            DESCRIÇÕES
+        ========================================== */}
+
+        <section
+          className={
+            styles.section
+          }
+        >
+          <div
+            className={
+              styles.sectionHeader
+            }
+          >
+            <h2>
+              Descrições
+            </h2>
+
+            <p>
+              Conteúdo apresentado
+              ao cliente.
+            </p>
           </div>
 
-          <div className={styles.stack}>
+          <div
+            className={
+              styles.stack
+            }
+          >
             <label>
               Descrição curta
+
               <textarea
                 name="shortDescription"
                 value={
                   form.shortDescription
                 }
-                onChange={handleChange}
+                onChange={
+                  handleChange
+                }
                 rows="3"
               />
             </label>
 
             <label>
               Descrição completa
+
               <textarea
                 name="description"
                 value={
                   form.description
                 }
-                onChange={handleChange}
+                onChange={
+                  handleChange
+                }
                 rows="7"
               />
             </label>
           </div>
         </section>
 
-        <section className={styles.section}>
-          <div className={styles.sectionHeader}>
-            <div className={styles.titleWithIcon}>
-              <Image size={19} />
-              <h2>Mídia</h2>
+        {/* =========================================
+            ESPECIFICAÇÕES
+        ========================================== */}
+
+        <section
+          className={
+            styles.section
+          }
+        >
+          <ProductSpecsEditor
+            specs={
+              specs
+            }
+            onAdd={
+              addSpec
+            }
+            onChange={
+              updateSpec
+            }
+            onRemove={
+              removeSpec
+            }
+          />
+        </section>
+
+        {/* =========================================
+            MÍDIA
+        ========================================== */}
+
+        <section
+          className={
+            styles.section
+          }
+        >
+          <div
+            className={
+              styles.sectionHeader
+            }
+          >
+            <div
+              className={
+                styles.titleWithIcon
+              }
+            >
+              <Image
+                size={19}
+              />
+
+              <h2>
+                Mídia
+              </h2>
             </div>
 
             <p>
-              Por enquanto trabalharemos com URLs. Upload de arquivos pode ser adicionado depois.
+              Informe URLs de
+              imagens e vídeos.
             </p>
           </div>
 
-          <div className={styles.stack}>
+          <div
+            className={
+              styles.stack
+            }
+          >
             <label>
               Imagem de capa
+
               <input
                 name="cover"
-                value={form.cover}
-                onChange={handleChange}
+                value={
+                  form.cover
+                }
+                onChange={
+                  handleChange
+                }
                 placeholder="https://..."
               />
             </label>
 
             <label>
               Galeria
+
               <textarea
                 name="images"
-                value={form.images}
-                onChange={handleChange}
+                value={
+                  form.images
+                }
+                onChange={
+                  handleChange
+                }
                 rows="5"
                 placeholder={
                   "Uma URL por linha\nhttps://...\nhttps://..."
                 }
               />
+
+              <small>
+                Informe uma imagem
+                por linha.
+              </small>
             </label>
 
             <label>
               Vídeo
+
               <input
                 name="video"
-                value={form.video}
-                onChange={handleChange}
+                value={
+                  form.video
+                }
+                onChange={
+                  handleChange
+                }
                 placeholder="/videos/produto.mp4 ou https://..."
               />
             </label>
           </div>
-        </section>
 
-        <section className={styles.section}>
-          <div className={styles.relationHeader}>
-            <div>
-              <div className={styles.titleWithIcon}>
-                <Palette size={19} />
-                <h2>Cores</h2>
-              </div>
-
-              <p>
-                Cadastre as cores disponíveis para o produto.
-              </p>
-            </div>
-
-            <button
-              type="button"
-              className={styles.secondaryButton}
-              onClick={addColor}
+          {(
+            form.cover.trim() ||
+            galleryImages.length >
+              0 ||
+            form.video.trim()
+          ) && (
+            <div
+              className={
+                styles.mediaPreview
+              }
             >
-              <Plus size={16} />
-              Adicionar cor
-            </button>
-          </div>
+              <h3>
+                Preview
+              </h3>
 
-          {colors.length === 0 ? (
-            <div className={styles.relationEmpty}>
-              Nenhuma cor cadastrada.
-            </div>
-          ) : (
-            <div className={styles.colorList}>
-              {colors.map((color, index) => (
-                <div
-                  className={styles.colorRow}
-                  key={`color-${index}`}
-                >
-                  <label>
-                    Nome
-                    <input
-                      value={color.name}
-                      onChange={(event) =>
-                        updateColor(
-                          index,
-                          "name",
-                          event.target.value
-                        )
-                      }
-                    />
-                  </label>
-
-                  <label>
-                    Identificador
-                    <input
-                      value={color.key}
-                      onChange={(event) =>
-                        updateColor(
-                          index,
-                          "key",
-                          createKey(
-                            event.target.value
-                          )
-                        )
-                      }
-                    />
-                  </label>
-
-                  <label>
-                    Cor
-                    <div className={styles.colorInput}>
-                      <input
-                        type="color"
-                        value={color.hex}
-                        onChange={(event) =>
-                          updateColor(
-                            index,
-                            "hex",
-                            event.target.value
-                          )
-                        }
-                      />
-
-                      <input
-                        value={color.hex}
-                        onChange={(event) =>
-                          updateColor(
-                            index,
-                            "hex",
-                            event.target.value
-                          )
-                        }
-                      />
-                    </div>
-                  </label>
-
-                  <button
-                    type="button"
-                    className={styles.removeButton}
-                    onClick={() =>
-                      removeColor(index)
+              {form.cover.trim() && (
+                <div>
+                  <span
+                    className={
+                      styles.previewLabel
                     }
                   >
-                    <Trash2 size={17} />
-                  </button>
+                    Capa
+                  </span>
+
+                  <img
+                    className={
+                      styles.coverPreview
+                    }
+                    src={
+                      form.cover.trim()
+                    }
+                    alt="Preview da capa"
+                  />
                 </div>
-              ))}
+              )}
+
+              {galleryImages.length >
+                0 && (
+                <div>
+                  <span
+                    className={
+                      styles.previewLabel
+                    }
+                  >
+                    Galeria
+                  </span>
+
+                  <div
+                    className={
+                      styles.galleryPreview
+                    }
+                  >
+                    {galleryImages.map(
+                      (
+                        image,
+                        index
+                      ) => (
+                        <img
+                          src={
+                            image
+                          }
+                          alt={`Preview ${index + 1}`}
+                          key={`${image}-${index}`}
+                        />
+                      )
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {form.video.trim() && (
+                <div>
+                  <span
+                    className={
+                      styles.previewLabel
+                    }
+                  >
+                    Vídeo
+                  </span>
+
+                  <video
+                    className={
+                      styles.videoPreview
+                    }
+                    src={
+                      form.video.trim()
+                    }
+                    controls
+                    muted
+                  />
+                </div>
+              )}
             </div>
           )}
         </section>
 
-        <section className={styles.section}>
-          <div className={styles.relationHeader}>
+        {/* =========================================
+            CORES
+        ========================================== */}
+
+        <section
+          className={
+            styles.section
+          }
+        >
+          <div
+            className={
+              styles.relationHeader
+            }
+          >
             <div>
-              <div className={styles.titleWithIcon}>
-                <Boxes size={19} />
-                <h2>Variantes e estoque</h2>
+              <div
+                className={
+                  styles.titleWithIcon
+                }
+              >
+                <Palette
+                  size={19}
+                />
+
+                <h2>
+                  Cores
+                </h2>
               </div>
 
               <p>
-                O estoque das variantes substitui o estoque manual.
+                Cadastre as cores
+                disponíveis.
               </p>
             </div>
 
             <button
               type="button"
-              className={styles.secondaryButton}
-              onClick={addVariant}
+              className={
+                styles.secondaryButton
+              }
+              onClick={
+                addColor
+              }
             >
-              <Plus size={16} />
+              <Plus
+                size={16}
+              />
+
+              Adicionar cor
+            </button>
+          </div>
+
+          {colors.length ===
+          0 ? (
+            <div
+              className={
+                styles.relationEmpty
+              }
+            >
+              Nenhuma cor
+              cadastrada.
+            </div>
+          ) : (
+            <div
+              className={
+                styles.colorList
+              }
+            >
+              {colors.map(
+                (
+                  color,
+                  index
+                ) => (
+                  <div
+                    className={
+                      styles.colorRow
+                    }
+                    key={`color-${index}`}
+                  >
+                    <label>
+                      Nome
+
+                      <input
+                        value={
+                          color.name
+                        }
+                        onChange={(
+                          event
+                        ) =>
+                          updateColor(
+                            index,
+                            "name",
+                            event
+                              .target
+                              .value
+                          )
+                        }
+                        placeholder="Preto"
+                      />
+                    </label>
+
+                    <label>
+                      Identificador
+
+                      <input
+                        value={
+                          color.key
+                        }
+                        onChange={(
+                          event
+                        ) =>
+                          updateColor(
+                            index,
+                            "key",
+                            createKey(
+                              event
+                                .target
+                                .value
+                            )
+                          )
+                        }
+                        placeholder="black"
+                      />
+                    </label>
+
+                    <label>
+                      Cor
+
+                      <div
+                        className={
+                          styles.colorInput
+                        }
+                      >
+                        <input
+                          type="color"
+                          value={
+                            color.hex
+                          }
+                          onChange={(
+                            event
+                          ) =>
+                            updateColor(
+                              index,
+                              "hex",
+                              event
+                                .target
+                                .value
+                            )
+                          }
+                        />
+
+                        <input
+                          value={
+                            color.hex
+                          }
+                          onChange={(
+                            event
+                          ) =>
+                            updateColor(
+                              index,
+                              "hex",
+                              event
+                                .target
+                                .value
+                            )
+                          }
+                        />
+                      </div>
+                    </label>
+
+                    <button
+                      type="button"
+                      className={
+                        styles.removeButton
+                      }
+                      title="Remover cor"
+                      onClick={() =>
+                        removeColor(
+                          index
+                        )
+                      }
+                    >
+                      <Trash2
+                        size={17}
+                      />
+                    </button>
+                  </div>
+                )
+              )}
+            </div>
+          )}
+        </section>
+
+        {/* =========================================
+            VARIANTES / ESTOQUE
+        ========================================== */}
+
+        <section
+          className={
+            styles.section
+          }
+        >
+          <div
+            className={
+              styles.relationHeader
+            }
+          >
+            <div>
+              <div
+                className={
+                  styles.titleWithIcon
+                }
+              >
+                <Boxes
+                  size={19}
+                />
+
+                <h2>
+                  Variantes e
+                  estoque
+                </h2>
+              </div>
+
+              <p>
+                Quando há variantes,
+                o estoque geral é
+                calculado pela soma
+                delas.
+              </p>
+            </div>
+
+            <button
+              type="button"
+              className={
+                styles.secondaryButton
+              }
+              onClick={
+                addVariant
+              }
+            >
+              <Plus
+                size={16}
+              />
+
               Adicionar variante
             </button>
           </div>
 
-          {variants.length > 0 ? (
+          {variants.length >
+          0 ? (
             <>
-              <div className={styles.stockSummary}>
-                <span>Estoque calculado</span>
+              <div
+                className={
+                  styles.stockSummary
+                }
+              >
+                <span>
+                  Estoque calculado
+                </span>
+
                 <strong>
-                  {totalVariantStock}
+                  {
+                    totalVariantStock
+                  }
                 </strong>
               </div>
 
-              <div className={styles.variantList}>
+              <div
+                className={
+                  styles.variantList
+                }
+              >
                 {variants.map(
-                  (variant, index) => (
+                  (
+                    variant,
+                    index
+                  ) => (
                     <div
-                      className={styles.variantRow}
+                      className={
+                        styles.variantRow
+                      }
                       key={`variant-${index}`}
                     >
                       <label>
                         Identificador
+
                         <input
-                          value={variant.key}
-                          onChange={(event) =>
+                          value={
+                            variant.key
+                          }
+                          onChange={(
+                            event
+                          ) =>
                             updateVariant(
                               index,
                               "key",
                               createKey(
-                                event.target.value
+                                event
+                                  .target
+                                  .value
                               )
                             )
                           }
+                          placeholder="black-58"
                         />
                       </label>
 
                       <label>
                         Cor
+
                         <select
                           value={
                             variant.colorKey
                           }
-                          onChange={(event) =>
+                          onChange={(
+                            event
+                          ) =>
                             updateVariant(
                               index,
                               "colorKey",
-                              event.target.value
+                              event
+                                .target
+                                .value
                             )
                           }
                         >
@@ -1540,10 +2404,15 @@ function AdminProductForm() {
                           </option>
 
                           {colors.map(
-                            (color, colorIndex) => (
+                            (
+                              color,
+                              colorIndex
+                            ) => (
                               <option
                                 key={`${colorIndex}-${color.key}`}
-                                value={color.key}
+                                value={
+                                  color.key
+                                }
                               >
                                 {color.name ||
                                   color.key ||
@@ -1556,30 +2425,45 @@ function AdminProductForm() {
 
                       <label>
                         Tamanho
+
                         <input
-                          value={variant.size}
-                          onChange={(event) =>
+                          value={
+                            variant.size
+                          }
+                          onChange={(
+                            event
+                          ) =>
                             updateVariant(
                               index,
                               "size",
-                              event.target.value
+                              event
+                                .target
+                                .value
                             )
                           }
+                          placeholder="58 / M / Único"
                         />
                       </label>
 
                       <label>
                         Estoque
+
                         <input
                           type="number"
                           min="0"
                           step="1"
-                          value={variant.stock}
-                          onChange={(event) =>
+                          value={
+                            variant.stock
+                          }
+                          onChange={(
+                            event
+                          ) =>
                             updateVariant(
                               index,
                               "stock",
-                              event.target.value
+                              event
+                                .target
+                                .value
                             )
                           }
                         />
@@ -1587,12 +2471,19 @@ function AdminProductForm() {
 
                       <button
                         type="button"
-                        className={styles.removeButton}
+                        className={
+                          styles.removeButton
+                        }
+                        title="Remover variante"
                         onClick={() =>
-                          removeVariant(index)
+                          removeVariant(
+                            index
+                          )
                         }
                       >
-                        <Trash2 size={17} />
+                        <Trash2
+                          size={17}
+                        />
                       </button>
                     </div>
                   )
@@ -1600,36 +2491,63 @@ function AdminProductForm() {
               </div>
             </>
           ) : (
-            <div className={styles.manualStock}>
-              <div className={styles.titleWithIcon}>
-                <Package size={18} />
-                <strong>Estoque manual</strong>
+            <div
+              className={
+                styles.manualStock
+              }
+            >
+              <div
+                className={
+                  styles.titleWithIcon
+                }
+              >
+                <Package
+                  size={18}
+                />
+
+                <strong>
+                  Estoque manual
+                </strong>
               </div>
 
-              <div className={styles.grid}>
+              <div
+                className={
+                  styles.grid
+                }
+              >
                 <label>
                   Quantidade
+
                   <input
                     type="number"
                     name="stockQuantity"
                     value={
                       form.stockQuantity
                     }
-                    onChange={handleChange}
+                    onChange={
+                      handleChange
+                    }
                     min="0"
                     step="1"
                   />
                 </label>
 
-                <label className={styles.toggleCard}>
+                <label
+                  className={
+                    styles.toggleCard
+                  }
+                >
                   <input
                     type="checkbox"
                     name="stockAvailable"
                     checked={
                       form.stockAvailable
                     }
-                    onChange={handleChange}
+                    onChange={
+                      handleChange
+                    }
                   />
+
                   Produto disponível
                 </label>
               </div>
@@ -1637,22 +2555,58 @@ function AdminProductForm() {
           )}
         </section>
 
-        <section className={styles.section}>
-          <div className={styles.sectionHeader}>
-            <div className={styles.titleWithIcon}>
-              <Megaphone size={19} />
-              <h2>Feed</h2>
+        {/* =========================================
+            FEED
+        ========================================== */}
+
+        <section
+          className={
+            styles.section
+          }
+        >
+          <div
+            className={
+              styles.sectionHeader
+            }
+          >
+            <div
+              className={
+                styles.titleWithIcon
+              }
+            >
+              <Megaphone
+                size={19}
+              />
+
+              <h2>
+                Feed
+              </h2>
             </div>
+
+            <p>
+              Controle a exibição
+              do produto no feed
+              imersivo.
+            </p>
           </div>
 
-          <div className={styles.checkboxes}>
+          <div
+            className={
+              styles.checkboxes
+            }
+          >
             <label>
               <input
                 type="checkbox"
                 name="feedEnabled"
-                checked={form.feedEnabled}
-                onChange={handleChange}
+                checked={
+                  form.feedEnabled
+                }
+                onChange={
+                  handleChange
+                }
               />
+
               Exibir no feed
             </label>
 
@@ -1660,21 +2614,35 @@ function AdminProductForm() {
               <input
                 type="checkbox"
                 name="feedFeatured"
-                checked={form.feedFeatured}
-                onChange={handleChange}
+                checked={
+                  form.feedFeatured
+                }
+                onChange={
+                  handleChange
+                }
               />
+
               Produto em destaque
             </label>
           </div>
 
-          <div className={styles.gridTop}>
+          <div
+            className={
+              styles.gridTop
+            }
+          >
             <label>
               Ordem
+
               <input
                 type="number"
                 name="feedOrder"
-                value={form.feedOrder}
-                onChange={handleChange}
+                value={
+                  form.feedOrder
+                }
+                onChange={
+                  handleChange
+                }
                 min="0"
                 step="1"
               />
@@ -1682,95 +2650,204 @@ function AdminProductForm() {
 
             <label>
               Texto do feed
+
               <input
                 name="feedText"
-                value={form.feedText}
-                onChange={handleChange}
+                value={
+                  form.feedText
+                }
+                onChange={
+                  handleChange
+                }
               />
             </label>
           </div>
         </section>
 
-        <section className={styles.section}>
-          <div className={styles.sectionHeader}>
-            <div className={styles.titleWithIcon}>
-              <Tags size={19} />
-              <h2>Badges e tags</h2>
+        {/* =========================================
+            BADGES / TAGS
+        ========================================== */}
+
+        <section
+          className={
+            styles.section
+          }
+        >
+          <div
+            className={
+              styles.sectionHeader
+            }
+          >
+            <div
+              className={
+                styles.titleWithIcon
+              }
+            >
+              <Tags
+                size={19}
+              />
+
+              <h2>
+                Badges e tags
+              </h2>
             </div>
 
             <p>
-              Separe os itens por vírgula.
+              Separe cada item
+              por vírgula.
             </p>
           </div>
 
-          <div className={styles.grid}>
+          <div
+            className={
+              styles.grid
+            }
+          >
             <label>
               Badges
+
               <input
                 name="badges"
-                value={form.badges}
-                onChange={handleChange}
-                placeholder="Destaque, Promoção"
+                value={
+                  form.badges
+                }
+                onChange={
+                  handleChange
+                }
+                placeholder="Destaque, Promoção, Novo"
               />
             </label>
 
             <label>
               Tags
+
               <input
                 name="tags"
-                value={form.tags}
-                onChange={handleChange}
+                value={
+                  form.tags
+                }
+                onChange={
+                  handleChange
+                }
                 placeholder="moto, yamaha, naked"
               />
             </label>
           </div>
         </section>
 
-        <section className={styles.section}>
-          <div className={styles.sectionHeader}>
-            <div className={styles.titleWithIcon}>
-              <Search size={19} />
-              <h2>SEO</h2>
+        {/* =========================================
+            SEO
+        ========================================== */}
+
+        <section
+          className={
+            styles.section
+          }
+        >
+          <div
+            className={
+              styles.sectionHeader
+            }
+          >
+            <div
+              className={
+                styles.titleWithIcon
+              }
+            >
+              <Search
+                size={19}
+              />
+
+              <h2>
+                SEO
+              </h2>
             </div>
+
+            <p>
+              Informações utilizadas
+              pelos mecanismos de
+              busca.
+            </p>
           </div>
 
-          <div className={styles.stack}>
+          <div
+            className={
+              styles.stack
+            }
+          >
             <label>
               Título SEO
+
               <input
                 name="seoTitle"
-                value={form.seoTitle}
-                onChange={handleChange}
+                value={
+                  form.seoTitle
+                }
+                onChange={
+                  handleChange
+                }
               />
             </label>
 
             <label>
               Descrição SEO
+
               <textarea
                 name="seoDescription"
                 value={
                   form.seoDescription
                 }
-                onChange={handleChange}
+                onChange={
+                  handleChange
+                }
                 rows="3"
               />
             </label>
           </div>
         </section>
 
-        <section className={styles.section}>
-          <div className={styles.sectionHeader}>
-            <h2>Comercial</h2>
+        {/* =========================================
+            COMERCIAL
+        ========================================== */}
+
+        <section
+          className={
+            styles.section
+          }
+        >
+          <div
+            className={
+              styles.sectionHeader
+            }
+          >
+            <h2>
+              Comercial
+            </h2>
+
+            <p>
+              Controle publicação
+              e ações disponíveis
+              para o cliente.
+            </p>
           </div>
 
-          <div className={styles.checkboxes}>
+          <div
+            className={
+              styles.checkboxes
+            }
+          >
             <label>
               <input
                 type="checkbox"
                 name="active"
-                checked={form.active}
-                onChange={handleChange}
+                checked={
+                  form.active
+                }
+                onChange={
+                  handleChange
+                }
               />
+
               Produto ativo
             </label>
 
@@ -1781,8 +2858,11 @@ function AdminProductForm() {
                 checked={
                   form.purchasableOnline
                 }
-                onChange={handleChange}
+                onChange={
+                  handleChange
+                }
               />
+
               Compra online
             </label>
 
@@ -1793,8 +2873,11 @@ function AdminProductForm() {
                 checked={
                   form.requestQuote
                 }
-                onChange={handleChange}
+                onChange={
+                  handleChange
+                }
               />
+
               Solicitar proposta
             </label>
 
@@ -1802,9 +2885,14 @@ function AdminProductForm() {
               <input
                 type="checkbox"
                 name="testRide"
-                checked={form.testRide}
-                onChange={handleChange}
+                checked={
+                  form.testRide
+                }
+                onChange={
+                  handleChange
+                }
               />
+
               Test ride
             </label>
 
@@ -1812,28 +2900,49 @@ function AdminProductForm() {
               <input
                 type="checkbox"
                 name="whatsapp"
-                checked={form.whatsapp}
-                onChange={handleChange}
+                checked={
+                  form.whatsapp
+                }
+                onChange={
+                  handleChange
+                }
               />
+
               WhatsApp
             </label>
           </div>
         </section>
 
-        <footer className={styles.actions}>
+        {/* =========================================
+            AÇÕES
+        ========================================== */}
+
+        <footer
+          className={
+            styles.actions
+          }
+        >
           <Link
             to="/admin/produtos"
-            className={styles.cancelButton}
+            className={
+              styles.cancelButton
+            }
           >
             Cancelar
           </Link>
 
           <button
             type="submit"
-            className={styles.saveButton}
-            disabled={saving}
+            className={
+              styles.saveButton
+            }
+            disabled={
+              saving
+            }
           >
-            <Save size={18} />
+            <Save
+              size={18}
+            />
 
             {saving
               ? "Salvando..."

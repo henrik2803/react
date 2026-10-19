@@ -1,0 +1,224 @@
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  margin-bottom: 20px;
+}
+
+.header h3 {
+  font-size: 1.05rem;
+}
+
+.header p {
+  margin-top: 5px;
+
+  color:
+    var(--color-text-secondary);
+
+  font-size: 0.85rem;
+}
+
+.addButton {
+  min-height: 40px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 7px;
+
+  padding: 0 14px;
+
+  color:
+    var(--color-text);
+
+  background:
+    var(--color-surface-light);
+
+  border:
+    1px solid
+      var(--color-border);
+
+  border-radius:
+    var(--radius-sm);
+
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+.addButton:hover {
+  border-color:
+    var(--color-primary);
+}
+
+.list {
+  display: grid;
+
+  gap: 12px;
+}
+
+.row {
+  display: grid;
+
+  grid-template-columns:
+    minmax(
+      180px,
+      0.7fr
+    )
+    minmax(
+      280px,
+      1.3fr
+    )
+    42px;
+
+  align-items: end;
+
+  gap: 12px;
+
+  padding: 16px;
+
+  background:
+    var(--color-surface-light);
+
+  border:
+    1px solid
+      var(--color-border);
+
+  border-radius:
+    var(--radius-sm);
+}
+
+.row label {
+  display: grid;
+
+  gap: 8px;
+
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.row input,
+.row textarea {
+  width: 100%;
+
+  padding: 12px 14px;
+
+  color:
+    var(--color-text);
+
+  background:
+    var(--color-surface);
+
+  border:
+    1px solid
+      var(--color-border);
+
+  border-radius:
+    var(--radius-sm);
+
+  outline: none;
+}
+
+.row textarea {
+  min-height: 43px;
+
+  resize: vertical;
+}
+
+.row input:focus,
+.row textarea:focus {
+  border-color:
+    var(--color-primary);
+}
+
+.removeButton {
+  width: 42px;
+  height: 42px;
+
+  display: grid;
+  place-items: center;
+
+  color:
+    var(--color-primary);
+
+  background:
+    rgba(
+      255,
+      30,
+      45,
+      0.08
+    );
+
+  border:
+    1px solid
+      rgba(
+        255,
+        30,
+        45,
+        0.22
+      );
+
+  border-radius:
+    var(--radius-sm);
+
+  cursor: pointer;
+}
+
+.empty {
+  padding: 30px;
+
+  color:
+    var(--color-text-secondary);
+
+  background:
+    var(--color-surface-light);
+
+  border:
+    1px dashed
+      var(--color-border);
+
+  border-radius:
+    var(--radius-sm);
+
+  text-align: center;
+}
+
+.help {
+  margin-top: 14px;
+
+  color:
+    var(--color-text-secondary);
+
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+
+.help code {
+  color:
+    var(--color-text);
+}
+
+@media (
+  max-width: 700px
+) {
+  .header {
+    flex-direction: column;
+  }
+
+  .addButton {
+    width: 100%;
+  }
+
+  .row {
+    grid-template-columns:
+      1fr;
+  }
+
+  .removeButton {
+    width: 100%;
+  }
+}
