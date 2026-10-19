@@ -17,6 +17,11 @@ import TestRideForm from "../../lead/TestRideForm/TestRideForm";
 import useFavorites from "../../../hooks/useFavorites";
 import useCart from "../../../hooks/useCart";
 
+import {
+  hasWhatsAppNumber,
+  openProductWhatsApp,
+} from "../../../utils/whatsapp";
+
 import styles from "./ProductActions.module.css";
 
 function ProductActions({
@@ -47,7 +52,8 @@ function ProductActions({
     product.type === "moto";
 
   const hasVariants =
-    product.variants?.length > 0;
+    product.variants?.length >
+    0;
 
   const selectedVariant =
     hasVariants
@@ -69,25 +75,31 @@ function ProductActions({
         item.productId ===
           product.id &&
         item.variantId ===
-          (selectedVariantId ||
-            null)
+          (
+            selectedVariantId ||
+            null
+          )
     );
 
   const quantityInCart =
-    currentCartItem?.quantity ?? 0;
+    currentCartItem
+      ?.quantity ?? 0;
 
   const productAvailable =
-    product.stock?.available !==
-    false;
+    product.stock
+      ?.available !== false;
 
   const hasRequiredSelection =
     !hasVariants ||
-    Boolean(selectedVariant);
+    Boolean(
+      selectedVariant
+    );
 
   const reachedStockLimit =
     typeof maxStock ===
       "number" &&
-    quantityInCart >= maxStock;
+    quantityInCart >=
+      maxStock;
 
   const canAddToCart =
     productAvailable &&
@@ -95,10 +107,17 @@ function ProductActions({
     !reachedStockLimit;
 
   const favorite =
-    isFavorite(product.id);
+    isFavorite(
+      product.id
+    );
+
+  const whatsappAvailable =
+    hasWhatsAppNumber();
 
   function handleFavorite() {
-    toggleFavorite(product.id);
+    toggleFavorite(
+      product.id
+    );
   }
 
   function handleAddToCart() {
@@ -124,8 +143,16 @@ function ProductActions({
     });
   }
 
+  function handleWhatsApp() {
+    openProductWhatsApp(
+      product
+    );
+  }
+
   function getHelperMessage() {
-    if (!productAvailable) {
+    if (
+      !productAvailable
+    ) {
       return "Produto indisponível.";
     }
 
@@ -136,7 +163,9 @@ function ProductActions({
       return "Selecione o tamanho antes de adicionar ao carrinho.";
     }
 
-    if (reachedStockLimit) {
+    if (
+      reachedStockLimit
+    ) {
       return "Quantidade máxima disponível em estoque atingida.";
     }
 
@@ -149,7 +178,9 @@ function ProductActions({
   return (
     <>
       <div
-        className={styles.actions}
+        className={
+          styles.actions
+        }
       >
         {isMoto ? (
           <>
@@ -157,7 +188,9 @@ function ProductActions({
               ?.requestQuote && (
               <Button
                 onClick={() =>
-                  setQuoteOpen(true)
+                  setQuoteOpen(
+                    true
+                  )
                 }
               >
                 Solicitar proposta
@@ -210,7 +243,9 @@ function ProductActions({
                     styles.helper
                   }
                 >
-                  {helperMessage}
+                  {
+                    helperMessage
+                  }
                 </span>
               )}
             </>
@@ -252,7 +287,20 @@ function ProductActions({
 
           {product.sales
             ?.whatsapp && (
-            <Button variant="ghost">
+            <Button
+              variant="ghost"
+              onClick={
+                handleWhatsApp
+              }
+              disabled={
+                !whatsappAvailable
+              }
+              title={
+                whatsappAvailable
+                  ? "Conversar pelo WhatsApp"
+                  : "WhatsApp ainda não configurado"
+              }
+            >
               <MessageCircle
                 size={18}
               />
@@ -271,9 +319,13 @@ function ProductActions({
         }
       >
         <QuoteForm
-          product={product}
+          product={
+            product
+          }
           onClose={() =>
-            setQuoteOpen(false)
+            setQuoteOpen(
+              false
+            )
           }
         />
       </LeadModal>
@@ -282,13 +334,19 @@ function ProductActions({
         open={testRideOpen}
         title="Agendar Test Ride"
         onClose={() =>
-          setTestRideOpen(false)
+          setTestRideOpen(
+            false
+          )
         }
       >
         <TestRideForm
-          product={product}
+          product={
+            product
+          }
           onClose={() =>
-            setTestRideOpen(false)
+            setTestRideOpen(
+              false
+            )
           }
         />
       </LeadModal>

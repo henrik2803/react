@@ -10,6 +10,25 @@ type ProductWithRelations =
     };
   }>;
 
+function mapProductType(
+  type:
+    | "MOTO"
+    | "ACCESSORY"
+    | "PART"
+) {
+  switch (type) {
+    case "MOTO":
+      return "moto";
+
+    case "PART":
+      return "part";
+
+    case "ACCESSORY":
+    default:
+      return "accessory";
+  }
+}
+
 export function toPublicProduct(
   product: ProductWithRelations
 ) {
@@ -24,12 +43,13 @@ export function toPublicProduct(
     );
 
   return {
-    id: product.id,
+    id:
+      product.id,
 
     type:
-      product.type === "MOTO"
-        ? "moto"
-        : "accessory",
+      mapProductType(
+        product.type
+      ),
 
     category:
       product.category,
@@ -56,10 +76,13 @@ export function toPublicProduct(
       product.description,
 
     price:
-      Number(product.price),
+      Number(
+        product.price
+      ),
 
     oldPrice:
-      product.oldPrice === null
+      product.oldPrice ===
+      null
         ? null
         : Number(
             product.oldPrice
@@ -95,23 +118,31 @@ export function toPublicProduct(
     colors:
       product.colors.map(
         (color) => ({
-          id: color.key,
-          name: color.name,
-          hex: color.hex,
+          id:
+            color.key,
+
+          name:
+            color.name,
+
+          hex:
+            color.hex,
         })
       ),
 
     variants:
       product.variants.map(
         (variant) => ({
-          id: variant.key,
+          id:
+            variant.key,
 
           colorId:
-            variant.colorId === null
+            variant.colorId ===
+            null
               ? null
               : colorKeyById.get(
                   variant.colorId
-                ) ?? null,
+                ) ??
+                null,
 
           size:
             variant.size,
@@ -122,7 +153,8 @@ export function toPublicProduct(
       ),
 
     specs:
-      product.specs ?? {},
+      product.specs ??
+      {},
 
     badges:
       product.badges,
