@@ -21,6 +21,7 @@ import AdminDashboard from "../pages/AdminDashboard/AdminDashboard";
 import AdminQuotes from "../pages/AdminQuotes/AdminQuotes";
 import AdminTestRides from "../pages/AdminTestRides/AdminTestRides";
 import AdminProducts from "../pages/AdminProducts/AdminProducts";
+import AdminProductForm from "../pages/AdminProductForm/AdminProductForm";
 
 function AppRoutes() {
   return (
@@ -104,6 +105,20 @@ function AppRoutes() {
             path="produtos"
             element={
               <AdminProducts />
+            }
+          />
+
+          <Route
+            path="produtos/novo"
+            element={
+              <AdminProductForm />
+            }
+          />
+
+          <Route
+            path="produtos/:id/editar"
+            element={
+              <AdminProductForm />
             }
           />
         </Route>

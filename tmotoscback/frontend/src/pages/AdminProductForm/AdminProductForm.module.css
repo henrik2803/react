@@ -1,0 +1,652 @@
+.page {
+  width: 100%;
+  max-width: 1180px;
+
+  margin: 0 auto;
+  padding: 48px;
+}
+
+.header {
+  margin-bottom: 32px;
+}
+
+.back {
+  display: inline-flex;
+  align-items: center;
+
+  gap: 7px;
+
+  margin-bottom: 24px;
+
+  color:
+    var(--color-text-secondary);
+
+  text-decoration: none;
+
+  transition:
+    color 0.2s ease;
+}
+
+.back:hover {
+  color:
+    var(--color-text);
+}
+
+.eyebrow {
+  display: block;
+
+  color:
+    var(--color-primary);
+
+  font-size: 0.8rem;
+  font-weight: 700;
+
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.header h1 {
+  margin-top: 6px;
+
+  font-size: 2.4rem;
+}
+
+.header p {
+  margin-top: 6px;
+
+  color:
+    var(--color-text-secondary);
+}
+
+.form {
+  display: grid;
+
+  gap: 24px;
+}
+
+.section {
+  padding: 28px;
+
+  background:
+    var(--color-surface);
+
+  border:
+    1px solid
+      var(--color-border);
+
+  border-radius:
+    var(--radius-lg);
+}
+
+.sectionHeader,
+.relationHeader {
+  margin-bottom: 24px;
+}
+
+.relationHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 24px;
+}
+
+.sectionHeader h2,
+.relationHeader h2 {
+  font-size: 1.15rem;
+}
+
+.sectionHeader p,
+.relationHeader p {
+  margin-top: 6px;
+
+  color:
+    var(--color-text-secondary);
+
+  font-size: 0.88rem;
+}
+
+.titleWithIcon {
+  display: flex;
+  align-items: center;
+
+  gap: 9px;
+}
+
+.titleWithIcon svg {
+  color:
+    var(--color-primary);
+}
+
+.grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      2,
+      minmax(
+        0,
+        1fr
+      )
+    );
+
+  gap: 20px;
+}
+
+.stack {
+  display: grid;
+
+  gap: 20px;
+}
+
+.form label {
+  display: grid;
+
+  gap: 8px;
+
+  color:
+    var(--color-text);
+
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.form input,
+.form select,
+.form textarea {
+  width: 100%;
+
+  padding: 12px 14px;
+
+  color:
+    var(--color-text);
+
+  background:
+    var(--color-surface-light);
+
+  border:
+    1px solid
+      var(--color-border);
+
+  border-radius:
+    var(--radius-sm);
+
+  outline: none;
+
+  transition:
+    border-color 0.2s ease;
+}
+
+.form input:focus,
+.form select:focus,
+.form textarea:focus {
+  border-color:
+    var(--color-primary);
+}
+
+.form textarea {
+  resize: vertical;
+}
+
+.form small {
+  color:
+    var(--color-text-secondary);
+
+  font-weight: 400;
+}
+
+.full {
+  grid-column:
+    1 / -1;
+}
+
+.secondaryButton {
+  min-height: 40px;
+
+  flex-shrink: 0;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 7px;
+
+  padding: 0 14px;
+
+  color:
+    var(--color-text);
+
+  background:
+    var(--color-surface-light);
+
+  border:
+    1px solid
+      var(--color-border);
+
+  border-radius:
+    var(--radius-sm);
+
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+.secondaryButton:hover {
+  border-color:
+    var(--color-primary);
+}
+
+.colorList,
+.variantList {
+  display: grid;
+
+  gap: 12px;
+}
+
+.colorRow {
+  display: grid;
+
+  grid-template-columns:
+    minmax(
+      130px,
+      1fr
+    )
+    minmax(
+      130px,
+      1fr
+    )
+    minmax(
+      180px,
+      1fr
+    )
+    42px;
+
+  align-items: end;
+
+  gap: 12px;
+
+  padding: 16px;
+
+  background:
+    var(--color-surface-light);
+
+  border:
+    1px solid
+      var(--color-border);
+
+  border-radius:
+    var(--radius-sm);
+}
+
+.colorInput {
+  display: grid;
+
+  grid-template-columns:
+    48px
+    1fr;
+
+  gap: 8px;
+}
+
+.colorInput input[type="color"] {
+  height: 43px;
+
+  padding: 4px;
+
+  cursor: pointer;
+}
+
+.variantRow {
+  display: grid;
+
+  grid-template-columns:
+    minmax(
+      180px,
+      1.3fr
+    )
+    minmax(
+      140px,
+      1fr
+    )
+    minmax(
+      120px,
+      0.8fr
+    )
+    110px
+    42px;
+
+  align-items: end;
+
+  gap: 12px;
+
+  padding: 16px;
+
+  background:
+    var(--color-surface-light);
+
+  border:
+    1px solid
+      var(--color-border);
+
+  border-radius:
+    var(--radius-sm);
+}
+
+.removeButton {
+  width: 42px;
+  height: 42px;
+
+  display: grid;
+  place-items: center;
+
+  color:
+    var(--color-primary);
+
+  background:
+    rgba(
+      255,
+      30,
+      45,
+      0.08
+    );
+
+  border:
+    1px solid
+      rgba(
+        255,
+        30,
+        45,
+        0.22
+      );
+
+  border-radius:
+    var(--radius-sm);
+
+  cursor: pointer;
+}
+
+.removeButton:hover {
+  background:
+    rgba(
+      255,
+      30,
+      45,
+      0.16
+    );
+}
+
+.relationEmpty {
+  padding: 30px;
+
+  color:
+    var(--color-text-secondary);
+
+  background:
+    var(--color-surface-light);
+
+  border:
+    1px dashed
+      var(--color-border);
+
+  border-radius:
+    var(--radius-sm);
+
+  text-align: center;
+}
+
+.stockSummary {
+  display: inline-flex;
+  align-items: center;
+
+  gap: 10px;
+
+  margin-bottom: 16px;
+
+  padding: 9px 12px;
+
+  color:
+    var(--color-text-secondary);
+
+  background:
+    var(--color-surface-light);
+
+  border:
+    1px solid
+      var(--color-border);
+
+  border-radius: 999px;
+
+  font-size: 0.82rem;
+}
+
+.stockSummary strong {
+  color:
+    var(--color-text);
+
+  font-size: 0.95rem;
+}
+
+.relationNote {
+  margin-top: 16px;
+
+  color:
+    var(--color-text-secondary);
+
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+
+.checkboxes {
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      2,
+      minmax(
+        0,
+        1fr
+      )
+    );
+
+  gap: 14px;
+}
+
+.checkboxes label {
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  padding: 14px;
+
+  background:
+    var(--color-surface-light);
+
+  border:
+    1px solid
+      var(--color-border);
+
+  border-radius:
+    var(--radius-sm);
+
+  cursor: pointer;
+}
+
+.checkboxes input {
+  width: auto;
+
+  flex-shrink: 0;
+
+  accent-color:
+    var(--color-primary);
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+
+  gap: 12px;
+
+  padding-bottom: 24px;
+}
+
+.cancelButton,
+.saveButton {
+  min-height: 44px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  padding: 0 18px;
+
+  border-radius:
+    var(--radius-sm);
+
+  font-weight: 700;
+
+  text-decoration: none;
+}
+
+.cancelButton {
+  color:
+    var(--color-text);
+
+  background:
+    var(--color-surface);
+
+  border:
+    1px solid
+      var(--color-border);
+}
+
+.cancelButton:hover {
+  border-color:
+    var(--color-primary);
+}
+
+.saveButton {
+  color: white;
+
+  background:
+    var(--color-primary);
+
+  border:
+    1px solid
+      var(--color-primary);
+
+  cursor: pointer;
+}
+
+.saveButton:disabled {
+  opacity: 0.55;
+
+  cursor: not-allowed;
+}
+
+.error {
+  margin-bottom: 24px;
+
+  padding: 14px 16px;
+
+  color:
+    var(--color-text);
+
+  background:
+    rgba(
+      255,
+      30,
+      45,
+      0.14
+    );
+
+  border:
+    1px solid
+      rgba(
+        255,
+        30,
+        45,
+        0.25
+      );
+
+  border-radius:
+    var(--radius-sm);
+}
+
+.loading {
+  padding: 48px;
+
+  color:
+    var(--color-text-secondary);
+
+  text-align: center;
+}
+
+@media (
+  max-width: 1000px
+) {
+  .colorRow {
+    grid-template-columns:
+      1fr 1fr;
+
+    align-items: end;
+  }
+
+  .variantRow {
+    grid-template-columns:
+      1fr 1fr;
+  }
+}
+
+@media (
+  max-width: 700px
+) {
+  .page {
+    padding: 24px 16px;
+  }
+
+  .header h1 {
+    font-size: 2rem;
+  }
+
+  .section {
+    padding: 20px;
+  }
+
+  .grid,
+  .checkboxes,
+  .colorRow,
+  .variantRow {
+    grid-template-columns:
+      1fr;
+  }
+
+  .full {
+    grid-column:
+      auto;
+  }
+
+  .relationHeader {
+    flex-direction: column;
+  }
+
+  .secondaryButton {
+    width: 100%;
+  }
+
+  .removeButton {
+    width: 100%;
+  }
+
+  .actions {
+    flex-direction:
+      column-reverse;
+  }
+
+  .cancelButton,
+  .saveButton {
+    width: 100%;
+  }
+}
