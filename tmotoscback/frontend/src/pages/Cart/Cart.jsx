@@ -9,6 +9,7 @@ import {
 } from "react-router-dom";
 
 import {
+  MessageCircle,
   Minus,
   Plus,
   ShoppingBag,
@@ -28,6 +29,10 @@ import {
   formatBRL,
 } from "../../utils/currency";
 
+import {
+  buildCartWhatsAppUrl,
+} from "../../utils/whatsapp";
+
 import styles from "./Cart.module.css";
 
 function Cart() {
@@ -44,11 +49,15 @@ function Cart() {
     setProducts,
   ] = useState([]);
 
-  const [loading, setLoading] =
-    useState(true);
+  const [
+    loading,
+    setLoading,
+  ] = useState(true);
 
-  const [error, setError] =
-    useState("");
+  const [
+    error,
+    setError,
+  ] = useState("");
 
   useEffect(() => {
     async function loadProducts() {
@@ -65,12 +74,22 @@ function Cart() {
           ),
         ];
 
+        if (
+          !productIds.length
+        ) {
+          setProducts([]);
+
+          return;
+        }
+
         const data =
           await getProductsByIds(
             productIds
           );
 
-        setProducts(data);
+        setProducts(
+          data
+        );
       } catch (error) {
         console.error(
           "Erro ao carregar carrinho:",
@@ -91,49 +110,53 @@ function Cart() {
   const detailedItems =
     useMemo(() => {
       return cartItems
-        .map((cartItem) => {
-          const product =
-            products.find(
-              (product) =>
-                product.id ===
-                cartItem.productId
-            );
+        .map(
+          (cartItem) => {
+            const product =
+              products.find(
+                (product) =>
+                  product.id ===
+                  cartItem.productId
+              );
 
-          if (!product) {
-            return null;
+            if (!product) {
+              return null;
+            }
+
+            const variant =
+              product.variants
+                ?.find(
+                  (variant) =>
+                    variant.id ===
+                    cartItem.variantId
+                ) ?? null;
+
+            const color =
+              variant
+                ? product.colors
+                    ?.find(
+                      (color) =>
+                        color.id ===
+                        variant.colorId
+                    ) ?? null
+                : null;
+
+            const availableStock =
+              variant
+                ? variant.stock
+                : product.stock
+                    ?.quantity;
+
+            return {
+              ...cartItem,
+
+              product,
+              variant,
+              color,
+              availableStock,
+            };
           }
-
-          const variant =
-            product.variants?.find(
-              (variant) =>
-                variant.id ===
-                cartItem.variantId
-            ) ?? null;
-
-          const color =
-            variant
-              ? product.colors?.find(
-                  (color) =>
-                    color.id ===
-                    variant.colorId
-                ) ?? null
-              : null;
-
-          const availableStock =
-            variant
-              ? variant.stock
-              : product.stock
-                  ?.quantity;
-
-          return {
-            ...cartItem,
-
-            product,
-            variant,
-            color,
-            availableStock,
-          };
-        })
+        )
         .filter(Boolean);
     }, [
       cartItems,
@@ -144,20 +167,33 @@ function Cart() {
     detailedItems.reduce(
       (total, item) =>
         total +
-        item.product.price *
+        Number(
+          item.product.price
+        ) *
           item.quantity,
       0
     );
 
-  function handleDecrease(item) {
+  const whatsappUrl =
+    buildCartWhatsAppUrl(
+      detailedItems,
+      subtotal
+    );
+
+  function handleDecrease(
+    item
+  ) {
     updateQuantity(
       item.productId,
       item.variantId,
-      item.quantity - 1
+      item.quantity - 1,
+      item.availableStock
     );
   }
 
-  function handleIncrease(item) {
+  function handleIncrease(
+    item
+  ) {
     if (
       typeof item.availableStock ===
         "number" &&
@@ -170,22 +206,45 @@ function Cart() {
     updateQuantity(
       item.productId,
       item.variantId,
-      item.quantity + 1
+      item.quantity + 1,
+      item.availableStock
     );
   }
 
-  function handleRemove(item) {
+  function handleRemove(
+    item
+  ) {
     removeItem(
       item.productId,
       item.variantId
     );
   }
 
+  function handleCheckout() {
+    if (!whatsappUrl) {
+      return;
+    }
+
+    window.open(
+      whatsappUrl,
+      "_blank",
+      "noopener,noreferrer"
+    );
+  }
+
   if (loading) {
     return (
-      <main className={styles.page}>
+      <main
+        className={
+          styles.page
+        }
+      >
         <Container>
-          <div className={styles.status}>
+          <div
+            className={
+              styles.status
+            }
+          >
             Carregando carrinho...
           </div>
         </Container>
@@ -195,27 +254,45 @@ function Cart() {
 
   if (error) {
     return (
-      <main className={styles.page}>
+      <main
+        className={
+          styles.page
+        }
+      >
         <Container>
-          <div className={styles.status}>
+          <div
+            className={
+              styles.status
+            }
+          >
             <h1>
               Não foi possível carregar
               o carrinho
             </h1>
 
-            <p>{error}</p>
+            <p>
+              {error}
+            </p>
           </div>
         </Container>
       </main>
     );
   }
 
-  if (!detailedItems.length) {
+  if (
+    !detailedItems.length
+  ) {
     return (
-      <main className={styles.page}>
+      <main
+        className={
+          styles.page
+        }
+      >
         <Container>
           <section
-            className={styles.empty}
+            className={
+              styles.empty
+            }
           >
             <div
               className={
@@ -252,10 +329,16 @@ function Cart() {
   }
 
   return (
-    <main className={styles.page}>
+    <main
+      className={
+        styles.page
+      }
+    >
       <Container>
         <section
-          className={styles.header}
+          className={
+            styles.header
+          }
         >
           <div>
             <span
@@ -291,7 +374,9 @@ function Cart() {
             }
           >
             <span
-              className={styles.count}
+              className={
+                styles.count
+              }
             >
               {cartCount}{" "}
               {cartCount === 1
@@ -304,16 +389,24 @@ function Cart() {
               className={
                 styles.clearButton
               }
-              onClick={clearCart}
+              onClick={
+                clearCart
+              }
             >
               Limpar carrinho
             </button>
           </div>
         </section>
 
-        <div className={styles.layout}>
+        <div
+          className={
+            styles.layout
+          }
+        >
           <section
-            className={styles.items}
+            className={
+              styles.items
+            }
           >
             {detailedItems.map(
               (item) => {
@@ -425,7 +518,8 @@ function Cart() {
                             </span>
                           )}
 
-                          {variant?.size && (
+                          {variant
+                            ?.size && (
                             <span>
                               Tamanho:{" "}
                               <strong>
@@ -493,14 +587,18 @@ function Cart() {
                         >
                           <span>
                             {formatBRL(
-                              product.price
+                              Number(
+                                product.price
+                              )
                             )}{" "}
                             cada
                           </span>
 
                           <strong>
                             {formatBRL(
-                              product.price *
+                              Number(
+                                product.price
+                              ) *
                                 item.quantity
                             )}
                           </strong>
@@ -526,7 +624,9 @@ function Cart() {
           </section>
 
           <aside
-            className={styles.summary}
+            className={
+              styles.summary
+            }
           >
             <h2>
               Resumo do pedido
@@ -573,7 +673,9 @@ function Cart() {
                 styles.total
               }
             >
-              <span>Total</span>
+              <span>
+                Total
+              </span>
 
               <strong>
                 {formatBRL(
@@ -582,8 +684,19 @@ function Cart() {
               </strong>
             </div>
 
-            <Button disabled>
-              Continuar pedido
+            <Button
+              onClick={
+                handleCheckout
+              }
+              disabled={
+                !whatsappUrl
+              }
+            >
+              <MessageCircle
+                size={18}
+              />
+
+              Finalizar pelo WhatsApp
             </Button>
 
             <p
@@ -591,9 +704,11 @@ function Cart() {
                 styles.summaryNote
               }
             >
-              A finalização pelo
-              WhatsApp será conectada na
-              próxima etapa.
+              Você será direcionado ao
+              WhatsApp com o resumo do
+              pedido para confirmar
+              disponibilidade, entrega e
+              pagamento.
             </p>
 
             <Link
