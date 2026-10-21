@@ -294,3 +294,44 @@
     transform: translateY(0);
   }
 }
+.whatsappButton {
+  min-height: 46px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  width: 100%;
+
+  padding: 0 20px;
+
+  color:
+    var(--color-text-secondary);
+
+  background: transparent;
+
+  border:
+    1px solid transparent;
+
+  border-radius:
+    var(--radius-md);
+
+  font-size: 0.95rem;
+  font-weight: 600;
+
+  text-decoration: none;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.whatsappButton:hover {
+  color:
+    var(--color-text);
+
+  background:
+    var(--color-surface-light);
+}

@@ -26,6 +26,10 @@ import {
   formatBRL,
 } from "../../../utils/currency";
 
+import {
+  buildProductWhatsAppUrl,
+} from "../../../utils/whatsapp";
+
 import styles from "./ProductQuickView.module.css";
 
 function ProductQuickView({
@@ -57,7 +61,11 @@ function ProductQuickView({
 
   if (!product) {
     return (
-      <aside className={styles.empty}>
+      <aside
+        className={
+          styles.empty
+        }
+      >
         <span>
           Selecione um produto
         </span>
@@ -72,36 +80,49 @@ function ProductQuickView({
   }
 
   const isMoto =
-    product.type === "moto";
+    product.type ===
+    "moto";
 
   const hasVariants =
-    product.variants?.length > 0;
+    product.variants
+      ?.length > 0;
 
   const favorite =
-    isFavorite(product.id);
+    isFavorite(
+      product.id
+    );
+
+  const whatsappUrl =
+    buildProductWhatsAppUrl(
+      product
+    );
 
   const maxStock =
-    product.stock?.quantity;
+    product.stock
+      ?.quantity;
 
   const currentCartItem =
     cartItems.find(
       (item) =>
         item.productId ===
           product.id &&
-        item.variantId === null
+        item.variantId ===
+          null
     );
 
   const quantityInCart =
-    currentCartItem?.quantity ?? 0;
+    currentCartItem
+      ?.quantity ?? 0;
 
   const productAvailable =
-    product.stock?.available !==
-    false;
+    product.stock
+      ?.available !== false;
 
   const reachedStockLimit =
     typeof maxStock ===
       "number" &&
-    quantityInCart >= maxStock;
+    quantityInCart >=
+      maxStock;
 
   const canQuickAdd =
     !hasVariants &&
@@ -123,9 +144,11 @@ function ProductQuickView({
       productId:
         product.id,
 
-      variantId: null,
+      variantId:
+        null,
 
-      quantity: 1,
+      quantity:
+        1,
 
       maxQuantity:
         typeof maxStock ===
@@ -136,7 +159,9 @@ function ProductQuickView({
   }
 
   function handleFavorite() {
-    toggleFavorite(product.id);
+    toggleFavorite(
+      product.id
+    );
   }
 
   function handleOpenQuote() {
@@ -162,7 +187,9 @@ function ProductQuickView({
         className={
           styles.backdrop
         }
-        onClick={onClose}
+        onClick={
+          onClose
+        }
         aria-label="Fechar detalhes do produto"
       />
 
@@ -176,7 +203,9 @@ function ProductQuickView({
           className={
             styles.close
           }
-          onClick={onClose}
+          onClick={
+            onClose
+          }
           aria-label="Fechar detalhes"
         >
           <X size={20} />
@@ -189,13 +218,18 @@ function ProductQuickView({
         />
 
         <div
-          className={styles.media}
+          className={
+            styles.media
+          }
         >
           <img
             src={
-              product.media.cover
+              product.media
+                ?.cover
             }
-            alt={product.name}
+            alt={
+              product.name
+            }
             className={
               styles.image
             }
@@ -212,7 +246,9 @@ function ProductQuickView({
               styles.brand
             }
           >
-            {product.brand}
+            {
+              product.brand
+            }
           </span>
 
           <h2
@@ -220,7 +256,9 @@ function ProductQuickView({
               styles.name
             }
           >
-            {product.name}
+            {
+              product.name
+            }
           </h2>
 
           <p
@@ -353,6 +391,9 @@ function ProductQuickView({
                 onClick={
                   handleFavorite
                 }
+                aria-pressed={
+                  favorite
+                }
               >
                 <Heart
                   size={18}
@@ -369,29 +410,43 @@ function ProductQuickView({
               </Button>
 
               {product.sales
-                ?.whatsapp && (
-                <Button variant="ghost">
-                  <MessageCircle
-                    size={18}
-                  />
+                ?.whatsapp &&
+                whatsappUrl && (
+                  <a
+                    href={
+                      whatsappUrl
+                    }
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={
+                      styles.whatsappButton
+                    }
+                  >
+                    <MessageCircle
+                      size={18}
+                    />
 
-                  WhatsApp
-                </Button>
-              )}
+                    WhatsApp
+                  </a>
+                )}
             </div>
           </div>
         </div>
       </aside>
 
       <LeadModal
-        open={quoteOpen}
+        open={
+          quoteOpen
+        }
         title="Solicitar proposta"
         onClose={
           handleCloseQuote
         }
       >
         <QuoteForm
-          product={product}
+          product={
+            product
+          }
           onClose={
             handleCloseQuote
           }
@@ -399,14 +454,18 @@ function ProductQuickView({
       </LeadModal>
 
       <LeadModal
-        open={testRideOpen}
+        open={
+          testRideOpen
+        }
         title="Agendar Test Ride"
         onClose={
           handleCloseTestRide
         }
       >
         <TestRideForm
-          product={product}
+          product={
+            product
+          }
           onClose={
             handleCloseTestRide
           }

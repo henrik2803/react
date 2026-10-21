@@ -22,8 +22,8 @@ export function hasWhatsAppNumber() {
   );
 }
 
-export function buildProductWhatsAppUrl(
-  product
+export function buildWhatsAppUrl(
+  message
 ) {
   const phone =
     normalizePhone(
@@ -34,15 +34,31 @@ export function buildProductWhatsAppUrl(
     return null;
   }
 
+  const text =
+    message ||
+    "Olá! Vim pelo site da TMotos e gostaria de atendimento.";
+
+  return (
+    `https://wa.me/${phone}` +
+    `?text=${encodeURIComponent(
+      text
+    )}`
+  );
+}
+
+export function buildProductWhatsAppUrl(
+  product
+) {
+  if (!product) {
+    return buildWhatsAppUrl();
+  }
+
   const productUrl =
     `${window.location.origin}/produto/${product.slug}`;
 
-  const message = [
-    "Olá! Tenho interesse neste produto:",
-    "",
-    `${product.brand} ${product.name}`,
+  const price =
     product.price
-      ? `Preço: ${new Intl.NumberFormat(
+      ? new Intl.NumberFormat(
           "pt-BR",
           {
             style:
@@ -54,7 +70,15 @@ export function buildProductWhatsAppUrl(
           Number(
             product.price
           )
-        )}`
+        )
+      : null;
+
+  const message = [
+    "Olá! Tenho interesse neste produto:",
+    "",
+    `${product.brand} ${product.name}`,
+    price
+      ? `Preço: ${price}`
       : null,
     "",
     productUrl,
@@ -62,11 +86,8 @@ export function buildProductWhatsAppUrl(
     .filter(Boolean)
     .join("\n");
 
-  return (
-    `https://wa.me/${phone}` +
-    `?text=${encodeURIComponent(
-      message
-    )}`
+  return buildWhatsAppUrl(
+    message
   );
 }
 
