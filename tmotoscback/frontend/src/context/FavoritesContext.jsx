@@ -24,9 +24,25 @@ function getStoredFavorites() {
     const parsed =
       JSON.parse(stored);
 
-    return Array.isArray(parsed)
-      ? parsed
-      : [];
+    if (!Array.isArray(parsed)) {
+      return [];
+    }
+
+    /*
+     * Remove valores inválidos
+     * e IDs duplicados.
+     */
+    return [
+      ...new Set(
+        parsed.filter(
+          (id) =>
+            typeof id ===
+              "number" ||
+            typeof id ===
+              "string"
+        )
+      ),
+    ];
   } catch (error) {
     console.error(
       "Erro ao carregar favoritos:",
@@ -47,20 +63,38 @@ function FavoritesProvider({
     getStoredFavorites
   );
 
+  /*
+   * Persiste favoritos
+   * automaticamente.
+   */
   useEffect(() => {
     localStorage.setItem(
       STORAGE_KEY,
-      JSON.stringify(favoriteIds)
+      JSON.stringify(
+        favoriteIds
+      )
     );
   }, [favoriteIds]);
 
-  function isFavorite(productId) {
+  function isFavorite(
+    productId
+  ) {
     return favoriteIds.includes(
       productId
     );
   }
 
-  function addFavorite(productId) {
+  function addFavorite(
+    productId
+  ) {
+    if (
+      productId ===
+        undefined ||
+      productId === null
+    ) {
+      return;
+    }
+
     setFavoriteIds(
       (currentFavorites) => {
         if (
@@ -94,6 +128,14 @@ function FavoritesProvider({
   function toggleFavorite(
     productId
   ) {
+    if (
+      productId ===
+        undefined ||
+      productId === null
+    ) {
+      return;
+    }
+
     setFavoriteIds(
       (currentFavorites) => {
         const alreadyFavorite =
@@ -101,10 +143,13 @@ function FavoritesProvider({
             productId
           );
 
-        if (alreadyFavorite) {
+        if (
+          alreadyFavorite
+        ) {
           return currentFavorites.filter(
             (id) =>
-              id !== productId
+              id !==
+              productId
           );
         }
 
@@ -116,16 +161,69 @@ function FavoritesProvider({
     );
   }
 
+  /*
+   * Remove favoritos que
+   * não existem mais na API
+   * pública.
+   *
+   * Isso cobre produtos:
+   * - desativados
+   * - removidos
+   * - IDs antigos
+   */
+  function syncFavorites(
+    validProductIds
+  ) {
+    if (
+      !Array.isArray(
+        validProductIds
+      )
+    ) {
+      return;
+    }
+
+    const validIds =
+      new Set(
+        validProductIds
+      );
+
+    setFavoriteIds(
+      (currentFavorites) => {
+        const nextFavorites =
+          currentFavorites.filter(
+            (id) =>
+              validIds.has(id)
+          );
+
+        if (
+          nextFavorites.length ===
+          currentFavorites.length
+        ) {
+          return currentFavorites;
+        }
+
+        return nextFavorites;
+      }
+    );
+  }
+
+  function clearFavorites() {
+    setFavoriteIds([]);
+  }
+
+  const favoritesCount =
+    favoriteIds.length;
+
   const value = {
     favoriteIds,
-
-    favoritesCount:
-      favoriteIds.length,
+    favoritesCount,
 
     isFavorite,
     addFavorite,
     removeFavorite,
     toggleFavorite,
+    syncFavorites,
+    clearFavorites,
   };
 
   return (
