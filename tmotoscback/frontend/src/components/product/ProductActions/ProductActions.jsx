@@ -4,7 +4,6 @@ import {
 
 import {
   Heart,
-  MessageCircle,
   ShoppingBag,
 } from "lucide-react";
 
@@ -16,11 +15,6 @@ import TestRideForm from "../../lead/TestRideForm/TestRideForm";
 
 import useFavorites from "../../../hooks/useFavorites";
 import useCart from "../../../hooks/useCart";
-
-import {
-  hasWhatsAppNumber,
-  openProductWhatsApp,
-} from "../../../utils/whatsapp";
 
 import styles from "./ProductActions.module.css";
 
@@ -111,9 +105,6 @@ function ProductActions({
       product.id
     );
 
-  const whatsappAvailable =
-    hasWhatsAppNumber();
-
   function handleFavorite() {
     toggleFavorite(
       product.id
@@ -141,12 +132,6 @@ function ProductActions({
           ? maxStock
           : null,
     });
-  }
-
-  function handleWhatsApp() {
-    openProductWhatsApp(
-      product
-    );
   }
 
   function getHelperMessage() {
@@ -284,30 +269,6 @@ function ProductActions({
               ? "Favoritado"
               : "Favoritar"}
           </Button>
-
-          {product.sales
-            ?.whatsapp && (
-            <Button
-              variant="ghost"
-              onClick={
-                handleWhatsApp
-              }
-              disabled={
-                !whatsappAvailable
-              }
-              title={
-                whatsappAvailable
-                  ? "Conversar pelo WhatsApp"
-                  : "WhatsApp ainda não configurado"
-              }
-            >
-              <MessageCircle
-                size={18}
-              />
-
-              WhatsApp
-            </Button>
-          )}
         </div>
       </div>
 
@@ -319,9 +280,7 @@ function ProductActions({
         }
       >
         <QuoteForm
-          product={
-            product
-          }
+          product={product}
           onClose={() =>
             setQuoteOpen(
               false
@@ -340,9 +299,7 @@ function ProductActions({
         }
       >
         <TestRideForm
-          product={
-            product
-          }
+          product={product}
           onClose={() =>
             setTestRideOpen(
               false

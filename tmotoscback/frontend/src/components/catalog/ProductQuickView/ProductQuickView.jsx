@@ -8,7 +8,6 @@ import {
 
 import {
   Heart,
-  MessageCircle,
   ShoppingBag,
   X,
 } from "lucide-react";
@@ -25,10 +24,6 @@ import useFavorites from "../../../hooks/useFavorites";
 import {
   formatBRL,
 } from "../../../utils/currency";
-
-import {
-  buildProductWhatsAppUrl,
-} from "../../../utils/whatsapp";
 
 import styles from "./ProductQuickView.module.css";
 
@@ -92,11 +87,6 @@ function ProductQuickView({
       product.id
     );
 
-  const whatsappUrl =
-    buildProductWhatsAppUrl(
-      product
-    );
-
   const maxStock =
     product.stock
       ?.quantity;
@@ -147,8 +137,7 @@ function ProductQuickView({
       variantId:
         null,
 
-      quantity:
-        1,
+      quantity: 1,
 
       maxQuantity:
         typeof maxStock ===
@@ -208,7 +197,9 @@ function ProductQuickView({
           }
           aria-label="Fechar detalhes"
         >
-          <X size={20} />
+          <X
+            size={20}
+          />
         </button>
 
         <div
@@ -408,27 +399,6 @@ function ProductQuickView({
                   ? "Favoritado"
                   : "Favoritar"}
               </Button>
-
-              {product.sales
-                ?.whatsapp &&
-                whatsappUrl && (
-                  <a
-                    href={
-                      whatsappUrl
-                    }
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={
-                      styles.whatsappButton
-                    }
-                  >
-                    <MessageCircle
-                      size={18}
-                    />
-
-                    WhatsApp
-                  </a>
-                )}
             </div>
           </div>
         </div>

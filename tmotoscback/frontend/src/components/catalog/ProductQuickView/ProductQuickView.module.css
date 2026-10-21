@@ -5,10 +5,15 @@
 
   min-height: 560px;
 
-  background: var(--color-surface);
+  background:
+    var(--color-surface);
 
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
+  border:
+    1px solid
+    var(--color-border);
+
+  border-radius:
+    var(--radius-lg);
 
   overflow: hidden;
 }
@@ -27,7 +32,8 @@
 }
 
 .empty span {
-  color: var(--color-text);
+  color:
+    var(--color-text);
 
   font-size: 1.1rem;
   font-weight: 600;
@@ -36,7 +42,8 @@
 .empty p {
   max-width: 280px;
 
-  color: var(--color-text-secondary);
+  color:
+    var(--color-text-secondary);
 
   line-height: 1.5;
 }
@@ -65,15 +72,26 @@
 
   color: var(--color-text);
 
-  background: rgba(0, 0, 0, 0.65);
+  background:
+    rgba(
+      0,
+      0,
+      0,
+      0.65
+    );
 
+  border: 0;
   border-radius: 50%;
 
-  backdrop-filter: blur(8px);
+  cursor: pointer;
+
+  backdrop-filter:
+    blur(8px);
 }
 
 .media {
-  aspect-ratio: 16 / 10;
+  aspect-ratio:
+    16 / 10;
 
   overflow: hidden;
 
@@ -92,19 +110,24 @@
 }
 
 .brand {
-  color: var(--color-text-secondary);
+  color:
+    var(--color-text-secondary);
 
   font-size: 0.78rem;
   font-weight: 700;
 
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
+  text-transform:
+    uppercase;
+
+  letter-spacing:
+    0.08em;
 }
 
 .name {
   margin-top: 6px;
 
-  color: var(--color-text);
+  color:
+    var(--color-text);
 
   font-size: 1.8rem;
 
@@ -114,7 +137,8 @@
 .description {
   margin-top: 14px;
 
-  color: var(--color-text-secondary);
+  color:
+    var(--color-text-secondary);
 
   line-height: 1.6;
 }
@@ -127,15 +151,17 @@
 }
 
 .oldPrice {
-  color: #777;
+  color: #777777;
 
   font-size: 0.85rem;
 
-  text-decoration: line-through;
+  text-decoration:
+    line-through;
 }
 
 .price {
-  color: var(--color-text);
+  color:
+    var(--color-text);
 
   font-size: 1.5rem;
 }
@@ -157,7 +183,7 @@
   display: grid;
 
   grid-template-columns:
-    repeat(2, minmax(0, 1fr));
+    1fr;
 
   gap: 8px;
 }
@@ -168,7 +194,9 @@
 
 /* MOBILE / TABLET */
 
-@media (max-width: 900px) {
+@media (
+  max-width: 900px
+) {
   .empty {
     display: none;
   }
@@ -185,11 +213,18 @@
     width: 100%;
     height: 100%;
 
-    background: rgba(0, 0, 0, 0.72);
+    background:
+      rgba(
+        0,
+        0,
+        0,
+        0.72
+      );
 
     border: 0;
 
-    backdrop-filter: blur(3px);
+    backdrop-filter:
+      blur(3px);
   }
 
   .quickView {
@@ -203,6 +238,7 @@
     z-index: 201;
 
     width: 100%;
+
     max-height: 88vh;
     min-height: auto;
 
@@ -219,7 +255,9 @@
       0;
 
     animation:
-      slideUp 0.25s ease;
+      slideUp
+      0.25s
+      ease;
   }
 
   .mobileHandle {
@@ -235,11 +273,19 @@
     width: 42px;
     height: 4px;
 
-    background: rgba(255, 255, 255, 0.35);
+    background:
+      rgba(
+        255,
+        255,
+        255,
+        0.35
+      );
 
-    border-radius: 999px;
+    border-radius:
+      999px;
 
-    transform: translateX(-50%);
+    transform:
+      translateX(-50%);
   }
 
   .close {
@@ -248,14 +294,20 @@
   }
 
   .media {
-    aspect-ratio: 16 / 9;
+    aspect-ratio:
+      16 / 9;
   }
 
   .content {
     padding:
       22px
       20px
-      calc(30px + env(safe-area-inset-bottom));
+      calc(
+        30px +
+        env(
+          safe-area-inset-bottom
+        )
+      );
   }
 
   .name {
@@ -271,67 +323,27 @@
   }
 }
 
-@media (max-width: 480px) {
+@media (
+  max-width: 480px
+) {
   .quickView {
     max-height: 90vh;
   }
 
   .media {
-    aspect-ratio: 4 / 3;
-  }
-
-  .secondaryActions {
-    grid-template-columns: 1fr;
+    aspect-ratio:
+      4 / 3;
   }
 }
 
 @keyframes slideUp {
   from {
-    transform: translateY(100%);
+    transform:
+      translateY(100%);
   }
 
   to {
-    transform: translateY(0);
+    transform:
+      translateY(0);
   }
-}
-.whatsappButton {
-  min-height: 46px;
-
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-
-  gap: 8px;
-
-  width: 100%;
-
-  padding: 0 20px;
-
-  color:
-    var(--color-text-secondary);
-
-  background: transparent;
-
-  border:
-    1px solid transparent;
-
-  border-radius:
-    var(--radius-md);
-
-  font-size: 0.95rem;
-  font-weight: 600;
-
-  text-decoration: none;
-
-  transition:
-    background 0.2s ease,
-    color 0.2s ease;
-}
-
-.whatsappButton:hover {
-  color:
-    var(--color-text);
-
-  background:
-    var(--color-surface-light);
 }
