@@ -1,14 +1,14 @@
 .page {
-  padding: 48px;
-
-  max-width: 1440px;
+  width: 100%;
+  max-width: 1500px;
 
   margin: 0 auto;
+  padding: 48px;
 }
 
 .header {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
 
   gap: 24px;
@@ -40,21 +40,267 @@
   letter-spacing: 0.12em;
 }
 
-.counter {
-  min-width: 42px;
-  height: 42px;
+.counters {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
 
+  gap: 8px;
+
+  justify-content: flex-end;
+}
+
+.counter,
+.newCounter,
+.contactedCounter,
+.closedCounter {
+  min-height: 44px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 7px;
+
+  padding: 0 12px;
+
+  border-radius: 999px;
+
+  font-size: 0.8rem;
+}
+
+.counter {
+  background:
+    var(--color-surface);
+
+  border:
+    1px solid
+    var(--color-border);
+}
+
+.newCounter {
+  color: #f4c56b;
+
+  background:
+    rgba(
+      244,
+      197,
+      107,
+      0.1
+    );
+
+  border:
+    1px solid
+    rgba(
+      244,
+      197,
+      107,
+      0.24
+    );
+}
+
+.contactedCounter {
+  color: #77b7ff;
+
+  background:
+    rgba(
+      72,
+      143,
+      255,
+      0.1
+    );
+
+  border:
+    1px solid
+    rgba(
+      72,
+      143,
+      255,
+      0.24
+    );
+}
+
+.closedCounter {
+  color: #7ee2a8;
+
+  background:
+    rgba(
+      46,
+      160,
+      87,
+      0.12
+    );
+
+  border:
+    1px solid
+    rgba(
+      46,
+      160,
+      87,
+      0.25
+    );
+}
+
+.success,
+.error {
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  margin-bottom: 24px;
+  padding: 14px 16px;
+
+  border-radius:
+    var(--radius-sm);
+
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.success svg,
+.error svg {
+  flex-shrink: 0;
+}
+
+.success {
+  color: #7ee2a8;
+
+  background:
+    rgba(
+      46,
+      160,
+      87,
+      0.12
+    );
+
+  border:
+    1px solid
+    rgba(
+      46,
+      160,
+      87,
+      0.28
+    );
+}
+
+.error {
+  color: #ff8b93;
+
+  background:
+    rgba(
+      255,
+      30,
+      45,
+      0.14
+    );
+
+  border:
+    1px solid
+    rgba(
+      255,
+      30,
+      45,
+      0.25
+    );
+}
+
+.filters {
   display: grid;
-  place-items: center;
+
+  grid-template-columns:
+    minmax(
+      260px,
+      1fr
+    )
+    200px;
+
+  gap: 12px;
+
+  margin-bottom: 12px;
+}
+
+.search {
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  padding: 0 14px;
 
   background:
     var(--color-surface);
 
   border:
     1px solid
-      var(--color-border);
+    var(--color-border);
 
-  border-radius: 999px;
+  border-radius:
+    var(--radius-sm);
+}
+
+.search svg {
+  flex-shrink: 0;
+
+  color:
+    var(--color-text-secondary);
+}
+
+.search input {
+  width: 100%;
+
+  padding: 13px 0;
+
+  color:
+    var(--color-text);
+
+  background: transparent;
+
+  border: 0;
+  outline: 0;
+}
+
+.search input::placeholder {
+  color:
+    var(--color-text-secondary);
+}
+
+.filters select,
+.statusSelect {
+  padding: 0 14px;
+
+  color:
+    var(--color-text);
+
+  background:
+    var(--color-surface);
+
+  border:
+    1px solid
+    var(--color-border);
+
+  border-radius:
+    var(--radius-sm);
+
+  outline: none;
+}
+
+.filters select {
+  min-height: 46px;
+}
+
+.resultInfo {
+  margin-bottom: 18px;
+
+  color:
+    var(--color-text-secondary);
+
+  font-size: 0.78rem;
+}
+
+.resultInfo strong {
+  color:
+    var(--color-text);
 }
 
 .tableWrapper {
@@ -65,7 +311,7 @@
 
   border:
     1px solid
-      var(--color-border);
+    var(--color-border);
 
   border-radius:
     var(--radius-lg);
@@ -73,30 +319,51 @@
 
 .table {
   width: 100%;
-
-  min-width: 950px;
+  min-width: 1050px;
 
   border-collapse: collapse;
 }
 
 .table th,
 .table td {
-  padding: 16px 20px;
+  padding: 16px 18px;
 
   text-align: left;
+  vertical-align: middle;
 
   border-bottom:
     1px solid
-      var(--color-border);
+    var(--color-border);
 }
 
 .table th {
   color:
     var(--color-text-secondary);
 
-  font-size: 0.75rem;
+  font-size: 0.72rem;
+  font-weight: 700;
 
   text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.table tbody tr {
+  transition:
+    background 0.2s ease;
+}
+
+.table tbody tr:hover {
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.02
+    );
 }
 
 .table td strong,
@@ -111,53 +378,112 @@
     var(--color-text-secondary);
 }
 
-.table select {
+.statusSelect {
+  min-width: 130px;
+
   padding: 9px 10px;
 
-  color:
-    var(--color-text);
-
-  background:
-    var(--color-surface-light);
-
-  border:
-    1px solid
-      var(--color-border);
-
-  border-radius:
-    var(--radius-sm);
+  cursor: pointer;
 }
 
-.error {
-  margin-bottom: 24px;
+.statusSelect:disabled {
+  opacity: 0.55;
 
-  padding: 14px;
+  cursor: not-allowed;
+}
+
+.yesBadge,
+.noBadge {
+  display: inline-flex;
+
+  padding: 5px 9px;
+
+  border-radius: 999px;
+
+  font-size: 0.74rem;
+  font-weight: 700;
+}
+
+.yesBadge {
+  color: #7ee2a8;
 
   background:
     rgba(
-      255,
-      30,
-      45,
-      0.14
+      46,
+      160,
+      87,
+      0.12
     );
-
-  border-radius:
-    var(--radius-sm);
 }
 
-.empty {
-  padding: 40px !important;
+.noBadge {
+  color:
+    var(--color-text-secondary);
 
-  text-align: center !important;
+  background:
+    var(--color-surface-light);
+}
+
+.loading {
+  padding: 48px;
 
   color:
     var(--color-text-secondary);
+
+  text-align: center;
+}
+
+.empty {
+  padding:
+    48px !important;
+
+  color:
+    var(--color-text-secondary);
+
+  text-align:
+    center !important;
 }
 
 @media (
-  max-width: 700px
+  max-width: 900px
 ) {
   .page {
-    padding: 24px;
+    padding: 32px 24px;
+  }
+
+  .header {
+    flex-direction: column;
+  }
+
+  .counters {
+    justify-content: flex-start;
+  }
+}
+
+@media (
+  max-width: 600px
+) {
+  .page {
+    padding: 24px 16px;
+  }
+
+  .header h1 {
+    font-size: 2rem;
+  }
+
+  .counters {
+    width: 100%;
+  }
+
+  .counter,
+  .newCounter,
+  .contactedCounter,
+  .closedCounter {
+    flex: 1;
+  }
+
+  .filters {
+    grid-template-columns:
+      1fr;
   }
 }

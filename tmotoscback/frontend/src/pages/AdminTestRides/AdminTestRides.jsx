@@ -1,7 +1,15 @@
 import {
   useEffect,
+  useMemo,
   useState,
 } from "react";
+
+import {
+  CalendarDays,
+  CheckCircle2,
+  Search,
+  TriangleAlert,
+} from "lucide-react";
 
 import useAdminAuth from "../../hooks/useAdminAuth";
 
@@ -18,25 +26,62 @@ import {
 
 import styles from "./AdminTestRides.module.css";
 
+const STATUS_LABELS =
+  Object.fromEntries(
+    LEAD_STATUS_OPTIONS.map(
+      (option) => [
+        option.value,
+        option.label,
+      ]
+    )
+  );
+
 function AdminTestRides() {
   const {
     token,
     logout,
   } = useAdminAuth();
 
-  const [leads, setLeads] =
-    useState([]);
+  const [
+    leads,
+    setLeads,
+  ] = useState([]);
 
-  const [loading, setLoading] =
-    useState(true);
+  const [
+    loading,
+    setLoading,
+  ] = useState(true);
 
-  const [error, setError] =
-    useState("");
+  const [
+    error,
+    setError,
+  ] = useState("");
+
+  const [
+    success,
+    setSuccess,
+  ] = useState("");
 
   const [
     updatingId,
     setUpdatingId,
   ] = useState(null);
+
+  const [
+    search,
+    setSearch,
+  ] = useState("");
+
+  const [
+    statusFilter,
+    setStatusFilter,
+  ] = useState("ALL");
+
+  /*
+   * =====================================================
+   * CARREGAMENTO
+   * =====================================================
+   */
 
   useEffect(() => {
     async function loadLeads() {
@@ -50,7 +95,8 @@ function AdminTestRides() {
           );
 
         setLeads(
-          response.data || []
+          response.data ||
+            []
         );
       } catch (error) {
         if (
@@ -71,19 +117,151 @@ function AdminTestRides() {
     }
 
     loadLeads();
-  }, [token]);
+  }, [
+    token,
+    logout,
+  ]);
+
+  /*
+   * =====================================================
+   * SUCESSO TEMPORÁRIO
+   * =====================================================
+   */
+
+  useEffect(() => {
+    if (!success) {
+      return;
+    }
+
+    const timer =
+      setTimeout(() => {
+        setSuccess("");
+      }, 4000);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [success]);
+
+  /*
+   * =====================================================
+   * CONTADORES
+   * =====================================================
+   */
+
+  const newCount =
+    useMemo(
+      () =>
+        leads.filter(
+          (lead) =>
+            lead.status ===
+            "NEW"
+        ).length,
+      [leads]
+    );
+
+  const contactedCount =
+    useMemo(
+      () =>
+        leads.filter(
+          (lead) =>
+            lead.status ===
+            "CONTACTED"
+        ).length,
+      [leads]
+    );
+
+  const closedCount =
+    useMemo(
+      () =>
+        leads.filter(
+          (lead) =>
+            lead.status ===
+            "CLOSED"
+        ).length,
+      [leads]
+    );
+
+  /*
+   * =====================================================
+   * FILTROS
+   * =====================================================
+   */
+
+  const filteredLeads =
+    useMemo(() => {
+      const normalizedSearch =
+        search
+          .trim()
+          .toLowerCase();
+
+      return leads.filter(
+        (lead) => {
+          const matchesSearch =
+            !normalizedSearch ||
+            [
+              lead.name,
+              lead.email,
+              lead.phone,
+              lead.productName,
+              lead.productBrand,
+            ]
+              .filter(Boolean)
+              .some(
+                (value) =>
+                  String(value)
+                    .toLowerCase()
+                    .includes(
+                      normalizedSearch
+                    )
+              );
+
+          const matchesStatus =
+            statusFilter ===
+              "ALL" ||
+            lead.status ===
+              statusFilter;
+
+          return (
+            matchesSearch &&
+            matchesStatus
+          );
+        }
+      );
+    }, [
+      leads,
+      search,
+      statusFilter,
+    ]);
+
+  /*
+   * =====================================================
+   * STATUS
+   * =====================================================
+   */
 
   async function handleStatus(
-    id,
+    lead,
     status
   ) {
+    if (
+      status ===
+      lead.status
+    ) {
+      return;
+    }
+
     try {
-      setUpdatingId(id);
+      setUpdatingId(
+        lead.id
+      );
+
       setError("");
+      setSuccess("");
 
       const response =
         await updateTestRideLeadStatus(
-          id,
+          lead.id,
           status,
           token
         );
@@ -91,11 +269,16 @@ function AdminTestRides() {
       setLeads(
         (current) =>
           current.map(
-            (lead) =>
-              lead.id === id
+            (item) =>
+              item.id ===
+              lead.id
                 ? response.data
-                : lead
+                : item
           )
+      );
+
+      setSuccess(
+        `Status do Test Ride de "${lead.name}" alterado para "${STATUS_LABELS[status] || status}".`
       );
     } catch (error) {
       if (
@@ -108,7 +291,7 @@ function AdminTestRides() {
 
       setError(
         error.message ||
-          "Erro ao atualizar o status."
+          "Não foi possível atualizar o status do Test Ride."
       );
     } finally {
       setUpdatingId(null);
@@ -145,29 +328,198 @@ function AdminTestRides() {
           </p>
         </div>
 
-        <strong
+        <div
           className={
-            styles.counter
+            styles.counters
           }
         >
-          {leads.length}
-        </strong>
+          <div
+            className={
+              styles.counter
+            }
+          >
+            <CalendarDays
+              size={17}
+            />
+
+            <strong>
+              {leads.length}
+            </strong>
+
+            <span>
+              Total
+            </span>
+          </div>
+
+          <div
+            className={
+              styles.newCounter
+            }
+          >
+            <strong>
+              {newCount}
+            </strong>
+
+            <span>
+              Novos
+            </span>
+          </div>
+
+          <div
+            className={
+              styles.contactedCounter
+            }
+          >
+            <strong>
+              {contactedCount}
+            </strong>
+
+            <span>
+              Contatados
+            </span>
+          </div>
+
+          <div
+            className={
+              styles.closedCounter
+            }
+          >
+            <strong>
+              {closedCount}
+            </strong>
+
+            <span>
+              Fechados
+            </span>
+          </div>
+        </div>
       </header>
+
+      {success && (
+        <div
+          className={
+            styles.success
+          }
+          role="status"
+        >
+          <CheckCircle2
+            size={19}
+          />
+
+          <span>
+            {success}
+          </span>
+        </div>
+      )}
 
       {error && (
         <div
           className={
             styles.error
           }
+          role="alert"
         >
-          {error}
+          <TriangleAlert
+            size={19}
+          />
+
+          <span>
+            {error}
+          </span>
+        </div>
+      )}
+
+      <section
+        className={
+          styles.filters
+        }
+      >
+        <div
+          className={
+            styles.search
+          }
+        >
+          <Search
+            size={18}
+          />
+
+          <input
+            type="search"
+            placeholder="Buscar cliente, telefone ou moto..."
+            value={
+              search
+            }
+            onChange={(
+              event
+            ) =>
+              setSearch(
+                event.target.value
+              )
+            }
+          />
+        </div>
+
+        <select
+          value={
+            statusFilter
+          }
+          onChange={(
+            event
+          ) =>
+            setStatusFilter(
+              event.target.value
+            )
+          }
+        >
+          <option value="ALL">
+            Todos os status
+          </option>
+
+          {LEAD_STATUS_OPTIONS.map(
+            (option) => (
+              <option
+                key={
+                  option.value
+                }
+                value={
+                  option.value
+                }
+              >
+                {option.label}
+              </option>
+            )
+          )}
+        </select>
+      </section>
+
+      {!loading && (
+        <div
+          className={
+            styles.resultInfo
+          }
+        >
+          Exibindo{" "}
+          <strong>
+            {
+              filteredLeads.length
+            }
+          </strong>{" "}
+          de{" "}
+          <strong>
+            {leads.length}
+          </strong>{" "}
+          Test Rides
         </div>
       )}
 
       {loading ? (
-        <p>
+        <div
+          className={
+            styles.loading
+          }
+        >
           Carregando Test Rides...
-        </p>
+        </div>
       ) : (
         <div
           className={
@@ -181,22 +533,38 @@ function AdminTestRides() {
           >
             <thead>
               <tr>
-                <th>Cliente</th>
-                <th>Moto</th>
-                <th>Telefone</th>
+                <th>
+                  Cliente
+                </th>
+
+                <th>
+                  Moto
+                </th>
+
+                <th>
+                  Telefone
+                </th>
+
                 <th>
                   Data desejada
                 </th>
-                <th>Período</th>
+
+                <th>
+                  Período
+                </th>
+
                 <th>
                   Solicitação
                 </th>
-                <th>Status</th>
+
+                <th>
+                  Status
+                </th>
               </tr>
             </thead>
 
             <tbody>
-              {leads.map(
+              {filteredLeads.map(
                 (lead) => (
                   <tr
                     key={
@@ -215,8 +583,10 @@ function AdminTestRides() {
                     </td>
 
                     <td>
-                      {lead.productBrand}{" "}
-                      {lead.productName}
+                      <strong>
+                        {lead.productBrand}{" "}
+                        {lead.productName}
+                      </strong>
                     </td>
 
                     <td>
@@ -230,10 +600,16 @@ function AdminTestRides() {
                     </td>
 
                     <td>
-                      {TEST_RIDE_PERIOD_LABELS[
-                        lead.period
-                      ] ||
-                        lead.period}
+                      <span
+                        className={
+                          styles.periodBadge
+                        }
+                      >
+                        {TEST_RIDE_PERIOD_LABELS[
+                          lead.period
+                        ] ||
+                          lead.period}
+                      </span>
                     </td>
 
                     <td>
@@ -244,6 +620,9 @@ function AdminTestRides() {
 
                     <td>
                       <select
+                        className={
+                          styles.statusSelect
+                        }
                         value={
                           lead.status
                         }
@@ -255,7 +634,7 @@ function AdminTestRides() {
                           event
                         ) =>
                           handleStatus(
-                            lead.id,
+                            lead,
                             event
                               .target
                               .value
@@ -281,12 +660,19 @@ function AdminTestRides() {
                           )
                         )}
                       </select>
+
+                      {updatingId ===
+                        lead.id && (
+                        <small>
+                          Salvando...
+                        </small>
+                      )}
                     </td>
                   </tr>
                 )
               )}
 
-              {leads.length ===
+              {filteredLeads.length ===
                 0 && (
                 <tr>
                   <td
@@ -296,7 +682,8 @@ function AdminTestRides() {
                     }
                   >
                     Nenhum Test Ride
-                    encontrado.
+                    encontrado com os
+                    filtros selecionados.
                   </td>
                 </tr>
               )}

@@ -1,7 +1,15 @@
 import {
   useEffect,
+  useMemo,
   useState,
 } from "react";
+
+import {
+  CheckCircle2,
+  FileText,
+  Search,
+  TriangleAlert,
+} from "lucide-react";
 
 import useAdminAuth from "../../hooks/useAdminAuth";
 
@@ -17,30 +25,68 @@ import {
 
 import styles from "./AdminQuotes.module.css";
 
+const STATUS_LABELS =
+  Object.fromEntries(
+    LEAD_STATUS_OPTIONS.map(
+      (option) => [
+        option.value,
+        option.label,
+      ]
+    )
+  );
+
 function AdminQuotes() {
   const {
     token,
     logout,
   } = useAdminAuth();
 
-  const [leads, setLeads] =
-    useState([]);
+  const [
+    leads,
+    setLeads,
+  ] = useState([]);
 
-  const [loading, setLoading] =
-    useState(true);
+  const [
+    loading,
+    setLoading,
+  ] = useState(true);
 
-  const [error, setError] =
-    useState("");
+  const [
+    error,
+    setError,
+  ] = useState("");
+
+  const [
+    success,
+    setSuccess,
+  ] = useState("");
 
   const [
     updatingId,
     setUpdatingId,
   ] = useState(null);
 
+  const [
+    search,
+    setSearch,
+  ] = useState("");
+
+  const [
+    statusFilter,
+    setStatusFilter,
+  ] = useState("ALL");
+
+  /*
+   * =====================================================
+   * CARREGAMENTO
+   * =====================================================
+   */
+
   useEffect(() => {
     async function loadLeads() {
       try {
         setLoading(true);
+        setError("");
 
         const response =
           await getQuoteLeads(
@@ -48,7 +94,8 @@ function AdminQuotes() {
           );
 
         setLeads(
-          response.data || []
+          response.data ||
+            []
         );
       } catch (error) {
         if (
@@ -60,7 +107,8 @@ function AdminQuotes() {
         }
 
         setError(
-          error.message
+          error.message ||
+            "Não foi possível carregar as propostas."
         );
       } finally {
         setLoading(false);
@@ -68,18 +116,151 @@ function AdminQuotes() {
     }
 
     loadLeads();
-  }, [token]);
+  }, [
+    token,
+    logout,
+  ]);
+
+  /*
+   * =====================================================
+   * MENSAGEM DE SUCESSO
+   * =====================================================
+   */
+
+  useEffect(() => {
+    if (!success) {
+      return;
+    }
+
+    const timer =
+      setTimeout(() => {
+        setSuccess("");
+      }, 4000);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [success]);
+
+  /*
+   * =====================================================
+   * CONTADORES
+   * =====================================================
+   */
+
+  const newCount =
+    useMemo(
+      () =>
+        leads.filter(
+          (lead) =>
+            lead.status ===
+            "NEW"
+        ).length,
+      [leads]
+    );
+
+  const contactedCount =
+    useMemo(
+      () =>
+        leads.filter(
+          (lead) =>
+            lead.status ===
+            "CONTACTED"
+        ).length,
+      [leads]
+    );
+
+  const closedCount =
+    useMemo(
+      () =>
+        leads.filter(
+          (lead) =>
+            lead.status ===
+            "CLOSED"
+        ).length,
+      [leads]
+    );
+
+  /*
+   * =====================================================
+   * FILTROS
+   * =====================================================
+   */
+
+  const filteredLeads =
+    useMemo(() => {
+      const normalizedSearch =
+        search
+          .trim()
+          .toLowerCase();
+
+      return leads.filter(
+        (lead) => {
+          const matchesSearch =
+            !normalizedSearch ||
+            [
+              lead.name,
+              lead.email,
+              lead.phone,
+              lead.productName,
+              lead.productBrand,
+            ]
+              .filter(Boolean)
+              .some(
+                (value) =>
+                  String(value)
+                    .toLowerCase()
+                    .includes(
+                      normalizedSearch
+                    )
+              );
+
+          const matchesStatus =
+            statusFilter ===
+              "ALL" ||
+            lead.status ===
+              statusFilter;
+
+          return (
+            matchesSearch &&
+            matchesStatus
+          );
+        }
+      );
+    }, [
+      leads,
+      search,
+      statusFilter,
+    ]);
+
+  /*
+   * =====================================================
+   * ALTERAÇÃO DE STATUS
+   * =====================================================
+   */
 
   async function handleStatus(
-    id,
+    lead,
     status
   ) {
+    if (
+      status ===
+      lead.status
+    ) {
+      return;
+    }
+
     try {
-      setUpdatingId(id);
+      setUpdatingId(
+        lead.id
+      );
+
+      setError("");
+      setSuccess("");
 
       const response =
         await updateQuoteLeadStatus(
-          id,
+          lead.id,
           status,
           token
         );
@@ -87,15 +268,29 @@ function AdminQuotes() {
       setLeads(
         (current) =>
           current.map(
-            (lead) =>
-              lead.id === id
+            (item) =>
+              item.id ===
+              lead.id
                 ? response.data
-                : lead
+                : item
           )
       );
+
+      setSuccess(
+        `Status da proposta de "${lead.name}" alterado para "${STATUS_LABELS[status] || status}".`
+      );
     } catch (error) {
+      if (
+        error.status === 401 ||
+        error.status === 403
+      ) {
+        logout();
+        return;
+      }
+
       setError(
-        error.message
+        error.message ||
+          "Não foi possível atualizar o status da proposta."
       );
     } finally {
       setUpdatingId(null);
@@ -132,29 +327,198 @@ function AdminQuotes() {
           </p>
         </div>
 
-        <strong
+        <div
           className={
-            styles.counter
+            styles.counters
           }
         >
-          {leads.length}
-        </strong>
+          <div
+            className={
+              styles.counter
+            }
+          >
+            <FileText
+              size={17}
+            />
+
+            <strong>
+              {leads.length}
+            </strong>
+
+            <span>
+              Total
+            </span>
+          </div>
+
+          <div
+            className={
+              styles.newCounter
+            }
+          >
+            <strong>
+              {newCount}
+            </strong>
+
+            <span>
+              Novas
+            </span>
+          </div>
+
+          <div
+            className={
+              styles.contactedCounter
+            }
+          >
+            <strong>
+              {contactedCount}
+            </strong>
+
+            <span>
+              Contatadas
+            </span>
+          </div>
+
+          <div
+            className={
+              styles.closedCounter
+            }
+          >
+            <strong>
+              {closedCount}
+            </strong>
+
+            <span>
+              Fechadas
+            </span>
+          </div>
+        </div>
       </header>
+
+      {success && (
+        <div
+          className={
+            styles.success
+          }
+          role="status"
+        >
+          <CheckCircle2
+            size={19}
+          />
+
+          <span>
+            {success}
+          </span>
+        </div>
+      )}
 
       {error && (
         <div
           className={
             styles.error
           }
+          role="alert"
         >
-          {error}
+          <TriangleAlert
+            size={19}
+          />
+
+          <span>
+            {error}
+          </span>
+        </div>
+      )}
+
+      <section
+        className={
+          styles.filters
+        }
+      >
+        <div
+          className={
+            styles.search
+          }
+        >
+          <Search
+            size={18}
+          />
+
+          <input
+            type="search"
+            placeholder="Buscar cliente, telefone ou moto..."
+            value={
+              search
+            }
+            onChange={(
+              event
+            ) =>
+              setSearch(
+                event.target.value
+              )
+            }
+          />
+        </div>
+
+        <select
+          value={
+            statusFilter
+          }
+          onChange={(
+            event
+          ) =>
+            setStatusFilter(
+              event.target.value
+            )
+          }
+        >
+          <option value="ALL">
+            Todos os status
+          </option>
+
+          {LEAD_STATUS_OPTIONS.map(
+            (option) => (
+              <option
+                key={
+                  option.value
+                }
+                value={
+                  option.value
+                }
+              >
+                {option.label}
+              </option>
+            )
+          )}
+        </select>
+      </section>
+
+      {!loading && (
+        <div
+          className={
+            styles.resultInfo
+          }
+        >
+          Exibindo{" "}
+          <strong>
+            {
+              filteredLeads.length
+            }
+          </strong>{" "}
+          de{" "}
+          <strong>
+            {leads.length}
+          </strong>{" "}
+          propostas
         </div>
       )}
 
       {loading ? (
-        <p>
+        <div
+          className={
+            styles.loading
+          }
+        >
           Carregando propostas...
-        </p>
+        </div>
       ) : (
         <div
           className={
@@ -168,20 +532,38 @@ function AdminQuotes() {
           >
             <thead>
               <tr>
-                <th>Cliente</th>
-                <th>Moto</th>
-                <th>Telefone</th>
-                <th>Troca</th>
+                <th>
+                  Cliente
+                </th>
+
+                <th>
+                  Moto
+                </th>
+
+                <th>
+                  Telefone
+                </th>
+
+                <th>
+                  Troca
+                </th>
+
                 <th>
                   Financiamento
                 </th>
-                <th>Data</th>
-                <th>Status</th>
+
+                <th>
+                  Data
+                </th>
+
+                <th>
+                  Status
+                </th>
               </tr>
             </thead>
 
             <tbody>
-              {leads.map(
+              {filteredLeads.map(
                 (lead) => (
                   <tr
                     key={
@@ -200,8 +582,10 @@ function AdminQuotes() {
                     </td>
 
                     <td>
-                      {lead.productBrand}{" "}
-                      {lead.productName}
+                      <strong>
+                        {lead.productBrand}{" "}
+                        {lead.productName}
+                      </strong>
                     </td>
 
                     <td>
@@ -209,15 +593,31 @@ function AdminQuotes() {
                     </td>
 
                     <td>
-                      {lead.tradeIn
-                        ? "Sim"
-                        : "Não"}
+                      <span
+                        className={
+                          lead.tradeIn
+                            ? styles.yesBadge
+                            : styles.noBadge
+                        }
+                      >
+                        {lead.tradeIn
+                          ? "Sim"
+                          : "Não"}
+                      </span>
                     </td>
 
                     <td>
-                      {lead.financing
-                        ? "Sim"
-                        : "Não"}
+                      <span
+                        className={
+                          lead.financing
+                            ? styles.yesBadge
+                            : styles.noBadge
+                        }
+                      >
+                        {lead.financing
+                          ? "Sim"
+                          : "Não"}
+                      </span>
                     </td>
 
                     <td>
@@ -228,6 +628,9 @@ function AdminQuotes() {
 
                     <td>
                       <select
+                        className={
+                          styles.statusSelect
+                        }
                         value={
                           lead.status
                         }
@@ -239,7 +642,7 @@ function AdminQuotes() {
                           event
                         ) =>
                           handleStatus(
-                            lead.id,
+                            lead,
                             event
                               .target
                               .value
@@ -265,12 +668,19 @@ function AdminQuotes() {
                           )
                         )}
                       </select>
+
+                      {updatingId ===
+                        lead.id && (
+                        <small>
+                          Salvando...
+                        </small>
+                      )}
                     </td>
                   </tr>
                 )
               )}
 
-              {leads.length ===
+              {filteredLeads.length ===
                 0 && (
                 <tr>
                   <td
@@ -280,7 +690,8 @@ function AdminQuotes() {
                     }
                   >
                     Nenhuma proposta
-                    encontrada.
+                    encontrada com os
+                    filtros selecionados.
                   </td>
                 </tr>
               )}
