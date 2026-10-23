@@ -112,9 +112,8 @@ function createKey(value) {
 function parseList(value) {
   return value
     .split(",")
-    .map(
-      (item) =>
-        item.trim()
+    .map((item) =>
+      item.trim()
     )
     .filter(Boolean);
 }
@@ -122,9 +121,8 @@ function parseList(value) {
 function parseImages(value) {
   return value
     .split("\n")
-    .map(
-      (item) =>
-        item.trim()
+    .map((item) =>
+      item.trim()
     )
     .filter(Boolean);
 }
@@ -166,9 +164,7 @@ function parseSpecValue(
   const trimmed =
     value.trim();
 
-  if (
-    trimmed === ""
-  ) {
+  if (!trimmed) {
     return "";
   }
 
@@ -243,6 +239,12 @@ function AdminProductForm() {
     slugEdited,
     setSlugEdited,
   ] = useState(false);
+
+  /*
+   * =====================================================
+   * CARREGAR PRODUTO
+   * =====================================================
+   */
 
   useEffect(() => {
     if (!editing) {
@@ -497,7 +499,8 @@ function AdminProductForm() {
         }
 
         setError(
-          error.message
+          error.message ||
+            "Não foi possível carregar o produto."
         );
       } finally {
         setLoading(false);
@@ -511,6 +514,12 @@ function AdminProductForm() {
     token,
     logout,
   ]);
+
+  /*
+   * =====================================================
+   * CÁLCULOS
+   * =====================================================
+   */
 
   const totalVariantStock =
     useMemo(
@@ -538,6 +547,12 @@ function AdminProductForm() {
         ),
       [form.images]
     );
+
+  /*
+   * =====================================================
+   * FORM
+   * =====================================================
+   */
 
   function handleChange(
     event
@@ -684,6 +699,7 @@ function AdminProductForm() {
               removed.key
                 ? {
                     ...variant,
+
                     colorKey:
                       "",
                   }
@@ -739,6 +755,7 @@ function AdminProductForm() {
             index
               ? {
                   ...variant,
+
                   [field]:
                     value,
                 }
@@ -801,6 +818,7 @@ function AdminProductForm() {
             index
               ? {
                   ...spec,
+
                   [field]:
                     value,
                 }
@@ -829,8 +847,7 @@ function AdminProductForm() {
     const result = {};
 
     for (
-      const spec of
-      specs
+      const spec of specs
     ) {
       const key =
         spec.key.trim();
@@ -865,7 +882,7 @@ function AdminProductForm() {
 
   /*
    * =====================================================
-   * VALIDAÇÃO CORES / VARIANTES
+   * CORES / VARIANTES
    * =====================================================
    */
 
@@ -1018,47 +1035,102 @@ function AdminProductForm() {
 
   function validateForm() {
     if (
-      !form.category.trim() ||
-      !form.brand.trim() ||
-      !form.name.trim() ||
+      !form.category.trim()
+    ) {
+      throw new Error(
+        "Informe a categoria do produto."
+      );
+    }
+
+    if (
+      !form.brand.trim()
+    ) {
+      throw new Error(
+        "Informe a marca do produto."
+      );
+    }
+
+    if (
+      !form.name.trim()
+    ) {
+      throw new Error(
+        "Informe o nome do produto."
+      );
+    }
+
+    if (
       !form.slug.trim()
     ) {
       throw new Error(
-        "Preencha os campos obrigatórios."
+        "Informe o slug do produto."
+      );
+    }
+
+    const validSlug =
+      /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
+
+    if (
+      !validSlug.test(
+        form.slug.trim()
+      )
+    ) {
+      throw new Error(
+        "O slug deve conter apenas letras minúsculas, números e hífens."
+      );
+    }
+
+    if (
+      form.price === ""
+    ) {
+      throw new Error(
+        "Informe o preço do produto."
       );
     }
 
     const price =
-      Number(form.price);
+      Number(
+        form.price
+      );
 
     if (
       Number.isNaN(
         price
       ) ||
-      price < 0
+      price <= 0
     ) {
       throw new Error(
-        "Informe um preço válido."
+        "O preço deve ser maior que zero."
       );
     }
 
     if (
       form.oldPrice !==
-        "" &&
-      (
-        Number.isNaN(
-          Number(
-            form.oldPrice
-          )
-        ) ||
+      ""
+    ) {
+      const oldPrice =
         Number(
           form.oldPrice
-        ) < 0
-      )
-    ) {
-      throw new Error(
-        "Informe um preço anterior válido."
-      );
+        );
+
+      if (
+        Number.isNaN(
+          oldPrice
+        ) ||
+        oldPrice < 0
+      ) {
+        throw new Error(
+          "Informe um preço anterior válido."
+        );
+      }
+
+      if (
+        oldPrice > 0 &&
+        oldPrice <= price
+      ) {
+        throw new Error(
+          "O preço anterior deve ser maior que o preço atual."
+        );
+      }
     }
 
     if (
@@ -1089,10 +1161,10 @@ function AdminProductForm() {
         Number.isNaN(
           value
         ) ||
-        value < 0
+        value <= 0
       ) {
         throw new Error(
-          "Informe um valor válido para a parcela."
+          "O valor da parcela deve ser maior que zero."
         );
       }
     }
@@ -1316,10 +1388,6 @@ function AdminProductForm() {
         },
       };
 
-      /*
-       * Sem variantes:
-       * estoque é manual.
-       */
       if (
         relations.variants
           .length === 0
@@ -1338,15 +1406,6 @@ function AdminProductForm() {
         };
       }
 
-      /*
-       * Novo produto:
-       * sempre envia cores
-       * e variantes.
-       *
-       * Edição:
-       * só envia quando houve
-       * alteração nas relações.
-       */
       if (
         !editing ||
         relationsDirty
@@ -1364,15 +1423,33 @@ function AdminProductForm() {
           payload,
           token
         );
-      } else {
-        await createAdminProduct(
-          payload,
-          token
+
+        navigate(
+          "/admin/produtos",
+          {
+            state: {
+              success:
+                `Produto "${form.name.trim()}" atualizado com sucesso.`,
+            },
+          }
         );
+
+        return;
       }
 
+      await createAdminProduct(
+        payload,
+        token
+      );
+
       navigate(
-        "/admin/produtos"
+        "/admin/produtos",
+        {
+          state: {
+            success:
+              `Produto "${form.name.trim()}" criado com sucesso.`,
+          },
+        }
       );
     } catch (error) {
       if (
@@ -1391,7 +1468,8 @@ function AdminProductForm() {
       );
 
       setError(
-        error.message
+        error.message ||
+          "Não foi possível salvar o produto."
       );
 
       window.scrollTo({
@@ -1403,12 +1481,6 @@ function AdminProductForm() {
       setSaving(false);
     }
   }
-
-  /*
-   * =====================================================
-   * LOADING
-   * =====================================================
-   */
 
   if (loading) {
     return (
@@ -1427,12 +1499,6 @@ function AdminProductForm() {
       </main>
     );
   }
-
-  /*
-   * =====================================================
-   * RENDER
-   * =====================================================
-   */
 
   return (
     <main
@@ -1484,6 +1550,7 @@ function AdminProductForm() {
           className={
             styles.error
           }
+          role="alert"
         >
           {error}
         </div>
@@ -1497,10 +1564,6 @@ function AdminProductForm() {
           handleSubmit
         }
       >
-        {/* =========================================
-            INFORMAÇÕES BÁSICAS
-        ========================================== */}
-
         <section
           className={
             styles.section
@@ -1652,10 +1715,6 @@ function AdminProductForm() {
           </div>
         </section>
 
-        {/* =========================================
-            PREÇOS / PARCELAMENTO
-        ========================================== */}
-
         <section
           className={
             styles.section
@@ -1759,8 +1818,7 @@ function AdminProductForm() {
                 }
               >
                 <label>
-                  Número de
-                  parcelas
+                  Número de parcelas
 
                   <input
                     type="number"
@@ -1796,10 +1854,6 @@ function AdminProductForm() {
             )}
           </div>
         </section>
-
-        {/* =========================================
-            DESCRIÇÕES
-        ========================================== */}
 
         <section
           className={
@@ -1858,10 +1912,6 @@ function AdminProductForm() {
           </div>
         </section>
 
-        {/* =========================================
-            ESPECIFICAÇÕES
-        ========================================== */}
-
         <section
           className={
             styles.section
@@ -1882,10 +1932,6 @@ function AdminProductForm() {
             }
           />
         </section>
-
-        {/* =========================================
-            MÍDIA
-        ========================================== */}
 
         <section
           className={
@@ -2072,10 +2118,6 @@ function AdminProductForm() {
             </div>
           )}
         </section>
-
-        {/* =========================================
-            CORES
-        ========================================== */}
 
         <section
           className={
@@ -2266,10 +2308,6 @@ function AdminProductForm() {
           )}
         </section>
 
-        {/* =========================================
-            VARIANTES / ESTOQUE
-        ========================================== */}
-
         <section
           className={
             styles.section
@@ -2291,8 +2329,7 @@ function AdminProductForm() {
                 />
 
                 <h2>
-                  Variantes e
-                  estoque
+                  Variantes e estoque
                 </h2>
               </div>
 
@@ -2555,10 +2592,6 @@ function AdminProductForm() {
           )}
         </section>
 
-        {/* =========================================
-            FEED
-        ========================================== */}
-
         <section
           className={
             styles.section
@@ -2664,10 +2697,6 @@ function AdminProductForm() {
           </div>
         </section>
 
-        {/* =========================================
-            BADGES / TAGS
-        ========================================== */}
-
         <section
           className={
             styles.section
@@ -2735,10 +2764,6 @@ function AdminProductForm() {
           </div>
         </section>
 
-        {/* =========================================
-            SEO
-        ========================================== */}
-
         <section
           className={
             styles.section
@@ -2805,10 +2830,6 @@ function AdminProductForm() {
             </label>
           </div>
         </section>
-
-        {/* =========================================
-            COMERCIAL
-        ========================================== */}
 
         <section
           className={
@@ -2912,10 +2933,6 @@ function AdminProductForm() {
             </label>
           </div>
         </section>
-
-        {/* =========================================
-            AÇÕES
-        ========================================== */}
 
         <footer
           className={

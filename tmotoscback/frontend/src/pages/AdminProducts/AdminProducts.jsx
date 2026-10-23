@@ -5,14 +5,18 @@ import {
 } from "react";
 
 import {
+  CheckCircle2,
   Package,
   Pencil,
   Plus,
   Search,
+  TriangleAlert,
 } from "lucide-react";
 
 import {
   Link,
+  useLocation,
+  useNavigate,
 } from "react-router-dom";
 
 import useAdminAuth from "../../hooks/useAdminAuth";
@@ -47,6 +51,12 @@ function formatCurrency(
 }
 
 function AdminProducts() {
+  const location =
+    useLocation();
+
+  const navigate =
+    useNavigate();
+
   const {
     token,
     logout,
@@ -65,6 +75,11 @@ function AdminProducts() {
   const [
     error,
     setError,
+  ] = useState("");
+
+  const [
+    success,
+    setSuccess,
   ] = useState("");
 
   const [
@@ -87,6 +102,44 @@ function AdminProducts() {
     setStatusFilter,
   ] = useState("ALL");
 
+  /*
+   * =====================================================
+   * MENSAGEM VINDO DO FORM
+   * =====================================================
+   */
+
+  useEffect(() => {
+    const message =
+      location.state
+        ?.success;
+
+    if (!message) {
+      return;
+    }
+
+    setSuccess(
+      message
+    );
+
+    navigate(
+      location.pathname,
+      {
+        replace: true,
+        state: {},
+      }
+    );
+  }, [
+    location.state,
+    location.pathname,
+    navigate,
+  ]);
+
+  /*
+   * =====================================================
+   * CARREGAR PRODUTOS
+   * =====================================================
+   */
+
   useEffect(() => {
     async function loadProducts() {
       try {
@@ -99,19 +152,23 @@ function AdminProducts() {
           );
 
         setProducts(
-          response.data || []
+          response.data ||
+            []
         );
       } catch (error) {
         if (
-          error.status === 401 ||
-          error.status === 403
+          error.status ===
+            401 ||
+          error.status ===
+            403
         ) {
           logout();
           return;
         }
 
         setError(
-          error.message
+          error.message ||
+            "Não foi possível carregar os produtos."
         );
       } finally {
         setLoading(false);
@@ -119,7 +176,57 @@ function AdminProducts() {
     }
 
     loadProducts();
-  }, [token]);
+  }, [
+    token,
+    logout,
+  ]);
+
+  /*
+   * =====================================================
+   * SUCESSO TEMPORÁRIO
+   * =====================================================
+   */
+
+  useEffect(() => {
+    if (!success) {
+      return;
+    }
+
+    const timer =
+      setTimeout(() => {
+        setSuccess("");
+      }, 4000);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [success]);
+
+  /*
+   * =====================================================
+   * INDICADORES
+   * =====================================================
+   */
+
+  const activeCount =
+    useMemo(
+      () =>
+        products.filter(
+          (product) =>
+            product.active
+        ).length,
+      [products]
+    );
+
+  const inactiveCount =
+    products.length -
+    activeCount;
+
+  /*
+   * =====================================================
+   * FILTROS
+   * =====================================================
+   */
 
   const filteredProducts =
     useMemo(() => {
@@ -183,20 +290,41 @@ function AdminProducts() {
       statusFilter,
     ]);
 
+  /*
+   * =====================================================
+   * ATIVAR / DESATIVAR
+   * =====================================================
+   */
+
   async function handleToggleStatus(
     product
   ) {
+    const nextActive =
+      !product.active;
+
+    const confirmed =
+      window.confirm(
+        nextActive
+          ? `Deseja ativar "${product.name}"?\n\nO produto voltará a aparecer no site público.`
+          : `Deseja desativar "${product.name}"?\n\nO produto deixará de aparecer nas áreas públicas do site.`
+      );
+
+    if (!confirmed) {
+      return;
+    }
+
     try {
       setUpdatingId(
         product.id
       );
 
       setError("");
+      setSuccess("");
 
       const response =
         await updateAdminProductStatus(
           product.id,
-          !product.active,
+          nextActive,
           token
         );
 
@@ -210,17 +338,24 @@ function AdminProducts() {
                 : item
           )
       );
+
+      setSuccess(
+        `Produto "${product.name}" ${nextActive ? "ativado" : "desativado"} com sucesso.`
+      );
     } catch (error) {
       if (
-        error.status === 401 ||
-        error.status === 403
+        error.status ===
+          401 ||
+        error.status ===
+          403
       ) {
         logout();
         return;
       }
 
       setError(
-        error.message
+        error.message ||
+          "Não foi possível alterar o status do produto."
       );
     } finally {
       setUpdatingId(null);
@@ -266,16 +401,60 @@ function AdminProducts() {
         >
           <div
             className={
-              styles.counter
+              styles.counters
             }
           >
-            <Package
-              size={18}
-            />
+            <div
+              className={
+                styles.counter
+              }
+            >
+              <Package
+                size={17}
+              />
 
-            <strong>
-              {products.length}
-            </strong>
+              <strong>
+                {
+                  products.length
+                }
+              </strong>
+
+              <span>
+                Total
+              </span>
+            </div>
+
+            <div
+              className={
+                styles.activeCounter
+              }
+            >
+              <strong>
+                {
+                  activeCount
+                }
+              </strong>
+
+              <span>
+                Ativos
+              </span>
+            </div>
+
+            <div
+              className={
+                styles.inactiveCounter
+              }
+            >
+              <strong>
+                {
+                  inactiveCount
+                }
+              </strong>
+
+              <span>
+                Inativos
+              </span>
+            </div>
           </div>
 
           <Link
@@ -293,13 +472,37 @@ function AdminProducts() {
         </div>
       </header>
 
+      {success && (
+        <div
+          className={
+            styles.success
+          }
+          role="status"
+        >
+          <CheckCircle2
+            size={19}
+          />
+
+          <span>
+            {success}
+          </span>
+        </div>
+      )}
+
       {error && (
         <div
           className={
             styles.error
           }
+          role="alert"
         >
-          {error}
+          <TriangleAlert
+            size={19}
+          />
+
+          <span>
+            {error}
+          </span>
         </div>
       )}
 
@@ -320,7 +523,9 @@ function AdminProducts() {
           <input
             type="search"
             placeholder="Buscar produto, marca, categoria..."
-            value={search}
+            value={
+              search
+            }
             onChange={(
               event
             ) =>
@@ -386,6 +591,28 @@ function AdminProducts() {
         </select>
       </section>
 
+      {!loading && (
+        <div
+          className={
+            styles.resultInfo
+          }
+        >
+          Exibindo{" "}
+          <strong>
+            {
+              filteredProducts.length
+            }
+          </strong>{" "}
+          de{" "}
+          <strong>
+            {
+              products.length
+            }
+          </strong>{" "}
+          produtos
+        </div>
+      )}
+
       {loading ? (
         <div
           className={
@@ -445,6 +672,10 @@ function AdminProducts() {
                       ?.cover ||
                     product.media
                       ?.images?.[0];
+
+                  const isUpdating =
+                    updatingId ===
+                    product.id;
 
                   return (
                     <tr
@@ -636,8 +867,7 @@ function AdminProducts() {
                                 : styles.activateButton
                             }
                             disabled={
-                              updatingId ===
-                              product.id
+                              isUpdating
                             }
                             onClick={() =>
                               handleToggleStatus(
@@ -645,8 +875,7 @@ function AdminProducts() {
                               )
                             }
                           >
-                            {updatingId ===
-                            product.id
+                            {isUpdating
                               ? "Salvando..."
                               : product.active
                                 ? "Desativar"
@@ -669,7 +898,8 @@ function AdminProducts() {
                     }
                   >
                     Nenhum produto
-                    encontrado.
+                    encontrado com os
+                    filtros selecionados.
                   </td>
                 </tr>
               )}
