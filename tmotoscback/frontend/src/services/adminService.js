@@ -2,24 +2,46 @@ const API_URL =
   import.meta.env.VITE_API_URL ||
   "http://localhost:3333";
 
+/*
+ * =====================================================
+ * REQUEST
+ * =====================================================
+ */
+
 async function request(
   endpoint,
   options = {}
 ) {
-  const response = await fetch(
-    `${API_URL}${endpoint}`,
-    options
-  );
+  const response =
+    await fetch(
+      `${API_URL}${endpoint}`,
+      {
+        ...options,
 
-  const data = await response
-    .json()
-    .catch(() => null);
-
-  if (!response.ok) {
-    const error = new Error(
-      data?.message ||
-        "Erro ao processar solicitação."
+        /*
+         * Obrigatório para enviar
+         * e receber o cookie HttpOnly.
+         */
+        credentials:
+          "include",
+      }
     );
+
+  const data =
+    await response
+      .json()
+      .catch(
+        () => null
+      );
+
+  if (
+    !response.ok
+  ) {
+    const error =
+      new Error(
+        data?.message ||
+          "Erro ao processar solicitação."
+      );
 
     error.status =
       response.status;
@@ -33,11 +55,8 @@ async function request(
   return data;
 }
 
-function authHeaders(token) {
+function jsonHeaders() {
   return {
-    Authorization:
-      `Bearer ${token}`,
-
     "Content-Type":
       "application/json",
   };
@@ -58,15 +77,30 @@ export async function adminLogin(
     {
       method: "POST",
 
-      headers: {
-        "Content-Type":
-          "application/json",
-      },
+      headers:
+        jsonHeaders(),
 
-      body: JSON.stringify({
-        email,
-        password,
-      }),
+      body:
+        JSON.stringify({
+          email,
+          password,
+        }),
+    }
+  );
+}
+
+export async function getAdminSession() {
+  return request(
+    "/api/v1/auth/session"
+  );
+}
+
+export async function adminLogout() {
+  return request(
+    "/api/v1/auth/logout",
+    {
+      method:
+        "POST",
     }
   );
 }
@@ -77,34 +111,29 @@ export async function adminLogin(
  * =====================================================
  */
 
-export async function getQuoteLeads(
-  token
-) {
+export async function getQuoteLeads() {
   return request(
-    "/api/v1/admin/leads/quotes",
-    {
-      headers:
-        authHeaders(token),
-    }
+    "/api/v1/admin/leads/quotes"
   );
 }
 
 export async function updateQuoteLeadStatus(
   id,
-  status,
-  token
+  status
 ) {
   return request(
     `/api/v1/admin/leads/quotes/${id}/status`,
     {
-      method: "PATCH",
+      method:
+        "PATCH",
 
       headers:
-        authHeaders(token),
+        jsonHeaders(),
 
-      body: JSON.stringify({
-        status,
-      }),
+      body:
+        JSON.stringify({
+          status,
+        }),
     }
   );
 }
@@ -115,34 +144,29 @@ export async function updateQuoteLeadStatus(
  * =====================================================
  */
 
-export async function getTestRideLeads(
-  token
-) {
+export async function getTestRideLeads() {
   return request(
-    "/api/v1/admin/leads/test-rides",
-    {
-      headers:
-        authHeaders(token),
-    }
+    "/api/v1/admin/leads/test-rides"
   );
 }
 
 export async function updateTestRideLeadStatus(
   id,
-  status,
-  token
+  status
 ) {
   return request(
     `/api/v1/admin/leads/test-rides/${id}/status`,
     {
-      method: "PATCH",
+      method:
+        "PATCH",
 
       headers:
-        authHeaders(token),
+        jsonHeaders(),
 
-      body: JSON.stringify({
-        status,
-      }),
+      body:
+        JSON.stringify({
+          status,
+        }),
     }
   );
 }
@@ -153,66 +177,31 @@ export async function updateTestRideLeadStatus(
  * =====================================================
  */
 
-/*
- * Lista todos os produtos.
- *
- * Diferente da API pública,
- * esta rota também retorna
- * produtos inativos.
- */
-export async function getAdminProducts(
-  token
-) {
+export async function getAdminProducts() {
   return request(
-    "/api/v1/admin/products",
-    {
-      headers:
-        authHeaders(token),
-    }
+    "/api/v1/admin/products"
   );
 }
 
-/*
- * Busca um produto pelo ID.
- */
 export async function getAdminProduct(
-  id,
-  token
+  id
 ) {
   return request(
-    `/api/v1/admin/products/${id}`,
-    {
-      headers:
-        authHeaders(token),
-    }
+    `/api/v1/admin/products/${id}`
   );
 }
 
-/*
- * Cria um novo produto.
- *
- * Pode receber:
- * - informações básicas
- * - preços
- * - estoque
- * - vendas
- * - mídia
- * - feed
- * - SEO
- * - cores
- * - variantes
- */
 export async function createAdminProduct(
-  productData,
-  token
+  productData
 ) {
   return request(
     "/api/v1/admin/products",
     {
-      method: "POST",
+      method:
+        "POST",
 
       headers:
-        authHeaders(token),
+        jsonHeaders(),
 
       body:
         JSON.stringify(
@@ -222,29 +211,18 @@ export async function createAdminProduct(
   );
 }
 
-/*
- * Atualiza um produto existente.
- *
- * O backend utiliza PATCH,
- * portanto podemos enviar somente
- * os campos que foram alterados.
- *
- * Quando houver alteração de
- * cores/variantes, as duas listas
- * devem ser enviadas juntas.
- */
 export async function updateAdminProduct(
   id,
-  productData,
-  token
+  productData
 ) {
   return request(
     `/api/v1/admin/products/${id}`,
     {
-      method: "PATCH",
+      method:
+        "PATCH",
 
       headers:
-        authHeaders(token),
+        jsonHeaders(),
 
       body:
         JSON.stringify(
@@ -254,21 +232,18 @@ export async function updateAdminProduct(
   );
 }
 
-/*
- * Ativa ou desativa produto.
- */
 export async function updateAdminProductStatus(
   id,
-  active,
-  token
+  active
 ) {
   return request(
     `/api/v1/admin/products/${id}/status`,
     {
-      method: "PATCH",
+      method:
+        "PATCH",
 
       headers:
-        authHeaders(token),
+        jsonHeaders(),
 
       body:
         JSON.stringify({

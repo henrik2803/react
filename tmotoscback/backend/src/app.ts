@@ -1,5 +1,7 @@
 import Fastify from "fastify";
 
+import cookie from "@fastify/cookie";
+
 import cors from "@fastify/cors";
 
 import helmet from "@fastify/helmet";
@@ -13,6 +15,10 @@ import adminRoutes from "./modules/admin/admin.routes.js";
 import {
   env,
 } from "./config/env.js";
+
+import {
+  ADMIN_SESSION_COOKIE_NAME,
+} from "./modules/auth/auth.config.js";
 
 import healthRoutes from "./routes/health.routes.js";
 
@@ -28,11 +34,6 @@ function buildApp() {
       bodyLimit:
         512 * 1024,
 
-      /*
-       * Importante para o rate limit
-       * identificar corretamente o IP
-       * quando houver proxy reverso.
-       */
       trustProxy:
         env.TRUST_PROXY,
 
@@ -46,8 +47,11 @@ function buildApp() {
         redact: {
           paths: [
             "req.headers.authorization",
+            "req.headers.cookie",
             "headers.authorization",
+            "headers.cookie",
             "authorization",
+            "cookie",
             "password",
             "token",
           ],
@@ -60,6 +64,19 @@ function buildApp() {
 
   /*
    * =====================================================
+   * COOKIES
+   * =====================================================
+   *
+   * Deve ser registrado antes das
+   * rotas que dependem de cookies.
+   */
+
+  app.register(
+    cookie
+  );
+
+  /*
+   * =====================================================
    * HEADERS DE SEGURANÇA
    * =====================================================
    */
@@ -69,18 +86,9 @@ function buildApp() {
     {
       global: true,
 
-      /*
-       * O backend entrega JSON.
-       * A CSP será mais importante
-       * posteriormente no frontend.
-       */
       contentSecurityPolicy:
         false,
 
-      /*
-       * HSTS apenas em produção,
-       * quando estivermos com HTTPS.
-       */
       strictTransportSecurity:
         env.NODE_ENV ===
         "production"
@@ -104,19 +112,8 @@ function buildApp() {
   app.register(
     rateLimit,
     {
-      /*
-       * Todas as rotas conhecidas
-       * recebem uma proteção básica.
-       */
       global: true,
 
-      /*
-       * 300 requisições por IP
-       * a cada minuto.
-       *
-       * Rotas sensíveis terão
-       * limites muito menores.
-       */
       max: 300,
 
       timeWindow:
@@ -128,6 +125,10 @@ function buildApp() {
    * =====================================================
    * CORS
    * =====================================================
+   *
+   * credentials precisa ser true
+   * para o navegador enviar o
+   * cookie da sessão.
    */
 
   app.register(
@@ -146,11 +147,10 @@ function buildApp() {
 
       allowedHeaders: [
         "Content-Type",
-        "Authorization",
       ],
 
       credentials:
-        false,
+        true,
 
       maxAge:
         86400,
@@ -168,6 +168,13 @@ function buildApp() {
     {
       secret:
         env.JWT_SECRET,
+
+      cookie: {
+        cookieName:
+          ADMIN_SESSION_COOKIE_NAME,
+
+        signed: false,
+      },
     }
   );
 
