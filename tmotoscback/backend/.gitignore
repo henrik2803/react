@@ -1,8 +1,12 @@
 node_modules/
 dist/
 
+# Variáveis reais nunca devem ir para o Git
 .env
 .env.*
+
+# Apenas o modelo pode ser versionado
+!.env.example
 
 src/generated/prisma/
 

@@ -1,53 +1,201 @@
 import "dotenv/config";
 
-import { z } from "zod";
+import {
+  z,
+} from "zod";
 
-const envSchema = z.object({
-  PORT: z.coerce
-    .number()
-    .int()
-    .positive()
-    .default(3333),
+const envSchema =
+  z
+    .object({
+      NODE_ENV: z
+        .enum([
+          "development",
+          "test",
+          "production",
+        ])
+        .default(
+          "development"
+        ),
 
-  HOST: z
-    .string()
-    .default("0.0.0.0"),
+      PORT: z.coerce
+        .number()
+        .int()
+        .positive()
+        .default(3333),
 
-  FRONTEND_URL: z
-    .string()
-    .url()
-    .default(
-      "http://localhost:5173"
-    ),
+      HOST: z
+        .string()
+        .trim()
+        .min(1)
+        .default(
+          "0.0.0.0"
+        ),
 
-  JWT_SECRET: z
-    .string()
-    .min(
-      32,
-      "JWT_SECRET deve ter pelo menos 32 caracteres."
-    ),
+      FRONTEND_URL: z
+        .string()
+        .trim()
+        .url(
+          "FRONTEND_URL inválida."
+        )
+        .transform(
+          (value) =>
+            value.replace(
+              /\/+$/,
+              ""
+            )
+        ),
 
-  ADMIN_EMAIL: z
-    .string()
-    .email(),
+      DATABASE_URL: z
+        .string()
+        .trim()
+        .min(
+          1,
+          "DATABASE_URL não definida."
+        ),
 
-  ADMIN_PASSWORD_HASH: z
-    .string()
-    .min(20),
-});
+      JWT_SECRET: z
+        .string()
+        .min(
+          32,
+          "JWT_SECRET deve ter pelo menos 32 caracteres."
+        ),
+
+      ADMIN_EMAIL: z
+        .string()
+        .trim()
+        .email(
+          "ADMIN_EMAIL inválido."
+        ),
+
+      ADMIN_PASSWORD_HASH: z
+        .string()
+        .regex(
+          /^\$2[aby]\$\d{2}\$[./A-Za-z0-9]{53}$/,
+          "ADMIN_PASSWORD_HASH deve ser um hash bcrypt válido."
+        ),
+    })
+    .superRefine(
+      (
+        data,
+        context
+      ) => {
+        /*
+         * Impede que placeholders
+         * conhecidos sejam usados
+         * acidentalmente.
+         */
+        const secret =
+          data.JWT_SECRET
+            .toUpperCase();
+
+        const insecureWords = [
+          "SUBSTITUA",
+          "CHANGE_ME",
+          "TROQUE",
+        ];
+
+        const insecureSecret =
+          insecureWords.some(
+            (word) =>
+              secret.includes(
+                word
+              )
+          );
+
+        if (
+          insecureSecret
+        ) {
+          context.addIssue({
+            code:
+              "custom",
+
+            path: [
+              "JWT_SECRET",
+            ],
+
+            message:
+              "JWT_SECRET ainda contém um valor de exemplo.",
+          });
+        }
+
+        /*
+         * Em produção o frontend
+         * precisa obrigatoriamente
+         * estar em HTTPS.
+         */
+        if (
+          data.NODE_ENV ===
+          "production"
+        ) {
+          const frontendUrl =
+            new URL(
+              data.FRONTEND_URL
+            );
+
+          if (
+            frontendUrl.protocol !==
+            "https:"
+          ) {
+            context.addIssue({
+              code:
+                "custom",
+
+              path: [
+                "FRONTEND_URL",
+              ],
+
+              message:
+                "Em produção, FRONTEND_URL deve utilizar HTTPS.",
+            });
+          }
+
+          if (
+            [
+              "localhost",
+              "127.0.0.1",
+              "::1",
+            ].includes(
+              frontendUrl.hostname
+            )
+          ) {
+            context.addIssue({
+              code:
+                "custom",
+
+              path: [
+                "FRONTEND_URL",
+              ],
+
+              message:
+                "FRONTEND_URL não pode apontar para localhost em produção.",
+            });
+          }
+        }
+      }
+    );
 
 const parsedEnv =
   envSchema.safeParse(
     process.env
   );
 
-if (!parsedEnv.success) {
+if (
+  !parsedEnv.success
+) {
+  console.error(
+    "Falha ao iniciar a aplicação."
+  );
+
   console.error(
     "Variáveis de ambiente inválidas:"
   );
 
+  const errors =
+    parsedEnv.error.flatten()
+      .fieldErrors;
+
   console.error(
-    parsedEnv.error.format()
+    errors
   );
 
   process.exit(1);
@@ -55,3 +203,7 @@ if (!parsedEnv.success) {
 
 export const env =
   parsedEnv.data;
+
+export const isProduction =
+  env.NODE_ENV ===
+  "production";
