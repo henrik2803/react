@@ -2,7 +2,11 @@ import Fastify from "fastify";
 
 import cors from "@fastify/cors";
 
+import helmet from "@fastify/helmet";
+
 import jwt from "@fastify/jwt";
+
+import rateLimit from "@fastify/rate-limit";
 
 import adminRoutes from "./modules/admin/admin.routes.js";
 
@@ -21,23 +25,17 @@ import authRoutes from "./modules/auth/auth.routes.js";
 function buildApp() {
   const app =
     Fastify({
-      /*
-       * Limite máximo do JSON recebido.
-       *
-       * Evita payloads gigantes sendo
-       * enviados desnecessariamente
-       * para a API.
-       */
       bodyLimit:
         512 * 1024,
 
       /*
-       * Logs estruturados.
-       *
-       * Informações sensíveis são
-       * removidas antes de chegarem
-       * aos logs.
+       * Importante para o rate limit
+       * identificar corretamente o IP
+       * quando houver proxy reverso.
        */
+      trustProxy:
+        env.TRUST_PROXY,
+
       logger: {
         level:
           env.NODE_ENV ===
@@ -62,6 +60,72 @@ function buildApp() {
 
   /*
    * =====================================================
+   * HEADERS DE SEGURANÇA
+   * =====================================================
+   */
+
+  app.register(
+    helmet,
+    {
+      global: true,
+
+      /*
+       * O backend entrega JSON.
+       * A CSP será mais importante
+       * posteriormente no frontend.
+       */
+      contentSecurityPolicy:
+        false,
+
+      /*
+       * HSTS apenas em produção,
+       * quando estivermos com HTTPS.
+       */
+      strictTransportSecurity:
+        env.NODE_ENV ===
+        "production"
+          ? {
+              maxAge:
+                31536000,
+
+              includeSubDomains:
+                true,
+            }
+          : false,
+    }
+  );
+
+  /*
+   * =====================================================
+   * RATE LIMIT GLOBAL
+   * =====================================================
+   */
+
+  app.register(
+    rateLimit,
+    {
+      /*
+       * Todas as rotas conhecidas
+       * recebem uma proteção básica.
+       */
+      global: true,
+
+      /*
+       * 300 requisições por IP
+       * a cada minuto.
+       *
+       * Rotas sensíveis terão
+       * limites muito menores.
+       */
+      max: 300,
+
+      timeWindow:
+        "1 minute",
+    }
+  );
+
+  /*
+   * =====================================================
    * CORS
    * =====================================================
    */
@@ -69,18 +133,9 @@ function buildApp() {
   app.register(
     cors,
     {
-      /*
-       * Apenas o frontend configurado
-       * poderá acessar a API através
-       * do navegador.
-       */
       origin:
         env.FRONTEND_URL,
 
-      /*
-       * Somente métodos realmente
-       * utilizados atualmente.
-       */
       methods: [
         "GET",
         "HEAD",
@@ -94,21 +149,9 @@ function buildApp() {
         "Authorization",
       ],
 
-      /*
-       * Ainda estamos usando
-       * Authorization Bearer.
-       *
-       * Quando migrarmos para
-       * HttpOnly Cookie isso será
-       * alterado para true.
-       */
       credentials:
         false,
 
-      /*
-       * Permite ao navegador guardar
-       * o resultado do preflight.
-       */
       maxAge:
         86400,
     }
@@ -203,7 +246,7 @@ function buildApp() {
 
   /*
    * =====================================================
-   * ERROS NÃO TRATADOS
+   * ERROS GERAIS
    * =====================================================
    */
 
@@ -229,13 +272,6 @@ function buildApp() {
           ? originalStatus
           : 500;
 
-      /*
-       * Erros internos ficam apenas
-       * nos logs.
-       *
-       * Nunca enviamos stack trace
-       * para o navegador.
-       */
       if (
         statusCode >= 500
       ) {

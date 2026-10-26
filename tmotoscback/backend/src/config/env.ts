@@ -73,17 +73,30 @@ const envSchema =
           /^\$2[aby]\$\d{2}\$[./A-Za-z0-9]{53}$/,
           "ADMIN_PASSWORD_HASH deve ser um hash bcrypt válido."
         ),
+
+      /*
+       * false no desenvolvimento local.
+       *
+       * Em produção dependerá do
+       * provedor onde o backend
+       * será hospedado.
+       */
+      TRUST_PROXY: z
+        .enum([
+          "true",
+          "false",
+        ])
+        .default("false")
+        .transform(
+          (value) =>
+            value === "true"
+        ),
     })
     .superRefine(
       (
         data,
         context
       ) => {
-        /*
-         * Impede que placeholders
-         * conhecidos sejam usados
-         * acidentalmente.
-         */
         const secret =
           data.JWT_SECRET
             .toUpperCase();
@@ -118,11 +131,6 @@ const envSchema =
           });
         }
 
-        /*
-         * Em produção o frontend
-         * precisa obrigatoriamente
-         * estar em HTTPS.
-         */
         if (
           data.NODE_ENV ===
           "production"
@@ -190,12 +198,10 @@ if (
     "Variáveis de ambiente inválidas:"
   );
 
-  const errors =
-    parsedEnv.error.flatten()
-      .fieldErrors;
-
   console.error(
-    errors
+    parsedEnv.error
+      .flatten()
+      .fieldErrors
   );
 
   process.exit(1);
