@@ -11,3 +11,6 @@ dist/
 src/generated/prisma/
 
 *.log
+
+cookies.txt
+*.cookie
