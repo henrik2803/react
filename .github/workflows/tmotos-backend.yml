@@ -1,0 +1,56 @@
+
+name: TMotos Backend - Build e Testes
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "tmotoscback/backend/**"
+      - ".github/workflows/tmotos-backend.yml"
+
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "tmotoscback/backend/**"
+      - ".github/workflows/tmotos-backend.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  backend:
+    name: Validar backend e seguranca
+
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: tmotoscback/backend
+
+    env:
+      DATABASE_URL: postgresql://ci:ci@127.0.0.1:5432/tmotos_ci
+
+    steps:
+      - name: Baixar codigo
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: tmotoscback/backend/package-lock.json
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Gerar Prisma Client
+        run: npx prisma7 generate
+
+      - name: Compilar TypeScript
+        run: npm run build
+
+      - name: Executar testes de seguranca
+        run: npm test
