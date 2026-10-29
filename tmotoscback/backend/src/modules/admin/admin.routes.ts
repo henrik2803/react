@@ -7,6 +7,10 @@ import {
 } from "../auth/auth.middleware.js";
 
 import {
+  requireTrustedOrigin,
+} from "../auth/csrf.middleware.js";
+
+import {
   listQuoteLeadsController,
   listTestRideLeadsController,
   updateQuoteLeadStatusController,
@@ -24,16 +28,46 @@ import {
 const adminRoutes:
   FastifyPluginAsync =
     async (app) => {
+      /*
+       * ===================================================
+       * PROTEÇÃO CSRF
+       * ===================================================
+       *
+       * Executada antes dos
+       * controllers administrativos.
+       */
+
+      app.addHook(
+        "onRequest",
+        requireTrustedOrigin
+      );
+
+      /*
+       * ===================================================
+       * AUTENTICAÇÃO ADMIN
+       * ===================================================
+       *
+       * Todas as rotas exigem
+       * uma sessão válida.
+       */
+
       app.addHook(
         "preHandler",
         authenticateAdmin
       );
+
+      /*
+       * ===================================================
+       * VERIFICAÇÃO ADMIN
+       * ===================================================
+       */
 
       app.get(
         "/ping",
         async () => {
           return {
             status: "ok",
+
             message:
               "Área administrativa autenticada.",
           };
@@ -41,8 +75,11 @@ const adminRoutes:
       );
 
       /*
+       * ===================================================
        * PROPOSTAS
+       * ===================================================
        */
+
       app.get(
         "/leads/quotes",
         listQuoteLeadsController
@@ -54,8 +91,11 @@ const adminRoutes:
       );
 
       /*
+       * ===================================================
        * TEST RIDES
+       * ===================================================
        */
+
       app.get(
         "/leads/test-rides",
         listTestRideLeadsController
@@ -67,8 +107,11 @@ const adminRoutes:
       );
 
       /*
+       * ===================================================
        * PRODUTOS
+       * ===================================================
        */
+
       app.get(
         "/products",
         listAdminProductsController

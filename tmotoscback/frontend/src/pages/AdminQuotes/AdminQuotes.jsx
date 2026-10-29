@@ -37,7 +37,6 @@ const STATUS_LABELS =
 
 function AdminQuotes() {
   const {
-    token,
     logout,
   } = useAdminAuth();
 
@@ -89,9 +88,7 @@ function AdminQuotes() {
         setError("");
 
         const response =
-          await getQuoteLeads(
-            token
-          );
+          await getQuoteLeads();
 
         setLeads(
           response.data ||
@@ -102,7 +99,7 @@ function AdminQuotes() {
           error.status === 401 ||
           error.status === 403
         ) {
-          logout();
+          await logout();
           return;
         }
 
@@ -117,15 +114,8 @@ function AdminQuotes() {
 
     loadLeads();
   }, [
-    token,
     logout,
   ]);
-
-  /*
-   * =====================================================
-   * MENSAGEM DE SUCESSO
-   * =====================================================
-   */
 
   useEffect(() => {
     if (!success) {
@@ -141,12 +131,6 @@ function AdminQuotes() {
       clearTimeout(timer);
     };
   }, [success]);
-
-  /*
-   * =====================================================
-   * CONTADORES
-   * =====================================================
-   */
 
   const newCount =
     useMemo(
@@ -180,12 +164,6 @@ function AdminQuotes() {
         ).length,
       [leads]
     );
-
-  /*
-   * =====================================================
-   * FILTROS
-   * =====================================================
-   */
 
   const filteredLeads =
     useMemo(() => {
@@ -233,12 +211,6 @@ function AdminQuotes() {
       statusFilter,
     ]);
 
-  /*
-   * =====================================================
-   * ALTERAÇÃO DE STATUS
-   * =====================================================
-   */
-
   async function handleStatus(
     lead,
     status
@@ -261,8 +233,7 @@ function AdminQuotes() {
       const response =
         await updateQuoteLeadStatus(
           lead.id,
-          status,
-          token
+          status
         );
 
       setLeads(
@@ -284,7 +255,7 @@ function AdminQuotes() {
         error.status === 401 ||
         error.status === 403
       ) {
-        logout();
+        await logout();
         return;
       }
 

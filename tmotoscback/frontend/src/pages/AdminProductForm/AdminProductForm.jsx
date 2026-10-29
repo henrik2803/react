@@ -186,7 +186,6 @@ function AdminProductForm() {
     useNavigate();
 
   const {
-    token,
     logout,
   } = useAdminAuth();
 
@@ -258,8 +257,7 @@ function AdminProductForm() {
 
         const response =
           await getAdminProduct(
-            id,
-            token
+            id
           );
 
         const product =
@@ -494,7 +492,7 @@ function AdminProductForm() {
           error.status ===
             403
         ) {
-          logout();
+          await logout();
           return;
         }
 
@@ -511,15 +509,8 @@ function AdminProductForm() {
   }, [
     editing,
     id,
-    token,
     logout,
   ]);
-
-  /*
-   * =====================================================
-   * CÁLCULOS
-   * =====================================================
-   */
 
   const totalVariantStock =
     useMemo(
@@ -547,12 +538,6 @@ function AdminProductForm() {
         ),
       [form.images]
     );
-
-  /*
-   * =====================================================
-   * FORM
-   * =====================================================
-   */
 
   function handleChange(
     event
@@ -604,12 +589,6 @@ function AdminProductForm() {
       })
     );
   }
-
-  /*
-   * =====================================================
-   * CORES
-   * =====================================================
-   */
 
   function addColor() {
     setColors(
@@ -699,7 +678,6 @@ function AdminProductForm() {
               removed.key
                 ? {
                     ...variant,
-
                     colorKey:
                       "",
                   }
@@ -710,12 +688,6 @@ function AdminProductForm() {
 
     setRelationsDirty(true);
   }
-
-  /*
-   * =====================================================
-   * VARIANTES
-   * =====================================================
-   */
 
   function addVariant() {
     setVariants(
@@ -783,12 +755,6 @@ function AdminProductForm() {
 
     setRelationsDirty(true);
   }
-
-  /*
-   * =====================================================
-   * ESPECIFICAÇÕES
-   * =====================================================
-   */
 
   function addSpec() {
     setSpecs(
@@ -879,12 +845,6 @@ function AdminProductForm() {
 
     return result;
   }
-
-  /*
-   * =====================================================
-   * CORES / VARIANTES
-   * =====================================================
-   */
 
   function validateRelations() {
     const normalizedColors =
@@ -1026,12 +986,6 @@ function AdminProductForm() {
         normalizedVariants,
     };
   }
-
-  /*
-   * =====================================================
-   * VALIDAÇÃO GERAL
-   * =====================================================
-   */
 
   function validateForm() {
     if (
@@ -1215,12 +1169,6 @@ function AdminProductForm() {
 
     return price;
   }
-
-  /*
-   * =====================================================
-   * SALVAR
-   * =====================================================
-   */
 
   async function handleSubmit(
     event
@@ -1420,8 +1368,7 @@ function AdminProductForm() {
       if (editing) {
         await updateAdminProduct(
           id,
-          payload,
-          token
+          payload
         );
 
         navigate(
@@ -1438,8 +1385,7 @@ function AdminProductForm() {
       }
 
       await createAdminProduct(
-        payload,
-        token
+        payload
       );
 
       navigate(
@@ -1458,7 +1404,7 @@ function AdminProductForm() {
         error.status ===
           403
       ) {
-        logout();
+        await logout();
         return;
       }
 

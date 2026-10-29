@@ -35,7 +35,6 @@ import styles from "./AdminDashboard.module.css";
 
 function AdminDashboard() {
   const {
-    token,
     logout,
   } = useAdminAuth();
 
@@ -81,17 +80,9 @@ function AdminDashboard() {
           quotesResponse,
           testRidesResponse,
         ] = await Promise.all([
-          getAdminProducts(
-            token
-          ),
-
-          getQuoteLeads(
-            token
-          ),
-
-          getTestRideLeads(
-            token
-          ),
+          getAdminProducts(),
+          getQuoteLeads(),
+          getTestRideLeads(),
         ]);
 
         setProducts(
@@ -113,7 +104,7 @@ function AdminDashboard() {
           error.status === 401 ||
           error.status === 403
         ) {
-          logout();
+          await logout();
           return;
         }
 
@@ -128,7 +119,6 @@ function AdminDashboard() {
 
     loadData();
   }, [
-    token,
     logout,
   ]);
 
@@ -323,12 +313,6 @@ function AdminDashboard() {
     }
   }
 
-  /*
-   * =====================================================
-   * LOADING
-   * =====================================================
-   */
-
   if (loading) {
     return (
       <main
@@ -394,10 +378,6 @@ function AdminDashboard() {
           </span>
         </div>
       )}
-
-      {/* =========================================
-          RESUMO PRINCIPAL
-      ========================================== */}
 
       <section
         className={
@@ -544,10 +524,6 @@ function AdminDashboard() {
           </div>
         </article>
       </section>
-
-      {/* =========================================
-          ÁREAS
-      ========================================== */}
 
       <section
         className={
@@ -797,10 +773,6 @@ function AdminDashboard() {
           </Link>
         </article>
       </section>
-
-      {/* =========================================
-          LEADS RECENTES
-      ========================================== */}
 
       <section
         className={

@@ -7,6 +7,10 @@ import {
 } from "./auth.middleware.js";
 
 import {
+  requireTrustedOrigin,
+} from "./csrf.middleware.js";
+
+import {
   loginController,
   logoutController,
   sessionController,
@@ -15,6 +19,24 @@ import {
 const authRoutes:
   FastifyPluginAsync =
     async (app) => {
+      /*
+       * ===================================================
+       * PROTEÇÃO CSRF
+       * ===================================================
+       *
+       * Aplica a verificação de
+       * origem aos métodos que
+       * modificam dados.
+       *
+       * GET /session continua
+       * funcionando normalmente.
+       */
+
+      app.addHook(
+        "onRequest",
+        requireTrustedOrigin
+      );
+
       /*
        * ===================================================
        * LOGIN
@@ -56,11 +78,9 @@ const authRoutes:
        * LOGOUT
        * ===================================================
        *
-       * Não precisa exigir uma sessão
-       * válida.
-       *
-       * Mesmo uma sessão expirada
-       * deve conseguir limpar o cookie.
+       * Permite limpar o cookie
+       * mesmo quando a sessão
+       * já estiver expirada.
        */
 
       app.post(

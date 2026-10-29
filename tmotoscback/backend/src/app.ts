@@ -1,3 +1,4 @@
+
 import Fastify from "fastify";
 
 import cookie from "@fastify/cookie";
@@ -263,8 +264,32 @@ function buildApp() {
       request,
       reply
     ) => {
+      /*
+       * CORREÇÃO TS18046
+       *
+       * O TypeScript considera
+       * error como unknown.
+       *
+       * Verificamos se é um objeto,
+       * se possui statusCode e se
+       * o valor é numérico.
+       */
+
       const originalStatus =
-        error.statusCode;
+        typeof error ===
+          "object" &&
+        error !== null &&
+        "statusCode" in
+          error &&
+        typeof error.statusCode ===
+          "number"
+          ? error.statusCode
+          : undefined;
+
+      /*
+       * Identificar erros
+       * do cliente (4xx).
+       */
 
       const isClientError =
         typeof originalStatus ===
@@ -274,10 +299,20 @@ function buildApp() {
         originalStatus <
           500;
 
+      /*
+       * Erros que não forem
+       * do cliente recebem 500.
+       */
+
       const statusCode =
         isClientError
           ? originalStatus
           : 500;
+
+      /*
+       * Registrar erros internos
+       * no servidor.
+       */
 
       if (
         statusCode >= 500
@@ -296,6 +331,11 @@ function buildApp() {
           "Erro interno não tratado."
         );
       }
+
+      /*
+       * Mensagens seguras
+       * retornadas ao cliente.
+       */
 
       const clientMessages:
         Record<

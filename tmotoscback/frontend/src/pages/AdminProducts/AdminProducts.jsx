@@ -58,7 +58,6 @@ function AdminProducts() {
     useNavigate();
 
   const {
-    token,
     logout,
   } = useAdminAuth();
 
@@ -147,9 +146,7 @@ function AdminProducts() {
         setError("");
 
         const response =
-          await getAdminProducts(
-            token
-          );
+          await getAdminProducts();
 
         setProducts(
           response.data ||
@@ -162,7 +159,7 @@ function AdminProducts() {
           error.status ===
             403
         ) {
-          logout();
+          await logout();
           return;
         }
 
@@ -177,7 +174,6 @@ function AdminProducts() {
 
     loadProducts();
   }, [
-    token,
     logout,
   ]);
 
@@ -202,12 +198,6 @@ function AdminProducts() {
     };
   }, [success]);
 
-  /*
-   * =====================================================
-   * INDICADORES
-   * =====================================================
-   */
-
   const activeCount =
     useMemo(
       () =>
@@ -221,12 +211,6 @@ function AdminProducts() {
   const inactiveCount =
     products.length -
     activeCount;
-
-  /*
-   * =====================================================
-   * FILTROS
-   * =====================================================
-   */
 
   const filteredProducts =
     useMemo(() => {
@@ -290,12 +274,6 @@ function AdminProducts() {
       statusFilter,
     ]);
 
-  /*
-   * =====================================================
-   * ATIVAR / DESATIVAR
-   * =====================================================
-   */
-
   async function handleToggleStatus(
     product
   ) {
@@ -324,8 +302,7 @@ function AdminProducts() {
       const response =
         await updateAdminProductStatus(
           product.id,
-          nextActive,
-          token
+          nextActive
         );
 
       setProducts(
@@ -349,7 +326,7 @@ function AdminProducts() {
         error.status ===
           403
       ) {
-        logout();
+        await logout();
         return;
       }
 

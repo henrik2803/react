@@ -38,7 +38,6 @@ const STATUS_LABELS =
 
 function AdminTestRides() {
   const {
-    token,
     logout,
   } = useAdminAuth();
 
@@ -77,12 +76,6 @@ function AdminTestRides() {
     setStatusFilter,
   ] = useState("ALL");
 
-  /*
-   * =====================================================
-   * CARREGAMENTO
-   * =====================================================
-   */
-
   useEffect(() => {
     async function loadLeads() {
       try {
@@ -90,9 +83,7 @@ function AdminTestRides() {
         setError("");
 
         const response =
-          await getTestRideLeads(
-            token
-          );
+          await getTestRideLeads();
 
         setLeads(
           response.data ||
@@ -103,7 +94,7 @@ function AdminTestRides() {
           error.status === 401 ||
           error.status === 403
         ) {
-          logout();
+          await logout();
           return;
         }
 
@@ -118,15 +109,8 @@ function AdminTestRides() {
 
     loadLeads();
   }, [
-    token,
     logout,
   ]);
-
-  /*
-   * =====================================================
-   * SUCESSO TEMPORÁRIO
-   * =====================================================
-   */
 
   useEffect(() => {
     if (!success) {
@@ -142,12 +126,6 @@ function AdminTestRides() {
       clearTimeout(timer);
     };
   }, [success]);
-
-  /*
-   * =====================================================
-   * CONTADORES
-   * =====================================================
-   */
 
   const newCount =
     useMemo(
@@ -181,12 +159,6 @@ function AdminTestRides() {
         ).length,
       [leads]
     );
-
-  /*
-   * =====================================================
-   * FILTROS
-   * =====================================================
-   */
 
   const filteredLeads =
     useMemo(() => {
@@ -234,12 +206,6 @@ function AdminTestRides() {
       statusFilter,
     ]);
 
-  /*
-   * =====================================================
-   * STATUS
-   * =====================================================
-   */
-
   async function handleStatus(
     lead,
     status
@@ -262,8 +228,7 @@ function AdminTestRides() {
       const response =
         await updateTestRideLeadStatus(
           lead.id,
-          status,
-          token
+          status
         );
 
       setLeads(
@@ -285,7 +250,7 @@ function AdminTestRides() {
         error.status === 401 ||
         error.status === 403
       ) {
-        logout();
+        await logout();
         return;
       }
 

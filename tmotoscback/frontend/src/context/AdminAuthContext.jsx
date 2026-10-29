@@ -14,9 +14,6 @@ import {
 export const AdminAuthContext =
   createContext(null);
 
-const OLD_STORAGE_KEY =
-  "tmotos_admin_token";
-
 export function AdminAuthProvider({
   children,
 }) {
@@ -40,15 +37,6 @@ export function AdminAuthProvider({
     useCallback(
       async () => {
         try {
-          /*
-           * Remove eventual token
-           * deixado pela implementação
-           * antiga.
-           */
-          sessionStorage.removeItem(
-            OLD_STORAGE_KEY
-          );
-
           await getAdminSession();
 
           setIsAuthenticated(
@@ -69,7 +57,7 @@ export function AdminAuthProvider({
 
   /*
    * =====================================================
-   * CARREGAMENTO INICIAL
+   * RESTAURAR SESSÃO
    * =====================================================
    */
 
@@ -79,10 +67,6 @@ export function AdminAuthProvider({
 
     async function restoreSession() {
       try {
-        sessionStorage.removeItem(
-          OLD_STORAGE_KEY
-        );
-
         await getAdminSession();
 
         if (active) {
@@ -153,15 +137,12 @@ export function AdminAuthProvider({
           await adminLogout();
         } catch {
           /*
-           * Mesmo que o backend não
-           * responda, removemos a
-           * autenticação do frontend.
+           * Mesmo que o backend esteja
+           * indisponível, o frontend
+           * deixa de considerar a
+           * sessão autenticada.
            */
         } finally {
-          sessionStorage.removeItem(
-            OLD_STORAGE_KEY
-          );
-
           setIsAuthenticated(
             false
           );
@@ -173,23 +154,10 @@ export function AdminAuthProvider({
   return (
     <AdminAuthContext.Provider
       value={{
-        /*
-         * Compatibilidade temporária
-         * com as páginas atuais.
-         *
-         * Nenhum JWT real fica
-         * disponível no JavaScript.
-         */
-        token: null,
-
         loading,
-
         isAuthenticated,
-
         login,
-
         logout,
-
         checkSession,
       }}
     >
