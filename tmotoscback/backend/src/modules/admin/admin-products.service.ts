@@ -2,6 +2,8 @@ import {
   prisma,
 } from "../../lib/prisma.js";
 
+import { buildProductAuditChanges, registerProductAudit } from "./admin-audit.service.js";
+
 export class AdminProductError
   extends Error {
   statusCode: number;
@@ -741,9 +743,7 @@ export async function getAdminProduct(
  * Produto + cores + variantes
  * são gravados na mesma transação.
  */
-export async function createAdminProduct(
-  data: ProductData
-) {
+export async function createAdminProduct(data: ProductData, actorEmail: string) {
   if (!data.slug) {
     throw new AdminProductError(
       "Slug é obrigatório.",
@@ -915,9 +915,16 @@ export async function createAdminProduct(
         );
       }
 
-      return mapProduct(
-        savedProduct
-      );
+      const result = mapProduct(savedProduct);
+      const audit = buildProductAuditChanges(null, result);
+      await registerProductAudit(tx, {
+        productId: savedProduct.id,
+        productName: savedProduct.name,
+        actorEmail,
+        action: "CREATED",
+        ...audit,
+      });
+      return result;
     }
   );
 }
@@ -931,10 +938,7 @@ export async function createAdminProduct(
  * Para alterar cores/variantes,
  * as duas listas devem ser enviadas.
  */
-export async function updateAdminProduct(
-  id: number,
-  data: ProductData
-) {
+export async function updateAdminProduct(id: number, data: ProductData, actorEmail: string) {
   const existing =
     await prisma.product.findUnique({
       where: {
@@ -1008,6 +1012,15 @@ export async function updateAdminProduct(
 
   return prisma.$transaction(
     async (tx) => {
+      
+      const original = await tx.product.findUnique({
+        where: { id },
+        include: productInclude,
+      });
+      if (!original) {
+        throw new AdminProductError("Produto não encontrado.", 404);
+      }
+
       /*
        * Atualiza dados principais.
        */
@@ -1182,9 +1195,18 @@ export async function updateAdminProduct(
         );
       }
 
-      return mapProduct(
-        savedProduct
-      );
+      const result = mapProduct(savedProduct);
+      const audit = buildProductAuditChanges(mapProduct(original), result);
+      if (audit.changedFields.length > 0) {
+        await registerProductAudit(tx, {
+          productId: savedProduct.id,
+          productName: savedProduct.name,
+          actorEmail,
+          action: "UPDATED",
+          ...audit,
+        });
+      }
+      return result;
     }
   );
 }
@@ -1194,41 +1216,34 @@ export async function updateAdminProduct(
  */
 export async function updateAdminProductStatus(
   id: number,
-  active: boolean
+  active: boolean,
+  actorEmail: string
 ) {
-  const existing =
-    await prisma.product.findUnique({
-      where: {
-        id,
-      },
-
-      select: {
-        id: true,
-      },
+  return prisma.$transaction(async (tx) => {
+    const original = await tx.product.findUnique({
+      where: { id },
+      include: productInclude,
     });
+    if (!original) {
+      throw new AdminProductError("Produto não encontrado.", 404);
+    }
 
-  if (!existing) {
-    throw new AdminProductError(
-      "Produto não encontrado.",
-      404
-    );
-  }
-
-  const updated =
-    await prisma.product.update({
-      where: {
-        id,
-      },
-
-      data: {
-        active,
-      },
-
-      include:
-        productInclude,
+    const updated = await tx.product.update({
+      where: { id },
+      data: { active },
+      include: productInclude,
     });
-
-  return mapProduct(
-    updated
-  );
+    const result = mapProduct(updated);
+    const audit = buildProductAuditChanges(mapProduct(original), result);
+    if (audit.changedFields.length > 0) {
+      await registerProductAudit(tx, {
+        productId: updated.id,
+        productName: updated.name,
+        actorEmail,
+        action: "STATUS_CHANGED",
+        ...audit,
+      });
+    }
+    return result;
+  });
 }

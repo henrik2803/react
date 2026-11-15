@@ -17,6 +17,12 @@ import {
 /*
  * ID
  */
+function getAdminAuditActor(request: FastifyRequest): string | null {
+  const user = request.user as { email?: unknown } | undefined;
+  if (typeof user?.email !== "string" || !user.email.trim()) return null;
+  return user.email.trim();
+}
+
 const idSchema =
   z.coerce
     .number()
@@ -593,10 +599,14 @@ export async function createAdminProductController(
   }
 
   try {
-    const product =
-      await createAdminProduct(
-        parsed.data
-      );
+    const actorEmail = getAdminAuditActor(request);
+    if (!actorEmail) {
+      return reply.status(403).send({
+        message: "Administrador não identificado na sessão.",
+      });
+    }
+
+    const product = await createAdminProduct(parsed.data, actorEmail);
 
     return reply
       .status(201)
@@ -661,11 +671,14 @@ export async function updateAdminProductController(
   }
 
   try {
-    const product =
-      await updateAdminProduct(
-        idResult.data,
-        bodyResult.data
-      );
+    const actorEmail = getAdminAuditActor(request);
+    if (!actorEmail) {
+      return reply.status(403).send({
+        message: "Administrador não identificado na sessão.",
+      });
+    }
+
+    const product = await updateAdminProduct(idResult.data, bodyResult.data, actorEmail);
 
     return reply
       .status(200)
@@ -725,12 +738,14 @@ export async function updateAdminProductStatusController(
   }
 
   try {
-    const product =
-      await updateAdminProductStatus(
-        idResult.data,
-        bodyResult.data
-          .active
-      );
+    const actorEmail = getAdminAuditActor(request);
+    if (!actorEmail) {
+      return reply.status(403).send({
+        message: "Administrador não identificado na sessão.",
+      });
+    }
+
+    const product = await updateAdminProductStatus(idResult.data, bodyResult.data.active, actorEmail);
 
     return reply
       .status(200)

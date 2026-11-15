@@ -178,3 +178,30 @@ model TestRideLead {
   @@index([preferredDate])
   @@map("test_ride_leads")
 }
+
+enum ProductAuditAction {
+  CREATED
+  UPDATED
+  STATUS_CHANGED
+}
+
+model ProductAuditLog {
+  id Int @id @default(autoincrement())
+
+  productId   Int
+  productName String?
+
+  actorEmail String
+  action     ProductAuditAction
+
+  changedFields String[] @default([])
+
+  before Json?
+  after  Json?
+
+  createdAt DateTime @default(now())
+
+  @@index([productId, createdAt])
+  @@index([createdAt])
+  @@map("product_audit_logs")
+}
